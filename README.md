@@ -20,4 +20,6 @@ mv basic communitex
 
 ```
 mix phx.gen.auth Accounts User users
+
+mix shotrize.apply
 ```

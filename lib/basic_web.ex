@@ -30,6 +30,7 @@ defmodule BasicWeb do
   def view do
     quote do
       use Phoenix.View,
+        pattern: "**/*",
         root: "lib/basic_web/templates",
         namespace: BasicWeb
 
@@ -83,6 +84,7 @@ defmodule BasicWeb do
 
       # Import LiveView helpers (live_render, live_component, live_patch, etc)
       import Phoenix.LiveView.Helpers
+      import BasicWeb.LiveHelpers
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View

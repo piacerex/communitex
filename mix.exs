@@ -33,6 +33,23 @@ defmodule Basic.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:pbkdf2_elixir, "~> 1.0"},
+      {:ex_doc, "~> 0.24", only: :dev, runtime: false},
+      {:earmark, "~> 1.4", only: :dev},
+      {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.1", only: :dev},
+
+      {:shotrize, git: "https://github.com/piacerex/shotrize.git", branch: "v1.0"}, 
+      {:smallex, git: "https://github.com/piacerex/smallex.git", branch: "v1.0"},
+      {:git_cli, "~> 0.3"}, 
+      {:websockex, "~> 0.4"}, 
+
+      {:phx_gen_auth, "~> 0.7"},
+      {:bamboo, "~> 2.1"},
+      {:bamboo_smtp, "~> 4.0"},
+      {:scrivener, "~> 2.7"},
+      {:scrivener_ecto, "~> 2.7"},
+
       {:phoenix, "~> 1.5.9"},
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},

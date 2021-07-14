@@ -17,3 +17,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 mix phx.new basic --live
 mv basic communitex
 ```
+
+```
+mix phx.gen.auth Accounts User users
+```

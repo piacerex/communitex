@@ -1,0 +1,87 @@
+<h1>Show Member</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.MemberLive.FormComponent,
+    id: @member.id,
+    title: @page_title,
+    action: @live_action,
+    member: @member,
+    return_to: Routes.member_show_path(@socket, :show, @member) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>User:</strong>
+    <%= @member.user_id %>
+  </li>
+
+  <li>
+    <strong>Last name:</strong>
+    <%= @member.last_name %>
+  </li>
+
+  <li>
+    <strong>First name:</strong>
+    <%= @member.first_name %>
+  </li>
+
+  <li>
+    <strong>Last name kana:</strong>
+    <%= @member.last_name_kana %>
+  </li>
+
+  <li>
+    <strong>First name kana:</strong>
+    <%= @member.first_name_kana %>
+  </li>
+
+  <li>
+    <strong>Detail:</strong>
+    <%= @member.detail %>
+  </li>
+
+  <li>
+    <strong>Image:</strong>
+    <%= @member.image %>
+  </li>
+
+  <li>
+    <strong>Birthday:</strong>
+    <%= @member.birthday %>
+  </li>
+
+  <li>
+    <strong>Corporate:</strong>
+    <%= @member.corporate_id %>
+  </li>
+
+  <li>
+    <strong>Corporate name:</strong>
+    <%= @member.corporate_name %>
+  </li>
+
+  <li>
+    <strong>Industry:</strong>
+    <%= @member.industry %>
+  </li>
+
+  <li>
+    <strong>Department:</strong>
+    <%= @member.department %>
+  </li>
+
+  <li>
+    <strong>Position:</strong>
+    <%= @member.position %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @member.deleted_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.member_show_path(@socket, :edit, @member), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.member_index_path(@socket, :index) %></span>

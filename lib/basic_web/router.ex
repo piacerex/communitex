@@ -62,6 +62,13 @@ defmodule BasicWeb.Router do
   scope "/", BasicWeb do
     pipe_through :browser
 
+    live "/members", MemberLive.Index, :index
+    live "/members/new", MemberLive.Index, :new
+    live "/members/:id/edit", MemberLive.Index, :edit
+
+    live "/members/:id", MemberLive.Show, :show
+    live "/members/:id/show/edit", MemberLive.Show, :edit
+
 #    live "/", PageLive, :index
 #    get "/*path_", PageController, :index
 #    post "/*path_", PageController, :index

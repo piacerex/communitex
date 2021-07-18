@@ -1,0 +1,61 @@
+<!--
+Title: 
+CreateDate: 2021/04/01 12:21:52.800054
+Creator: m-mori@digi-dock.com
+UpdateDate: 2021/04/06 10:28:54
+Updater: j-kimura@digi-dock.com
+-->
+
+<!--
+Title:
+CreateDate: 2021/03/08 22:09:55
+Creator: m-mori@digi-dock.com
+UpdateDate: 2021/03/08 22:10:35
+Updater: j-kimura@digi-dock.com
+-->
+<%
+conn = BasicWeb.UserAuth.require_authenticated_user( conn, nil )
+
+import Ecto.Query, warn: false
+alias Basic.Repo
+alias Basic.Materials.Material
+alias Basic.Assigns.Assign
+materials = case conn.assigns[ :current_user ] do
+  nil -> []
+  current_user ->
+    MaterialsEnhance.list_mypage( current_user.id )
+    |> Enum.with_index
+    |> Enum.map( & %{ i: elem( &1, 1 ) + 1, data: elem( &1, 0 ) } )
+end
+%>
+<section class="page-visual">
+    <div class="page-visual__inner">
+        <div class="page-visual-title-unit">
+            <h1 class="page-visual-title-unit__title">マイページ</h1>
+            <p class="page-visual-title-unit__lead">My page</p>
+        </div>
+    </div>
+</section>
+<div class="main">
+    <div class="page-content-container">
+        <div class="section-heading-unit02">
+            <h2 class="heading02">学習可能な教材一覧</h2>
+        </div>
+        
+        <%= if materials == [] do %>
+        <p>学習可能な教材がございません</p>
+        <% else %>
+        <p>以下の教材が学習可能です</p>
+        <div class="card01-group card01-group-col3">
+    
+            <%= for material <- materials do %>
+            <v-card :hover="true" :href="'<%= material.data.url %>'">
+                <img src="<%= material.data.image %>">
+                <v-card-title style="color: #417caa;"><%= material.data.title %></v-card-title>
+            </v-card>
+            <% end %>
+        </div>
+        <% end %>
+        
+    </div>
+</div>

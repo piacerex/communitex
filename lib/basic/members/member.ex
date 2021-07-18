@@ -25,6 +25,6 @@ defmodule Basic.Members.Member do
   def changeset(member, attrs) do
     member
     |> cast(attrs, [:user_id, :last_name, :first_name, :last_name_kana, :first_name_kana, :detail, :image, :birthday, :corporate_id, :corporate_name, :industry, :department, :position, :deleted_at])
-    |> validate_required([:user_id, :last_name, :first_name, :last_name_kana, :first_name_kana, :detail, :image, :birthday, :corporate_id, :corporate_name, :industry, :department, :position, :deleted_at])
+    |> validate_required([:user_id])
   end
 end

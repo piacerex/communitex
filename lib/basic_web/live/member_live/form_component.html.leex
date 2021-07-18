@@ -31,8 +31,18 @@
   <%= error_tag f, :detail %>
 
   <%= label f, :image %>
-  <%= text_input f, :image %>
-  <%= error_tag f, :image %>
+  <div class="container" phx-drop-target="<%= @uploads.avatar.ref %>">
+    <%= live_file_input @uploads.avatar %>
+  </div>
+
+<%= for {_ref, err} <- @uploads.avatar.errors do %>
+  <p class="alert"><%= Phoenix.Naming.humanize(err) %></p>
+<% end %>
+
+<%= for entry <- @uploads.avatar.entries do %>
+  <%= entry.client_name %> - <%= entry.progress %>%
+  <%= live_img_preview entry, width: 75 %>
+<% end %>
 
   <%= label f, :birthday %>
   <%= datetime_select f, :birthday %>

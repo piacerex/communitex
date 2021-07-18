@@ -7,6 +7,7 @@ defmodule Basic.Members do
   alias Basic.Repo
 
   alias Basic.Members.Member
+  alias Basic.Accounts.User
 
   @doc """
   Returns the list of members.
@@ -18,7 +19,29 @@ defmodule Basic.Members do
 
   """
   def list_members do
-    Repo.all(Member)
+    users = from user in User
+    Repo.all(from member in Member,
+              join: user in ^users,
+              on: [id: member.user_id],
+              select: %{
+                id: member.id,
+                user_id: member.user_id,
+                last_name: member.last_name,
+                last_name_kana: member.last_name_kana,
+                first_name: member.first_name,
+                first_name_kana: member.first_name_kana,
+                image: member.image,
+                birthday: member.birthday,
+                corporate_id: member.corporate_id,
+                corporate_name: member.corporate_name,
+                deleted_at: member.deleted_at,
+                department: member.department,
+                detail: member.detail,
+                industry: member.industry,
+                position: member.position,
+                email: user.email
+              }
+    )
   end
 
   @doc """
@@ -35,7 +58,33 @@ defmodule Basic.Members do
       ** (Ecto.NoResultsError)
 
   """
-  def get_member!(id), do: Repo.get!(Member, id)
+  def get_member!(id) do
+    users = from user in User
+    Repo.all(from member in Member, where: member.id == ^id,
+              join: user in ^users,
+              on: [id: member.user_id],
+              select: %{
+                id: member.id,
+                user_id: member.user_id,
+                last_name: member.last_name,
+                last_name_kana: member.last_name_kana,
+                first_name: member.first_name,
+                first_name_kana: member.first_name_kana,
+                image: member.image,
+                birthday: member.birthday,
+                corporate_id: member.corporate_id,
+                corporate_name: member.corporate_name,
+                deleted_at: member.deleted_at,
+                department: member.department,
+                detail: member.detail,
+                industry: member.industry,
+                position: member.position,
+                email: user.email
+              }
+    )
+  end
+
+  def get_delete_member!(id), do: Repo.get!(Member, id)
 
   @doc """
   Creates a member.
@@ -67,8 +116,25 @@ defmodule Basic.Members do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_member(%Member{} = member, attrs) do
-    member
+  def update_member(member, attrs) do
+    data = %Member{}
+                |> Map.put(:id, member.id)
+                |> Map.put(:user_id, member.user_id)
+                |> Map.put(:last_name, member.last_name)
+                |> Map.put(:last_name_kana, member.last_name_kana)
+                |> Map.put(:first_name, member.first_name)
+                |> Map.put(:first_name_kana, member.first_name_kana)
+                |> Map.put(:image, member.image)
+                |> Map.put(:birthday, member.birthday)
+                |> Map.put(:corporate_id, member.corporate_id)
+                |> Map.put(:corporate_name, member.corporate_name)
+                |> Map.put(:deleted_at, member.deleted_at)
+                |> Map.put(:department, member.department)
+                |> Map.put(:detail, member.detail)
+                |> Map.put(:industry, member.industry)
+                |> Map.put(:position, member.position)
+
+    data
     |> Member.changeset(attrs)
     |> Repo.update()
   end
@@ -98,7 +164,51 @@ defmodule Basic.Members do
       %Ecto.Changeset{data: %Member{}}
 
   """
-  def change_member(%Member{} = member, attrs \\ %{}) do
-    Member.changeset(member, attrs)
+  def change_member(member, attrs \\ %{}) do
+    data = %Member{}
+            |> Map.put(:id, member.id)
+            |> Map.put(:user_id, member.user_id)
+            |> Map.put(:last_name, member.last_name)
+            |> Map.put(:last_name_kana, member.last_name_kana)
+            |> Map.put(:first_name, member.first_name)
+            |> Map.put(:first_name_kana, member.first_name_kana)
+            |> Map.put(:image, member.image)
+            |> Map.put(:birthday, member.birthday)
+            |> Map.put(:corporate_id, member.corporate_id)
+            |> Map.put(:corporate_name, member.corporate_name)
+            |> Map.put(:deleted_at, member.deleted_at)
+            |> Map.put(:department, member.department)
+            |> Map.put(:detail, member.detail)
+            |> Map.put(:industry, member.industry)
+            |> Map.put(:position, member.position)
+    Member.changeset(data, attrs)
+  end
+
+  def paginate_members(params \\ []) do
+    users = from user in User
+    query = from member in Member,
+              join: user in ^users,
+              on: [id: member.user_id],
+              select: %{
+                id: member.id,
+                user_id: member.user_id,
+                last_name: member.last_name,
+                last_name_kana: member.last_name_kana,
+                first_name: member.first_name,
+                first_name_kana: member.first_name_kana,
+                image: member.image,
+                birthday: member.birthday,
+                corporate_id: member.corporate_id,
+                corporate_name: member.corporate_name,
+                deleted_at: member.deleted_at,
+                department: member.department,
+                detail: member.detail,
+                industry: member.industry,
+                position: member.position,
+                email: user.email
+              }
+
+   query
+    |> Repo.paginate(params)
   end
 end

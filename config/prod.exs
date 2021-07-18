@@ -53,3 +53,13 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
 import_config "prod.secret.exs"
+
+config :sphere,
+  content_root:     "/",
+  content_folder:   "content/communitex.org",
+  github_url:       "https://github.com/piacerex/communitex.org",
+  local_root:       "/app",
+  local_check_file: "index.html"
+
+config :spira,
+  javascript_handler: "this.loadMarkdown"

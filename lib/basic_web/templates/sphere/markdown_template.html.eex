@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head prefix="og: https://ogp.me/ns# fb: https://ogp.me/ns/fb# article: https://ogp.me/ns/article#">
+
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<link rel="canonical" href="https://communitex.org/">
+<meta name="description" content="">
+<meta name="keywords" content="">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<%= csrf_meta_tag() %>
+<link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+
+<title></title>
+
+<link rel="icon" href="/images/favicon.png">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@communitex.org">
+<meta name="twitter:site" content="@communitex.org">
+<meta name="twitter:title" content="communitex.org">
+<meta name="twitter:description" content="communitex.org">
+<meta name="twitter:url" content="https://communitex.org/">
+<meta name="twitter:image" content="https://communitex.org/images/ogp-image.png">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="communitex.org">
+<meta property="og:description" content="communitex.org">
+<meta property="og:url" content="https://communitex.org/">
+<meta property="og:image" content="https://communitex.org/images/ogp-image.png">
+
+<link href="/css/app.css" rel="stylesheet">
+
+<script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+<script src="https://unpkg.com/axios@0.x/dist/axios.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.5.1/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+<link rel="stylesheet" href="/css/markdown.css">
+<link rel="stylesheet" href="/css/frontend.css">
+
+</head>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NJW6M6X"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="app"><v-app><v-main>
+
+<!-- ヘッダーここから -->
+<header class="header">
+  <div class="header__inner">
+    <div class="header-logo">
+      <a href="/"><img src="/images/logo-header.png"></a>
+    </div>
+
+    <div class="header-control">
+      <div class="header-btn-group">
+        <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" v-on:click="location = '/users/log_in'">ログイン</v-btn>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- ヘッダーここまで -->
+
+<%= if Path.extname( @params[ "path" ] ) != ".md" do %>
+	<%= raw( @params[ "body" ] ) %>
+<% else %>
+	<div class="main" v-html="convertMarkdownToHtml"></div>
+<% end %>
+
+<!-- フッターここから -->
+<div id="footer" class="footer">
+  <ul class="footer-nav-body">
+    <li class="footer-nav-item">© 2021 communitex.org</li>
+  </ul>
+</div>
+<!-- フッターここまで -->
+
+</v-main></v-app></div>
+
+<script>
+var app = new Vue
+( {
+	el: '#app',
+	vuetify: new Vuetify(),
+	data: 
+	{
+		path:			'<%= @params[ "path" ] %>', 
+		title:			'<%= @params[ "title" ] %>', 
+		create_date:	'<%= @params[ "create_date" ] %>', 
+		creator:		'<%= @params[ "creator" ] %>', 
+		updater:		'<%= @params[ "updater" ] %>', 
+		raw:			<%= @params[ "raw" ] %>, 
+
+		body:	'<%= raw( @params[ "body" ] |> String.replace( "\r\n", "\\r\\n" ) |> String.replace( "\n", "\\n" ) |> String.replace( "'", "\\'" ) ) %>', 
+	},
+	mounted: function() 
+	{
+	}, 
+	computed: 
+	{
+		convertMarkdownToHtml: function() 
+		{
+			if ( this.raw != true )
+			{
+				const renderer = new marked.Renderer()
+				renderer.code = function( code, language ) 
+				{
+					hljs.initHighlightingOnLoad()
+					hljs.initLineNumbersOnLoad()
+					highlighted_code = hljs.highlightAuto( code, [ language ] ).value
+					hljs.lineNumbersBlock()
+					return '<pre><code class="' + language + ' hljs">' + highlighted_code + '</code></pre>'
+				}
+
+				marked.setOptions
+				( {
+					sanitize: true, 
+				} )
+				title = this.title != '' ? '# ' + this.title + '\r\n' : ''
+				marked_body = marked( title + this.body, { renderer: renderer } )
+				return marked_body
+			}
+			else
+			{
+				return this.body
+			}
+		}, 
+	}, 
+} )
+</script>
+
+</body>
+
+</html>

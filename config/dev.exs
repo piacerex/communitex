@@ -74,3 +74,13 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :sphere,
+  content_root:     "/",
+  content_folder:   "content/communitex.org",
+  github_url:       "https://github.com/piacerex/communitex.org",
+  local_root:       "D:/piacere/code/sphere/debli",
+  local_check_file: "index.html"
+
+config :spira,
+  javascript_handler: "this.loadMarkdown"

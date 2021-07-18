@@ -50,6 +50,8 @@ defmodule Basic.MixProject do
       {:scrivener, "~> 2.7"},
       {:scrivener_ecto, "~> 2.7"},
 
+      {:ex_image_info, "~> 0.2.4"},
+
       {:phoenix, "~> 1.5.9"},
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},

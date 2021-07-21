@@ -113,10 +113,58 @@ input[type='text'], input[type='password'], input[type='file'], input[type='numb
   border-radius: 4px;
 }
 
+.communitex-pagination-body
+{
+  display: inline-flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  list-style:none;
+  align-items: center;
+  list-style-type: none;
+}
 
+.communitex-pagination-body > li
+{
+  display: flex;
+  align-items: center;
+}
 
+.communitex-pagination-body > li > a
+{
+  display:flex;
+  align-items: center;
+  justify-content: center;  
+  width: auto;
+  height: 42px;  
+  border-radius: 4px;
+  line-height:1;
+  font-size: 15px;
+  margin: .3rem;
+  min-width: 34px;
+  padding: 0 5px;
+  text-decoration: none;
+  transition: .3s cubic-bezier(0,0,.2,1);
+  box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+  background: #fff;
+  color: rgba(0,0,0,.87);
+}
 
+.communitex-pagination-body > li.is-current > a
+{
+  background: #1976d2 !important;
+  color: #fff !important;
+  pointer-events:none;
+}
 
+.communitex-pagination-body > .is-prev > a,
+.communitex-pagination-body > .is-next > a
+{
+  color: #999;
+  font-weigth:bold;
+}
 
 
 

@@ -21,7 +21,8 @@ defmodule BasicWeb.UserRegistrationController do
 
         conn
         |> put_flash(:info, "User created successfully.")
-        |> UserAuth.log_in_user(user)
+#        |> UserAuth.log_in_user(user)
+        |> render("done.html")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)

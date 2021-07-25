@@ -119,8 +119,9 @@ defmodule Basic.Accounts.User do
   `Pbkdf2.no_user_verify/0` to avoid timing attacks.
   """
 #  def valid_password?(%Basic.Accounts.User{hashed_password: hashed_password}, password)
+#      when is_binary(hashed_password) and byte_size(password) > 0 do
   def valid_password?(%Basic.Accounts.User{hashed_password: hashed_password, confirmed_at: confirmed_at}, password)
-      when is_binary(hashed_password) and byte_size(password) > 0 do
+      when is_binary(hashed_password) and byte_size(password) > 0 and is_nil(confirmed_at) == false do
     Pbkdf2.verify_pass(password, hashed_password)
   end
 

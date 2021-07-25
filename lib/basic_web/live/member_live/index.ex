@@ -64,10 +64,12 @@ defmodule BasicWeb.MemberLive.Index do
     |> assign(:total_pages, String.to_integer(total_pages))
   end
 
-  defp apply_action(socket, :new, _params) do
+  defp apply_action(socket, :new, %{"page" => _page, "search" => _search}) do
     socket
     |> assign(:page_title, "New Member")
     |> assign(:member, %Member{})
+    |> assign(:page, 1)
+    |> assign(:search, "")
   end
 
   defp apply_action(socket, :index, params) do
@@ -77,11 +79,11 @@ defmodule BasicWeb.MemberLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete", %{"id" => id, "page" => page, "search" => search} = params, socket) do
 #    member = Members.get_member!(id)
     member = Members.get_delete_member!(id)
     {:ok, _} = Members.delete_member(member)
 
-    {:noreply, assign(socket, members: Members.list_members())}
+    {:noreply, assign(socket, get_and_assign_page(page, search))}
   end
 end

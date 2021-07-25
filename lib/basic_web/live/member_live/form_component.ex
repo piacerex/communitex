@@ -32,81 +32,59 @@ defmodule BasicWeb.MemberLive.FormComponent do
   end
 
   defp save_member(socket, :edit, member_params) do
-    uploaded_files = 
-      consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry ->
-        type = ExImageInfo.seems? File.read!(path)
-        dest = Path.join("content/communitex.org/images", 
-                member_params["user_id"] <> "-" <> Date.to_string(NaiveDateTime.utc_now) <> "-" <> String.replace(Time.to_string(NaiveDateTime.utc_now), [":", "."], "") <> "." <> Atom.to_string(type))
-        File.cp!(path, dest)
-        Routes.static_path(socket, "/images/#{Path.basename(dest)}")
-      end)
-
-    do_edit_member(socket, member_params, uploaded_files)
-  end
-
-  defp do_edit_member(socket, member_params, uploaded_files) do
-    if uploaded_files == [] do
-      case Members.update_member(socket.assigns.member, Map.put(member_params, "image", socket.assigns.member.image)) do
-        {:ok, _member} ->
-          {:noreply,
-          socket
-          |> put_flash(:info, "Member updated successfully")
-          |> push_redirect(to: socket.assigns.return_to)}
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          {:noreply, assign(socket, :changeset, changeset)}
-      end
+    uploaded_files = save_upload_file(socket, member_params)
+    image = if uploaded_files == [] do  # In the case of [], the file is not specified
+      socket.assigns.member.image
     else
-      case Members.update_member(socket.assigns.member, Map.put(member_params, "image", List.first(uploaded_files))) do
-        {:ok, _member} ->
-          {:noreply,
-          socket
-          |> put_flash(:info, "Member updated successfully")
-          |> push_redirect(to: socket.assigns.return_to)}
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          {:noreply, assign(socket, :changeset, changeset)}
+      if socket.assigns.member.image != nil do
+        path = Path.join(Application.fetch_env!(:sphere, :content_folder), socket.assigns.member.image)
+        File.rm(path)
       end
+      List.last(uploaded_files)
+    end
+    case Members.update_member(socket.assigns.member, Map.put(member_params, "image", image)) do
+      {:ok, _member} ->
+        {:noreply,
+        socket
+        |> put_flash(:info, "Member updated successfully")
+        |> push_redirect(to: socket.assigns.return_to)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :changeset, changeset)}
     end
   end
 
   defp save_member(socket, :new, member_params) do
-    uploaded_files = 
-      consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry ->
-        type = ExImageInfo.seems? File.read!(path)
-        dest = Path.join("priv/static/images", 
-                member_params["user_id"] <> "-" <> Date.to_string(NaiveDateTime.utc_now) <> "-" <> String.replace(Time.to_string(NaiveDateTime.utc_now), [":", "."], "") <> "." <> Atom.to_string(type))
-        File.cp!(path, dest)
-        Routes.static_path(socket, "/images/#{Path.basename(dest)}")
-      end)
+    uploaded_files = save_upload_file(socket, member_params)
+    image = if uploaded_files == [] do  # In the case of [], the file is not specified
+      ""
+    else
+      List.last(uploaded_files)
+    end
+    case Members.create_member(Map.put(member_params, "image", image)) do
+      {:ok, _member} ->
+        {:noreply,
+        socket
+        |> put_flash(:info, "Member created successfully")
+        |> push_redirect(to: socket.assigns.return_to)}
 
-    do_save_member(socket, member_params, uploaded_files)
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
+    end
   end
 
-# add
-  defp do_save_member(socket, member_params, uploaded_files) do
-    if uploaded_files == [] do
-      case Members.create_member(Map.put(member_params, "image", "")) do
-        {:ok, _member} ->
-          {:noreply,
-          socket
-          |> put_flash(:info, "Member created successfully")
-          |> push_redirect(to: socket.assigns.return_to)}
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          {:noreply, assign(socket, changeset: changeset)}
-      end
-    else
-      case Members.create_member(Map.put(member_params, "image", List.first(uploaded_files))) do
-        {:ok, _member} ->
-          {:noreply,
-          socket
-          |> put_flash(:info, "Member created successfully")
-          |> push_redirect(to: socket.assigns.return_to)}
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          {:noreply, assign(socket, changeset: changeset)}
-      end
-    end
+  def save_upload_file(socket, member_params) do
+    consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry ->
+      type = ExImageInfo.seems?(File.read!(path)) |> Atom.to_string |> String.replace("jpeg", "jpg")
+      now = NaiveDateTime.utc_now
+      dest = Path.join(
+        [
+          Application.fetch_env!(:sphere, :content_folder), 
+          "/images/data/", 
+          member_params["user_id"] <> "-" <> Date.to_string(now) <> "-" <> String.replace(Time.to_string(now), [":", "."], "") <> "." <> type
+        ])
+      File.cp!(path, dest)
+      Routes.static_path(socket, "/images/data/#{Path.basename(dest)}")
+    end)
   end
 end

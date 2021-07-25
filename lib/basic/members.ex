@@ -36,28 +36,16 @@ defmodule Basic.Members do
   """
   def get_member!(id) do
     users = from user in User
+    fields = Member.__schema__(:fields)
     Repo.all(from member in Member, where: member.id == ^id,
-              join: user in ^users,
-              on: [id: member.user_id],
-              select: %{
-                id: member.id,
-                user_id: member.user_id,
-                last_name: member.last_name,
-                last_name_kana: member.last_name_kana,
-                first_name: member.first_name,
-                first_name_kana: member.first_name_kana,
-                image: member.image,
-                birthday: member.birthday,
-                corporate_id: member.corporate_id,
-                corporate_name: member.corporate_name,
-                deleted_at: member.deleted_at,
-                department: member.department,
-                detail: member.detail,
-                industry: member.industry,
-                position: member.position,
-                email: user.email
-              }
-    )
+              join: user in User,
+              on: [ id: member.user_id ],
+              select: {
+                  map( member, ^fields ),
+                  map( user, [ :email ] ) 
+                }
+            ) |> Enum.map( & Map.merge( elem( &1, 0 ), elem( &1, 1 ) ) )
+
   end
 
   def get_delete_member!(id), do: Repo.get!(Member, id)
@@ -93,26 +81,11 @@ defmodule Basic.Members do
 
   """
   def update_member(member, attrs) do
-    data = %Member{}
-                |> Map.put(:id, member.id)
-                |> Map.put(:user_id, member.user_id)
-                |> Map.put(:last_name, member.last_name)
-                |> Map.put(:last_name_kana, member.last_name_kana)
-                |> Map.put(:first_name, member.first_name)
-                |> Map.put(:first_name_kana, member.first_name_kana)
-                |> Map.put(:image, member.image)
-                |> Map.put(:birthday, member.birthday)
-                |> Map.put(:corporate_id, member.corporate_id)
-                |> Map.put(:corporate_name, member.corporate_name)
-                |> Map.put(:deleted_at, member.deleted_at)
-                |> Map.put(:department, member.department)
-                |> Map.put(:detail, member.detail)
-                |> Map.put(:industry, member.industry)
-                |> Map.put(:position, member.position)
 
-    data
-    |> Member.changeset(attrs)
-    |> Repo.update()
+    data = %Member{}
+      |> Map.merge(Map.take(member, Map.keys(%Member{})))
+      |> Member.changeset(attrs)
+      |> Repo.update()
   end
 
   @doc """
@@ -142,58 +115,32 @@ defmodule Basic.Members do
   """
   def change_member(member, attrs \\ %{}) do
     data = %Member{}
-            |> Map.put(:id, member.id)
-            |> Map.put(:user_id, member.user_id)
-            |> Map.put(:last_name, member.last_name)
-            |> Map.put(:last_name_kana, member.last_name_kana)
-            |> Map.put(:first_name, member.first_name)
-            |> Map.put(:first_name_kana, member.first_name_kana)
-            |> Map.put(:image, member.image)
-            |> Map.put(:birthday, member.birthday)
-            |> Map.put(:corporate_id, member.corporate_id)
-            |> Map.put(:corporate_name, member.corporate_name)
-            |> Map.put(:deleted_at, member.deleted_at)
-            |> Map.put(:department, member.department)
-            |> Map.put(:detail, member.detail)
-            |> Map.put(:industry, member.industry)
-            |> Map.put(:position, member.position)
+      |> Map.merge(Map.take(member, Map.keys(%Member{})))
     Member.changeset(data, attrs)
   end
 
   def paginate_members(page \\ 1, search \\ "") do
-    users = from user in User
-    query = from member in Member,
-              join: user in User,
-              on: [id: member.user_id],
-              select: %{
-                id: member.id,
-                user_id: member.user_id,
-                last_name: member.last_name,
-                last_name_kana: member.last_name_kana,
-                first_name: member.first_name,
-                first_name_kana: member.first_name_kana,
-                image: member.image,
-                birthday: member.birthday,
-                corporate_id: member.corporate_id,
-                corporate_name: member.corporate_name,
-                deleted_at: member.deleted_at,
-                department: member.department,
-                detail: member.detail,
-                industry: member.industry,
-                position: member.position,
-                email: user.email
-              }
+    fields = Member.__schema__(:fields)
+    query = 
+      from( member in Member,
+        join: user in User, 
+          on: [id: member.user_id],
+        select: {map(member, ^fields), map(user, [:email])}
+      )
 
-  query = if search != "" do
-      from member in query, 
+    query = if search != "" do
+      from( member in query, 
         join: user in User,
-        on: [id: member.user_id],
-      where: like( member.last_name, ^"%#{ search }%" ) or like( member.first_name, ^"%#{ search }%" ) or like( user.email, ^"%#{ search }%" )
+          on: [id: member.user_id],
+      where: like(member.last_name,  ^"%#{search}%") 
+          or like(member.first_name, ^"%#{search}%") 
+          or like(user.email,        ^"%#{search}%")
+      )
     else
       query
     end
 
-   query
-    |> Repo.paginate([page: page])
+    result = Repo.paginate(query, [page: page])
+    Map.put(result, :entries, Enum.map(result.entries, & Map.merge(elem(&1, 0), elem(&1, 1))))
   end
 end

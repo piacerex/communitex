@@ -18,31 +18,7 @@ defmodule Basic.Members do
       [%Member{}, ...]
 
   """
-  def list_members do
-    users = from user in User
-    Repo.all(from member in Member,
-              join: user in ^users,
-              on: [id: member.user_id],
-              select: %{
-                id: member.id,
-                user_id: member.user_id,
-                last_name: member.last_name,
-                last_name_kana: member.last_name_kana,
-                first_name: member.first_name,
-                first_name_kana: member.first_name_kana,
-                image: member.image,
-                birthday: member.birthday,
-                corporate_id: member.corporate_id,
-                corporate_name: member.corporate_name,
-                deleted_at: member.deleted_at,
-                department: member.department,
-                detail: member.detail,
-                industry: member.industry,
-                position: member.position,
-                email: user.email
-              }
-    )
-  end
+  def list_members, do: paginate_members
 
   @doc """
   Gets a single member.
@@ -184,10 +160,10 @@ defmodule Basic.Members do
     Member.changeset(data, attrs)
   end
 
-  def paginate_members(params \\ []) do
+  def paginate_members(page_number \\ 1, search \\ "") do
     users = from user in User
     query = from member in Member,
-              join: user in ^users,
+              join: user in User,
               on: [id: member.user_id],
               select: %{
                 id: member.id,
@@ -208,7 +184,16 @@ defmodule Basic.Members do
                 email: user.email
               }
 
+  query = if search != "" do
+      from member in query, 
+        join: user in User,
+        on: [id: member.user_id],
+      where: like( member.last_name, ^"%#{ search }%" ) or like( member.first_name, ^"%#{ search }%" ) or like( user.email, ^"%#{ search }%" )
+    else
+      query
+    end
+
    query
-    |> Repo.paginate(params)
+    |> Repo.paginate([page: page_number])
   end
 end

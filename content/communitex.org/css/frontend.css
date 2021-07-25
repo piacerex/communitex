@@ -107,13 +107,12 @@ button:hover
   background-color: #20a2ca!important;
 }
 
-input[type='text'], input[type='password'], input[type='file'], input[type='number'], input[type='email'], input[type='tel'], input[type='date'], select, textarea
+input[type='text'], input[type='password'], input[type='search'], input[type='number'], input[type='email'], input[type='tel'], input[type='date'], select, textarea
 {
-  border: 1px solid #c0c0c0;
-  border-radius: 4px;
+  border-bottom: 1px solid #c0c0c0;
 }
 
-.communitex-pagination-body
+.pagination-body
 {
   display: inline-flex;
   justify-content: center;
@@ -126,13 +125,13 @@ input[type='text'], input[type='password'], input[type='file'], input[type='numb
   list-style-type: none;
 }
 
-.communitex-pagination-body > li
+.pagination-body > li
 {
   display: flex;
   align-items: center;
 }
 
-.communitex-pagination-body > li > a
+.pagination-body > li > a
 {
   display:flex;
   align-items: center;
@@ -152,20 +151,39 @@ input[type='text'], input[type='password'], input[type='file'], input[type='numb
   color: rgba(0,0,0,.87);
 }
 
-.communitex-pagination-body > li.is-current > a
+.pagination-body > li.is-current > a
 {
   background: #1976d2 !important;
   color: #fff !important;
   pointer-events:none;
 }
 
-.communitex-pagination-body > .is-prev > a,
-.communitex-pagination-body > .is-next > a
+.pagination-body > .is-prev > a,
+.pagination-body > .is-next > a
 {
   color: #999;
   font-weigth:bold;
 }
 
+.search
+{
+  text-align: right;
+  position: relative;
+}
+
+.search .input
+{
+  width: 400px;
+}
+
+.search .icon
+{
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  font-size: 20px;
+  color: gray;
+}
 
 
 

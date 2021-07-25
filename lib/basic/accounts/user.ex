@@ -8,6 +8,7 @@ defmodule Basic.Accounts.User do
     field :password, :string, virtual: true
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
+    field :deleted_at, :naive_datetime
 
     timestamps()
   end
@@ -38,17 +39,18 @@ defmodule Basic.Accounts.User do
 
   defp validate_email(changeset) do
     changeset
-    |> validate_required([:email])
-    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
+    |> validate_required([:email], message: "必須項目ですのでご入力ください" )  # ユーザ登録／メールアドレス変更で既存メールアドレス
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "「@」がありません、もしくは半角スペースは使えません" )
     |> validate_length(:email, max: 160)
-    |> unsafe_validate_unique(:email, Basic.Repo)
+    |> unsafe_validate_unique(:email, Basic.Repo, message: "すでに登録済みです" )  # ユーザ登録／メールアドレス変更で既存メールアドレス
     |> unique_constraint(:email)
   end
 
   defp validate_password(changeset, opts) do
     changeset
-    |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 80)
+    |> validate_required([:password], message: "必須項目ですのでご入力ください" )  # ユーザ登録／PW変更
+    |> validate_length(:password, min: 8, message: "%{count}文字以上にしてください" )  # ユーザ登録／PW変更
+    |> validate_length(:password, max: 16, message: "%{count}文字以内にしてください" )  # ユーザ登録／PW変更
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
@@ -79,7 +81,7 @@ defmodule Basic.Accounts.User do
     |> validate_email()
     |> case do
       %{changes: %{email: _}} = changeset -> changeset
-      %{} = changeset -> add_error(changeset, :email, "did not change")
+      %{} = changeset -> add_error(changeset, :email, "変更ができません")  # メールアドレス変更で既存メールアドレス
     end
   end
 
@@ -98,7 +100,7 @@ defmodule Basic.Accounts.User do
   def password_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:password])
-    |> validate_confirmation(:password, message: "does not match password")
+    |> validate_confirmation(:password, message: "パスワードが一致しません" )  # PW変更でPW確認不一致
     |> validate_password(opts)
   end
 
@@ -116,7 +118,8 @@ defmodule Basic.Accounts.User do
   If there is no user or the user doesn't have a password, we call
   `Pbkdf2.no_user_verify/0` to avoid timing attacks.
   """
-  def valid_password?(%Basic.Accounts.User{hashed_password: hashed_password}, password)
+#  def valid_password?(%Basic.Accounts.User{hashed_password: hashed_password}, password)
+  def valid_password?(%Basic.Accounts.User{hashed_password: hashed_password, confirmed_at: confirmed_at}, password)
       when is_binary(hashed_password) and byte_size(password) > 0 do
     Pbkdf2.verify_pass(password, hashed_password)
   end
@@ -133,7 +136,7 @@ defmodule Basic.Accounts.User do
     if valid_password?(changeset.data, password) do
       changeset
     else
-      add_error(changeset, :current_password, "is not valid")
+      add_error(changeset, :current_password, "正しくありません")  # メールアドレス変更／PW変更でPW間違い
     end
   end
 end

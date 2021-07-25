@@ -160,7 +160,7 @@ defmodule Basic.Members do
     Member.changeset(data, attrs)
   end
 
-  def paginate_members(page_number \\ 1, search \\ "") do
+  def paginate_members(page \\ 1, search \\ "") do
     users = from user in User
     query = from member in Member,
               join: user in User,
@@ -194,6 +194,6 @@ defmodule Basic.Members do
     end
 
    query
-    |> Repo.paginate([page: page_number])
+    |> Repo.paginate([page: page])
   end
 end

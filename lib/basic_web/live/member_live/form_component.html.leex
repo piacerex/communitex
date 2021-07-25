@@ -6,27 +6,27 @@
   phx_change: "validate",
   phx_submit: "save" %>
 
-  <%= label f, :user_id %>
+  <%= label f, :user_id, "ユーザID" %>
   <%= number_input f, :user_id %>
   <%= error_tag f, :user_id %>
 
-  <%= label f, :last_name %>
+  <%= label f, :last_name, "姓" %>
   <%= text_input f, :last_name %>
   <%= error_tag f, :last_name %>
 
-  <%= label f, :first_name %>
+  <%= label f, :first_name, "名" %>
   <%= text_input f, :first_name %>
   <%= error_tag f, :first_name %>
 
-  <%= label f, :last_name_kana %>
+  <%= label f, :last_name_kana, "セイ" %>
   <%= text_input f, :last_name_kana %>
   <%= error_tag f, :last_name_kana %>
 
-  <%= label f, :first_name_kana %>
+  <%= label f, :first_name_kana, "メイ" %>
   <%= text_input f, :first_name_kana %>
   <%= error_tag f, :first_name_kana %>
 
-  <%= label f, :detail %>
+  <%= label f, :detail, "詳細" %>
   <%= textarea f, :detail %>
   <%= error_tag f, :detail %>
 
@@ -44,33 +44,34 @@
   <%= live_img_preview entry, width: 75 %>
 <% end %>
 
-  <%= label f, :birthday %>
+  <%= label f, :birthday, "生年月日" %>
   <%= datetime_select f, :birthday %>
   <%= error_tag f, :birthday %>
-
-  <%= label f, :corporate_id %>
+<!--
+  <%= label f, :corporate_id, "企業ID" %>
   <%= number_input f, :corporate_id %>
   <%= error_tag f, :corporate_id %>
+-->
 
-  <%= label f, :corporate_name %>
+  <%= label f, :corporate_name, "企業名" %>
   <%= text_input f, :corporate_name %>
   <%= error_tag f, :corporate_name %>
 
-  <%= label f, :industry %>
+  <%= label f, :industry, "業種" %>
   <%= text_input f, :industry %>
   <%= error_tag f, :industry %>
 
-  <%= label f, :department %>
+  <%= label f, :department, "部署" %>
   <%= text_input f, :department %>
   <%= error_tag f, :department %>
 
-  <%= label f, :position %>
+  <%= label f, :position, "役職" %>
   <%= text_input f, :position %>
   <%= error_tag f, :position %>
-
+<!--
   <%= label f, :deleted_at %>
   <%= datetime_select f, :deleted_at %>
   <%= error_tag f, :deleted_at %>
-
+-->
   <%= submit "Save", phx_disable_with: "Saving..." %>
 </form>

@@ -37,6 +37,11 @@
   </li>
 
   <li>
+    <strong>Email:</strong>
+    <%= @member.email %>
+  </li>
+
+  <li>
     <strong>Detail:</strong>
     <%= @member.detail %>
   </li>
@@ -79,12 +84,12 @@
     <strong>Position:</strong>
     <%= @member.position %>
   </li>
-
+<!--
   <li>
     <strong>Deleted at:</strong>
     <%= @member.deleted_at %>
   </li>
-
+-->
 </ul>
 
 <span><%= live_patch "Edit", to: Routes.member_show_path(@socket, :edit, @member.id), class: "button" %></span>

@@ -25,7 +25,8 @@ defmodule BasicWeb.UserSettingsController do
         conn
         |> put_flash(
           :info,
-          "A link to confirm your email change has been sent to the new address."
+#          "A link to confirm your email change has been sent to the new address."
+          "メールアドレス変更を確認するためのリンクを新しいメールアドレスに送信しました"
         )
         |> redirect(to: Routes.user_settings_path(conn, :edit))
 
@@ -41,7 +42,8 @@ defmodule BasicWeb.UserSettingsController do
     case Accounts.update_user_password(user, password, user_params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "Password updated successfully.")
+#        |> put_flash(:info, "Password updated successfully.")
+        |> put_flash(:info, "パスワードの更新に成功しました")
         |> put_session(:user_return_to, Routes.user_settings_path(conn, :edit))
         |> UserAuth.log_in_user(user)
 
@@ -54,12 +56,14 @@ defmodule BasicWeb.UserSettingsController do
     case Accounts.update_user_email(conn.assigns.current_user, token) do
       :ok ->
         conn
-        |> put_flash(:info, "Email changed successfully.")
+#        |> put_flash(:info, "Email changed successfully.")
+        |> put_flash(:info, "メールアドレス変更に成功しました")
         |> redirect(to: Routes.user_settings_path(conn, :edit))
 
       :error ->
         conn
-        |> put_flash(:error, "Email change link is invalid or it has expired.")
+#        |> put_flash(:error, "Email change link is invalid or it has expired.")
+        |> put_flash(:error, "このメールアドレス変更URLは正しくないか、期限切れとなっております")
         |> redirect(to: Routes.user_settings_path(conn, :edit))
     end
   end

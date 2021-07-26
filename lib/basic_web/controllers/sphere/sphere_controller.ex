@@ -57,7 +57,13 @@ defmodule BasicWeb.SphereController do  #TODO: 本来のコントローラ副作
     end
   end
 
-  def current_user( conn ), do: if Map.has_key?( conn.assigns, :current_user ), do: conn.assigns.current_user.email, else: "nobody"
+  def current_user( conn ) do
+    if Map.has_key?(conn.assigns, :current_user) && conn.assigns.current_user != nil do
+      conn.assigns.current_user.email
+    else
+      "nobody"
+    end
+  end
 
   def edit( conn, %{ "path_" => path_ } ), do: render( conn, "edit.html", params: dispatch( conn, path_ ) )
 

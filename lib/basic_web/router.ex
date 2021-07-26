@@ -49,7 +49,7 @@ defmodule BasicWeb.Router do
     plug :put_root_layout, false
 #    plug :protect_from_forgery
     plug :put_secure_browser_headers
-#    plug :fetch_current_user
+    plug :fetch_current_user
   end
 
   scope "/sphere/", BasicWeb do
@@ -85,7 +85,8 @@ defmodule BasicWeb.Router do
   scope "/", BasicWeb do
     pipe_through [:browser]
 
-    delete "/users/log_out", UserSessionController, :delete
+#    delete "/users/log_out", UserSessionController, :delete
+    get "/users/log_out", UserSessionController, :delete
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
     get "/users/confirm/:token", UserConfirmationController, :confirm

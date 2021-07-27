@@ -15,7 +15,7 @@
 <%= csrf_meta_tag() %>
 <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
 
-<title></title>
+<title>communitex.org</title>
 
 <link rel="icon" href="/images/favicon.png">
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
@@ -112,16 +112,7 @@ var app = new Vue
   vuetify: new Vuetify(),
   data: 
   {
-  current_user: 
-  {
     email: '<%= if @current_user != nil, do: @current_user.email, else: "" %>', 
-  }, 
-  },
-  mounted: function() 
-  {
-  }, 
-  computed: 
-  {
   }, 
 } )
 </script>

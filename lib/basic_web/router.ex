@@ -108,7 +108,7 @@ defmodule BasicWeb.Router do
   end
 
   scope "/", BasicWeb do
-    pipe_through :sphere_browser
+    pipe_through :browser
 
     get "/*path_",  SphereController, :index
     post "/*path_", SphereController, :index

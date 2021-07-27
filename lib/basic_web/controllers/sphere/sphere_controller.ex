@@ -19,7 +19,8 @@ defmodule BasicWeb.SphereController do  #TODO: 本来のコントローラ副作
 
       { template, new_params } = case File.read( paths.absolute_path ) do
         { :ok, body } -> 
-          parsed = Markdown.dispatch( paths.relative_path, body, params, conn, current_user( conn ) )
+#          parsed = Markdown.dispatch( paths.relative_path, body, params, conn, current_user( conn ) )
+          parsed = Markdown.dispatch( paths.relative_path, body, params, nil )
           merge_params = Map.merge( params, parsed )
           case merge_params[ "naked" ] do
             true -> { "naked.html",             merge_params }
@@ -65,7 +66,8 @@ defmodule BasicWeb.SphereController do  #TODO: 本来のコントローラ副作
     end
   end
 
-  def edit( conn, %{ "path_" => path_ } ), do: render( conn, "edit.html", params: dispatch( conn, path_ ) )
+  def edit( conn, %{ "path_" => path_ } ), do: render( conn, "edit.html", params: 
+  dispatch( conn, path_ ) )
 
   def show( conn, %{ "path_" => path_ } ), do: render( conn |> put_layout( "plane.html" ), "show.html", params: dispatch( conn, path_ ) )
 
@@ -74,7 +76,8 @@ defmodule BasicWeb.SphereController do  #TODO: 本来のコントローラ副作
     paths = build_paths( content_path, Application.fetch_env!( :sphere, :content_folder ) )
     body = Fl.read_if_exist( paths.absolute_path )
 
-    Markdown.dispatch( paths.relative_path, body, :no_eval, conn, current_user( conn ) )
+#    Markdown.dispatch( paths.relative_path, body, :no_eval, conn, current_user( conn ) )
+    Markdown.dispatch( paths.relative_path, body, :no_eval, nil )
   end
 
   def build_paths( content_path, folder ) do

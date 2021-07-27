@@ -1,14 +1,18 @@
 defmodule Markdown do
 
-	def dispatch( relative_path, body, params, conn, current_email ) do
+	def dispatch( relative_path, body, params, current_email ) do
 		case body do
 			""       -> Markdown.new(    current_email )
 			"folder" -> Markdown.folder( current_email )
 			_        -> 
 				case Path.extname( relative_path ) do
+					".leex"  -> case relative_path |> String.split_at( -5 ) |> elem( 0 ) |> Path.extname do
+					    ".html" -> eex( body, params, current_email )
+					    ".json" -> eex( body, params, current_email )
+					  end
 					".eex"  -> case relative_path |> String.split_at( -4 ) |> elem( 0 ) |> Path.extname do
-					    ".html" -> eex( body, params, conn, current_email )
-					    ".json" -> eex( body, params, conn, current_email )
+					    ".html" -> eex( body, params, current_email )
+					    ".json" -> eex( body, params, current_email )
 					  end
 					".png"  -> image( relative_path, current_email )
 					".jpg"  -> image( relative_path, current_email )
@@ -25,10 +29,10 @@ defmodule Markdown do
 			} )
 	end
 
-	def eex( body, params, conn, current_email ) do
+	def eex( body, params, current_email ) do
 	  compiled_body = case params do
 	    :no_eval -> body
-	    params   -> body |> String.replace( "@params", "params" ) |> EEx.eval_string( [ params: params, conn: conn ] )
+	    params   -> body |> String.replace( "@params", "params" ) |> EEx.eval_string( [ params: params ] )
 	  end
 	  parse( compiled_body, current_email, true,  true )
 	end

@@ -112,7 +112,10 @@ var app = new Vue
   vuetify: new Vuetify(),
   data: 
   {
-    email: '<%= if @current_user != nil, do: @current_user.email, else: "" %>', 
+    current_user:
+    {
+      email: '<%= if @current_user != nil, do: @current_user.email, else: "" %>', 
+    },
   }, 
 } )
 </script>

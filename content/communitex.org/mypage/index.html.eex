@@ -2,60 +2,39 @@
 Title: 
 CreateDate: 2021/04/01 12:21:52.800054
 Creator: m-mori@digi-dock.com
-UpdateDate: 2021/04/06 10:28:54
-Updater: j-kimura@digi-dock.com
+UpdateDate: 2021/07/27 20:51:05
+Updater: 
 -->
 
-<!--
-Title:
-CreateDate: 2021/03/08 22:09:55
-Creator: m-mori@digi-dock.com
-UpdateDate: 2021/03/08 22:10:35
-Updater: j-kimura@digi-dock.com
--->
-<%
-conn = BasicWeb.UserAuth.require_authenticated_user( conn, nil )
+<h1>
+<br>
+マイページ
+<p style="font-size: 1rem;">My page.</p>
+</h1>
 
-import Ecto.Query, warn: false
-alias Basic.Repo
-alias Basic.Materials.Material
-alias Basic.Assigns.Assign
-materials = case conn.assigns[ :current_user ] do
-  nil -> []
-  current_user ->
-    MaterialsEnhance.list_mypage( current_user.id )
-    |> Enum.with_index
-    |> Enum.map( & %{ i: elem( &1, 1 ) + 1, data: elem( &1, 0 ) } )
-end
-%>
-<section class="page-visual">
-    <div class="page-visual__inner">
-        <div class="page-visual-title-unit">
-            <h1 class="page-visual-title-unit__title">マイページ</h1>
-            <p class="page-visual-title-unit__lead">My page</p>
-        </div>
-    </div>
-</section>
 <div class="main">
-    <div class="page-content-container">
-        <div class="section-heading-unit02">
-            <h2 class="heading02">学習可能な教材一覧</h2>
-        </div>
-        
-        <%= if materials == [] do %>
-        <p>学習可能な教材がございません</p>
-        <% else %>
-        <p>以下の教材が学習可能です</p>
-        <div class="card01-group card01-group-col3">
-    
-            <%= for material <- materials do %>
-            <v-card :hover="true" :href="'<%= material.data.url %>'">
-                <img src="<%= material.data.image %>">
-                <v-card-title style="color: #417caa;"><%= material.data.title %></v-card-title>
-            </v-card>
-            <% end %>
-        </div>
-        <% end %>
-        
-    </div>
+
+<article class="article-unit">
+
+<div class="article-unit-item article-unit-chamber">
+<figure class="article-unit-chamber__thumb"><img src="/images/top.png"></figure>
+</div>
+
+<div class="article-unit-item article-unit-content">
+  <h2 class="article-unit-content__title">コミュニティサイトを素早く立ち上げるためのOSS</h2>
+  <div class="article-unit-content__text">
+
+    <p>Communitexは、コミュニティサイトを気軽に作れる軽量CMS付きElixir製OSSです</p>
+
+    <p>Web上で、マークダウンを書くだけで簡単なページを作るところから始められ、HTML／CSS／JavaScriptによる本格的なサイト構築へと発展させていくことができます</p>
+
+    <p>静的なWebページだけで無く、Elixirコードを実行するページや、APIも、Web上だけで開発でき、リリース作業は不要です</p>
+
+    <p>顔写真やアイコン画像のアップロードも可能な会員登録／ログインやメール本文テンプレート編集、動画教材配信／受講／履修管理、商品管理、販売実績／報酬支払い管理も付いているので、コミュニティを始めるために必要なものが揃っています</p>
+
+  </div>
+</div>
+
+</article>
+
 </div>

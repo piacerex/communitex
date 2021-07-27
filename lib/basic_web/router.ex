@@ -102,7 +102,7 @@ defmodule BasicWeb.Router do
     live "/members/:id", MemberLive.Show, :show
     live "/members/:id/show/edit", MemberLive.Show, :edit
 
-    live "/*path_", PageLive, :index
+    live "/*path_", SphereLive, :index
 
 #    live "/", PageLive, :index
 #    get "/*path_", PageController, :index
@@ -112,8 +112,8 @@ defmodule BasicWeb.Router do
   scope "/", BasicWeb do
     pipe_through :browser
 
-    get "/*path_",  SphereController, :index
-    post "/*path_", SphereController, :index
+#    get "/*path_",  SphereController, :index
+#    post "/*path_", SphereController, :index
   end
 
   # Other scopes may use custom stacks.

@@ -21,20 +21,24 @@ defmodule PagePath do
   def complement_pagename( content_path, folder ) do
     full_path = Path.join( [ folder, content_path ] )
     filename = cond do
-      !File.dir?( full_path )                                      -> ""
-      File.exists?( Path.join( [ full_path, "index.html.eex" ] ) ) -> "index.html.eex"
-      File.exists?( Path.join( [ full_path, "index.html"     ] ) ) -> "index.html"
-      File.exists?( Path.join( [ full_path, "index.json.eex" ] ) ) -> "index.json.eex"
-      true                                                         -> "index.md"
+      !File.dir?( full_path )                                       -> ""
+      File.exists?( Path.join( [ full_path, "index.html.leex" ] ) ) -> "index.html.leex"
+      File.exists?( Path.join( [ full_path, "index.json.leex" ] ) ) -> "index.json.leex"
+      File.exists?( Path.join( [ full_path, "index.html.eex"  ] ) ) -> "index.html.eex"
+      File.exists?( Path.join( [ full_path, "index.json.eex"  ] ) ) -> "index.json.eex"
+      File.exists?( Path.join( [ full_path, "index.html"      ] ) ) -> "index.html"
+      true                                                          -> "index.md"
     end
     Path.join( [ content_path, filename ] )
   end
 
   def default_filenames() do
     [ 
+      "index.html.leex", 
+      "index.json.leex", 
       "index.html.eex", 
-      "index.html", 
       "index.json.eex", 
+      "index.html", 
       "index.md", 
     ]
   end
@@ -56,9 +60,11 @@ defmodule PagePath do
   """
   def fix_at_path_end_to_slash( "",  _folder ), do: "/"
   def fix_at_path_end_to_slash( "/", _folder ), do: "/"
+  def fix_at_path_end_to_slash( "/index.html.leex", _folder ), do: "/"
+  def fix_at_path_end_to_slash( "/index.json.leex", _folder ), do: "/"
   def fix_at_path_end_to_slash( "/index.html.eex", _folder ), do: "/"
-  def fix_at_path_end_to_slash( "/index.html", _folder ), do: "/"
   def fix_at_path_end_to_slash( "/index.json.eex", _folder ), do: "/"
+  def fix_at_path_end_to_slash( "/index.html", _folder ), do: "/"
   def fix_at_path_end_to_slash( "/index.md", _folder ), do: "/"
   def fix_at_path_end_to_slash( request_path, folder ) do
     full_path = Path.join( folder, request_path )

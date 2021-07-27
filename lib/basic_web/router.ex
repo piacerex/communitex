@@ -102,6 +102,8 @@ defmodule BasicWeb.Router do
     live "/members/:id", MemberLive.Show, :show
     live "/members/:id/show/edit", MemberLive.Show, :edit
 
+    live "/*path_", PageLive, :index
+
 #    live "/", PageLive, :index
 #    get "/*path_", PageController, :index
 #    post "/*path_", PageController, :index

@@ -41,14 +41,13 @@ config :basic, BasicWeb.Endpoint,
 # See `mix help release` for more information.
 
 config :sphere,
+  mail_url_domain:  "https://communitex.org", 
+  mail_from:        "noreply@communitex.org", 
   content_root:     "/",
   content_folder:   "content/communitex.org",
   github_url:       "https://github.com/piacerex/communitex.org",
   local_root:       "/app",
   local_check_file: "index.html"
-
-config :spira,
-  javascript_handler: "this.loadMarkdown"
 
 config :basic, Basic.Mailer,
   adapter: Bamboo.SMTPAdapter,
@@ -58,7 +57,7 @@ config :basic, Basic.Mailer,
   username: "noreply@communitex.org",
   password: "",
   tls: :if_available,
-  allowed_tls_versions: [:"tlsv1", :"tlsv1.1", :"tlsv1.2"], 
+  allowed_tls_versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"], 
   ssl: false,
   retries: 1,
   no_mx_lookups: false,

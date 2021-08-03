@@ -987,35 +987,9 @@ var app = new Vue
 		{
 			console.log( 'onClickFile' )
 			console.log( item )
-			await <%= Application.fetch_env!( :spira, :javascript_handler ) %>( item.parent_folder + item.name )
-			//console.log( '[' + this.content.error + ']' )
-			if ( this.content.error != '' )
-			{
-				alert( 'Load error: ' + this.content.error )
-			}
-			else
-			{
-				history.replaceState( '', '', '/sphere/edit' + item.parent_folder + item.name )
-				history.go()
-				this.is_open_browser = false
-			}
-		}, 
-		loadMarkdown: async function( path )
-		{
-			console.log( 'START loadMarkdown' )
-			console.log( encodeURI( path ) )
-/*
-			await axios.get( '/api/sphere/load_markdown?path=' + encodeURI( path ) )
-			.then
-			( 
-				response => 
-				{
-					this.content = response.data
-					//console.log( this.content )
-				} 
-			)
-*/
-			console.log( 'END loadMarkdown' )
+			history.replaceState( '', '', '/sphere/edit' + item.parent_folder + item.name )
+			history.go()
+			this.is_open_browser = false
 		}, 
 		onClickAddFileMode: function( event, parent_folder )
 		{

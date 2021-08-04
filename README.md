@@ -44,6 +44,53 @@ or
 mix phx.gen.html Blog Post posts title:string body:text
 ```
 
+## Setup Gigalixir
+
+```
+gigalixir pg:create --free
+```
+
+```
+gigalixir run mix ecto.migrate
+gigalixir ps:migrate
+```
+
+## Troubleshooting
+
+### if ``mix ecto.migrate`` may fail on local
+
+```
+mix ecto.migrate --step 0
+```
+
+### if ``mix ecto.migrate`` may fail on Gigalixir
+
+You perform the migration with specified time stamp as shown below, it will be restored.
+
+```
+gigalixir run mix ecto.migrate -v XXXXXXXXXXXXXX
+```
+
+or
+
+```
+gigalixir run mix ecto.migrate -n XXXXXXXXXXXXXX
+```
+
+For example:
+
+```
+gigalixir run mix ecto.migrate -v 20210309150445
+```
+
+### When Gigalixir is not updated with push
+
+You perform pushing to Gigalixir with cache clean as shown below.
+
+```
+git -c http.extraheader="GIGALIXIR-CLEAN: true" push gigalixir
+```
+
 ## Build processes (for communitex comitter only)
 
 ```

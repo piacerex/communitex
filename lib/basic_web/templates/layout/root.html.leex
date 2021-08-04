@@ -13,7 +13,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 <%= csrf_meta_tag() %>
-<link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+<link phx-track-static rel="stylesheet" href="/css/<%= @ui["style"] %>app.css"/>
 
 <title>communitex.org</title>
 
@@ -35,7 +35,7 @@
 <meta property="og:url" content="https://communitex.org/">
 <meta property="og:image" content="https://communitex.org/images/ogp-image.png">
 
-<link href="/css/app.css" rel="stylesheet">
+<link href="/css/<%= @ui["style"] %>app.css" rel="stylesheet">
 
 <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
 
@@ -53,8 +53,9 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
-<link rel="stylesheet" href="/css/markdown.css">
-<link rel="stylesheet" href="/css/frontend.css">
+<link rel="stylesheet" href="/css/<%= @ui["style"] %>markdown.css">
+<link rel="stylesheet" href="/css/<%= @ui["style"] %>frontend.css">
+<%= raw(@ui["cdns"]) %>
 
 </head>
 

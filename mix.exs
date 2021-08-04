@@ -37,12 +37,12 @@ defmodule Basic.MixProject do
       {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:earmark, "~> 1.4", only: :dev},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.1", only: :dev},
+      {:dialyxir, "~> 1.1", only: :dev, runtime: false},
 
-      {:shotrize, git: "https://github.com/piacerex/shotrize.git", branch: "v1.0"}, 
+      {:shotrize, git: "https://github.com/piacerex/shotrize.git", branch: "v1.0"},
       {:smallex, git: "https://github.com/piacerex/smallex.git", branch: "v1.0"},
-      {:git_cli, "~> 0.3"}, 
-      {:websockex, "~> 0.4"}, 
+      {:git_cli, "~> 0.3"},
+      {:websockex, "~> 0.4"},
 
       {:phx_gen_auth, "~> 0.7"},
       {:bamboo, "~> 2.1"},

@@ -17,6 +17,15 @@ defmodule BasicWeb.Router do
     plug :accepts, ["json"]
   end
 
+  if Mix.env() == :dev do
+    scope "/" do
+      pipe_through :browser
+
+      # If using Phoenix
+      forward "/sent_emails", Bamboo.SentEmailViewerPlug
+    end
+  end
+
   ## Authentication routes
 
   scope "/", BasicWeb do
@@ -43,7 +52,7 @@ defmodule BasicWeb.Router do
   scope "/", BasicWeb do
     pipe_through [:browser]
 
-#    delete "/users/log_out", UserSessionController, :delete
+    #    delete "/users/log_out", UserSessionController, :delete
     get "/users/log_out", UserSessionController, :delete
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create
@@ -62,12 +71,12 @@ defmodule BasicWeb.Router do
   scope "/api/", BasicWeb do
     pipe_through :api
 
-    #TODO: Shotrize化する？
-    get    "/file/list",        FileController, :list
-    post   "/file/upload",      FileController, :upload
-    put    "/file/new_file",    FileController, :new_file
-    put    "/file/new_folder",  FileController, :new_folder
-    delete "/file/remove",      FileController, :remove
+    # TODO: Shotrize化する？
+    get "/file/list", FileController, :list
+    post "/file/upload", FileController, :upload
+    put "/file/new_file", FileController, :new_file
+    put "/file/new_folder", FileController, :new_folder
+    delete "/file/remove", FileController, :remove
 
     get "/*path_", ApiController, :index
     post "/*path_", ApiController, :index
@@ -80,13 +89,13 @@ defmodule BasicWeb.Router do
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, false
-#    plug :protect_from_forgery
+    #    plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
   end
 
   scope "/sphere/", BasicWeb do
-#    pipe_through [:sphere_browser, :require_authenticated_user]
+    #    pipe_through [:sphere_browser, :require_authenticated_user]
     pipe_through :sphere_browser
 
     get "/edit/*path_", SphereController, :edit
@@ -104,16 +113,16 @@ defmodule BasicWeb.Router do
 
     live "/*path_", SphereLive, :index
 
-#    live "/", PageLive, :index
-#    get "/*path_", PageController, :index
-#    post "/*path_", PageController, :index
+    #    live "/", PageLive, :index
+    #    get "/*path_", PageController, :index
+    #    post "/*path_", PageController, :index
   end
 
   scope "/", BasicWeb do
     pipe_through :browser
 
-#    get "/*path_",  SphereController, :index
-#    post "/*path_", SphereController, :index
+    #    get "/*path_",  SphereController, :index
+    #    post "/*path_", SphereController, :index
   end
 
   # Other scopes may use custom stacks.

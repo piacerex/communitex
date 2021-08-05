@@ -5,24 +5,14 @@
 use Mix.Config
 
 config :sphere,
-  mail_url_domain:  "https://communitex.org", 
-  mail_from:        "noreply@communitex.org", 
-  content_root:     "/",
-  content_folder:   "content/communitex.org",
-  github_url:       "https://github.com/piacerex/communitex.org",
-  local_root:       "/app",
+  mail_url_domain: "http://localhost:4000",
+  mail_from: "noreply@communitex.org",
+  content_root: "/",
+  content_folder: "content/communitex.org",
+  github_url: "your github url",
+  local_root: File.cwd!(),
   local_check_file: "index.html"
 
-config :basic, Basic.Mailer,
-  adapter: Bamboo.SMTPAdapter,
-  server: "",
-  hostname: "communitex.org",
-  port: 21,
-  username: "noreply@communitex.org",
-  password: "",
-  tls: :if_available,
-  allowed_tls_versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"], 
-  ssl: false,
-  retries: 1,
-  no_mx_lookups: false,
-  auth: :if_available
+# Mailer Setting
+# access to /sent_emails
+config :basic, Basic.Mailer, adapter: Bamboo.LocalAdapter

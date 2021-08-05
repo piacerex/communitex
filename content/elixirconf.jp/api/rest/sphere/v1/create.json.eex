@@ -1,0 +1,39 @@
+require IEx
+#IEx.pry
+
+relative_path = @params[ "data" ][ "path" ]
+if relative_path == "" || relative_path == nil do
+	{ :error, "Path was empty..." }
+else
+	pwd = File.cwd!()
+	folder = Application.fetch_env!( :sphere, :content_folder )
+	content_path = [ pwd, folder ] |> Path.join
+	absolute_path = [ pwd, folder, relative_path ] |> Path.join
+	content = case Path.extname( relative_path ) do
+		".js"  -> @params[ "data" ][ "body" ]
+		".css" -> @params[ "data" ][ "body" ]
+		_ ->
+			"<!--\n" <>
+			"Title: "		<> @params[ "data" ][ "title" ]			<> "\n" <>
+			"CreateDate: "	<> @params[ "data" ][ "create_date" ]	<> "\n" <>
+			"Creator: "		<> @params[ "data" ][ "creator" ]		<> "\n" <>
+			"UpdateDate: "	<> Dt.to_ymdhms( Timex.now )			<> "\n" <>
+			"Updater: "		<> @params[ "data" ][ "updater" ]		<> "\n" <>
+			"-->\n" <>
+			"\n" <>
+			@params[ "data" ][ "body" ]
+	end
+	if File.mkdir_p( Path.dirname( absolute_path ) ) == :ok do
+		result = File.write( absolute_path, content )
+    if String.starts_with?( relative_path, "/api/" ), do: File.write( Path.join( [ pwd, "lib/basic_web/templates", relative_path ] ), @params[ "data" ][ "body" ] )
+
+    GitOperator.push( Path.join( File.cwd!(), Application.fetch_env!( :sphere, :content_folder ) ), "update" )
+
+		case result do
+			:ok -> { :ok, "" }
+			_   -> result
+		end
+	else
+		{ :error, "making folder failure..." }
+	end
+end

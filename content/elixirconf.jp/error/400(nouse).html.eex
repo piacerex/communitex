@@ -1,0 +1,31 @@
+<!--
+Title: 
+CreateDate: 2021/04/11 14:59:15.787808
+Creator: m-mori@digi-dock.com
+UpdateDate: 2021/07/27 20:39:44
+Updater: 
+-->
+
+<h1>
+<br>
+お探しのページが見つかりません
+<p style="font-size: 1rem;">404 Not Found</p>
+</h1>
+
+<div class="main">
+  <div class="page-content-container">
+    <div class="box01">
+      <div class="box01__content">
+        <div class="text-unit">
+          <p class="text-center">
+            入力されたURLやお使いのブラウザのキャッシュ破損があり得ます。<br>
+            閲覧履歴データやCookieを消去してから再度アクセスを行ってください。<br>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group-center">
+      <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" href="/">トップページに戻る</v-btn>
+    </div>
+  </div>
+</div>

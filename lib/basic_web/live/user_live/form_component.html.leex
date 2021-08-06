@@ -10,17 +10,5 @@
   <%= textarea f, :email %>
   <%= error_tag f, :email %>
 
-  <%= label f, :hashed_password %>
-  <%= text_input f, :hashed_password %>
-  <%= error_tag f, :hashed_password %>
-
-  <%= label f, :confirmed_at %>
-  <%= datetime_select f, :confirmed_at %>
-  <%= error_tag f, :confirmed_at %>
-
-  <%= label f, :deleted_at %>
-  <%= datetime_select f, :deleted_at %>
-  <%= error_tag f, :deleted_at %>
-
   <%= submit "Save", phx_disable_with: "Saving..." %>
 </form>

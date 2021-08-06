@@ -12,18 +12,28 @@
 <ul>
 
   <li>
+    <strong>Id:</strong>
+    <%= @user.id %>
+  </li>
+
+  <li>
     <strong>Email:</strong>
     <%= @user.email %>
   </li>
 
   <li>
-    <strong>Hashed password:</strong>
-    <%= @user.hashed_password %>
+    <strong>Confirmed at:</strong>
+    <%= @user.confirmed_at %>
   </li>
 
   <li>
-    <strong>Confirmed at:</strong>
-    <%= @user.confirmed_at %>
+    <strong>Inserted at:</strong>
+    <%= @user.inserted_at %>
+  </li>
+
+  <li>
+    <strong>Updated at:</strong>
+    <%= @user.updated_at %>
   </li>
 
   <li>

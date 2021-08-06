@@ -12,11 +12,14 @@ defmodule BasicWeb.SphereLive do
     content_path = PagePath.complement_pagename(content_path, content_folder)
     if String.contains?(content_path, [".html", ".md"]), do: ContentFolder.update(content_folder)
 
+    CssSwitcher.start_link()
     css_pysical_folder = Path.join([Application.fetch_env!(:sphere, :local_root), content_folder, "css"])
     style_folder = folder_in_between_if_exists(params["style"], css_pysical_folder, "")
     cdns_file = Path.join([css_pysical_folder, style_folder, "cdns.html"])
     cdns = if File.exists?(cdns_file), do: File.read!(cdns_file), else: ""
-    {:ok, assign(socket, params: params, ui: %{"style" => style_folder, "cdns" => cdns})}
+    CssSwitcher.update(%{current: style_folder, cdns: cdns})
+
+    {:ok, assign(socket, params: params)}
   end
 
   @impl true

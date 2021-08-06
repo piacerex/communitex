@@ -1,3 +1,8 @@
+<%
+current_css  = if CssSwitcher.is_alive(), do: CssSwitcher.current(), else: ""
+current_cdns = if CssSwitcher.is_alive(), do: CssSwitcher.cdns(),    else: ""
+current_js   = if  JsSwitcher.is_alive(), do:  JsSwitcher.current(),  else: ""
+%>
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -13,7 +18,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 <%= csrf_meta_tag() %>
-<link phx-track-static rel="stylesheet" href="/css/<%= @ui["style"] %>app.css"/>
+<link phx-track-static rel="stylesheet" href="/css/<%= current_css %>app.css"/>
 
 <title>communitex.org</title>
 
@@ -35,9 +40,9 @@
 <meta property="og:url" content="https://communitex.org/">
 <meta property="og:image" content="https://communitex.org/images/ogp-image.png">
 
-<link href="/css/<%= @ui["style"] %>app.css" rel="stylesheet">
+<link href="/css/<%= current_css %>app.css" rel="stylesheet">
 
-<script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+<script defer phx-track-static type="text/javascript" src="/js/<%= current_js %>app.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
 <script src="https://unpkg.com/axios@0.x/dist/axios.min.js"></script>
@@ -53,9 +58,9 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
-<link rel="stylesheet" href="/css/<%= @ui["style"] %>markdown.css">
-<link rel="stylesheet" href="/css/<%= @ui["style"] %>frontend.css">
-<%= raw(@ui["cdns"]) %>
+<link rel="stylesheet" href="/css/<%= current_css %>markdown.css">
+<link rel="stylesheet" href="/css/<%= current_css %>frontend.css">
+<%= raw(current_cdns) %>
 
 </head>
 

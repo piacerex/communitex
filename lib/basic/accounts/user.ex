@@ -13,6 +13,13 @@ defmodule Basic.Accounts.User do
     timestamps()
   end
 
+  @doc false
+  def changeset(user, attrs) do
+    user
+    |> cast(attrs, [:email, :hashed_password, :confirmed_at, :deleted_at])
+    |> validate_required([:email])
+  end
+
   @doc """
   A user changeset for registration.
 

@@ -106,4 +106,6 @@ mix shotrize.apply
 
 ```
 mix phx.gen.live Members Member members user_id:integer last_name:string first_name:string last_name_kana:string first_name_kana:string detail:text image:string birthday:datetime corporate_id:integer corporate_name:string industry:string department:string position:string deleted_at:datetime
+
+mix phx.gen.live Blogs Blog blogs post_id:string user_id:integer title:string image:binary tags:string body:text likes:integer views:integer deleted_at:datetime
 ```

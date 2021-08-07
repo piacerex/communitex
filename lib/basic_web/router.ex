@@ -107,9 +107,20 @@ defmodule BasicWeb.Router do
     live "/members", MemberLive.Index, :index
     live "/members/new", MemberLive.Index, :new
     live "/members/:id/edit", MemberLive.Index, :edit
-
     live "/members/:id", MemberLive.Show, :show
     live "/members/:id/show/edit", MemberLive.Show, :edit
+
+    live "/users", UserLive.Index, :index
+    live "/users/new", UserLive.Index, :new
+    live "/users/:id/edit", UserLive.Index, :edit
+    live "/users/:id", UserLive.Show, :show
+    live "/users/:id/show/edit", UserLive.Show, :edit
+
+    live "/blogs", BlogLive.Index, :index
+    live "/blogs/new", BlogLive.Index, :new
+    live "/blogs/:id/edit", BlogLive.Index, :edit
+    live "/blogs/:id", BlogLive.Show, :show
+    live "/blogs/:id/show/edit", BlogLive.Show, :edit
 
     live "/*path_", SphereLive, :index
 

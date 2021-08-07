@@ -1,0 +1,47 @@
+<h1>Show User</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.UserLive.FormComponent,
+    id: @user.id,
+    title: @page_title,
+    action: @live_action,
+    user: @user,
+    return_to: Routes.user_show_path(@socket, :show, @user) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Id:</strong>
+    <%= @user.id %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @user.email %>
+  </li>
+
+  <li>
+    <strong>Confirmed at:</strong>
+    <%= @user.confirmed_at %>
+  </li>
+
+  <li>
+    <strong>Inserted at:</strong>
+    <%= @user.inserted_at %>
+  </li>
+
+  <li>
+    <strong>Updated at:</strong>
+    <%= @user.updated_at %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @user.deleted_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.user_show_path(@socket, :edit, @user), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.user_index_path(@socket, :index) %></span>

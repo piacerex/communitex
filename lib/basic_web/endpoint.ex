@@ -22,7 +22,7 @@ defmodule BasicWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: (if ContentFolder.is_alive() == :undefined, do: "content/communitex.org", else: ContentFolder.get()),  # <--modify here
+    from: (if ContentFolder.is_alive(), do: ContentFolder.get(), else: "content/communitex.org"),  # <--modify here
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 

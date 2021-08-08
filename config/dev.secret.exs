@@ -14,5 +14,21 @@ config :sphere,
   local_check_file: "index.html"
 
 # Mailer Setting
-# access to /sent_emails
+
+# Browsing mail from browser access to /sent_emails
 config :basic, Basic.Mailer, adapter: Bamboo.LocalAdapter
+
+# smtp example
+# config :basic, Basic.Mailer,
+#  adapter: Bamboo.SMTPAdapter,
+#  server: "",
+#  hostname: "communitex.org",
+#  port: 21,
+#  username: "noreply@communitex.org",
+#  password: "",
+#  tls: :if_available,
+#  allowed_tls_versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"],
+#  ssl: false,
+#  retries: 1,
+#  no_mx_lookups: false,
+#  auth: :if_available

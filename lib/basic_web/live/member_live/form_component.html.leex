@@ -45,7 +45,11 @@
 <% end %>
 
   <%= label f, :birthday, "生年月日" %>
-  <%= datetime_select f, :birthday %>
+  <%= datetime_select f,
+    :birthday,
+    year: [options: 1950..Timex.now().year, selected: 1980],
+    month: [options: 1..12]
+  %>
   <%= error_tag f, :birthday %>
 <!--
   <%= label f, :corporate_id, "企業ID" %>

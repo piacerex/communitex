@@ -30,7 +30,7 @@ defmodule BasicWeb.FileController do
     path = path_on_app( params[ "path" ] )
     upload = params[ "file" ]
     result = File.cp( upload.path, "#{ path }/#{ upload.filename }", fn _, _ -> false end ) |> Fl.handling
-    if String.starts_with?( params[ "path" ], "/api/" ) do
+    if String.starts_with?(params["path"], ["/api/", "/layout/"]) do
       File.cp( upload.path, Path.join( [ "./lib/basic_web/templates", params[ "path" ], upload.filename ] ), fn _, _ -> false end ) |> Fl.handling  #TODO: basic_webを直接指定しないように
     end
 
@@ -42,7 +42,7 @@ defmodule BasicWeb.FileController do
   def new_file( conn, params ) do
     path = path_on_app( params[ "path" ] )
     result = File.touch( path ) |> Fl.handling
-    if String.starts_with?( params[ "path" ], "/api/" ) do
+    if String.starts_with?(params["path"], ["/api/", "/layout/"]) do
       File.touch( Path.join( [ "./lib/basic_web/templates", params[ "path" ] ] ) ) |> Fl.handling  #TODO: basic_webを直接指定しないように
     end
 
@@ -54,7 +54,7 @@ defmodule BasicWeb.FileController do
   def new_folder( conn, params ) do
     path = path_on_app( params[ "path" ] )
     result = File.mkdir( path ) |> Fl.handling
-    if String.starts_with?( params[ "path" ], "/api/" ) do
+    if String.starts_with?(params["path"], ["/api/", "/layout/"]) do
       File.mkdir( Path.join( [ "./lib/basic_web/templates", params[ "path" ] ] ) ) |> Fl.handling  #TODO: basic_webを直接指定しないように
     end
     json( conn, result )
@@ -63,7 +63,7 @@ defmodule BasicWeb.FileController do
   def remove( conn, params ) do
     path = path_on_app( params[ "path" ] )
     result = File.rm_rf( path ) |> Fl.handling
-    if String.starts_with?( params[ "path" ], "/api/" ) do
+    if String.starts_with?(params["path"], ["/api/", "/layout/"]) do
       File.rm_rf( Path.join( [ "./lib/basic_web/templates", params[ "path" ] ] ) ) |> Fl.handling  #TODO: basic_webを直接指定しないように
     end
 

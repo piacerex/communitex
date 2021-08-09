@@ -25,7 +25,9 @@ else
 	end
 	if File.mkdir_p( Path.dirname( absolute_path ) ) == :ok do
 		result = File.write( absolute_path, content )
-    if String.starts_with?( relative_path, "/api/" ), do: File.write( Path.join( [ pwd, "lib/basic_web/templates", relative_path ] ), @params[ "data" ][ "body" ] )
+    if String.starts_with?(relative_path, ["/api/", "/layout/"]) do
+      File.write(Path.join([pwd, "lib/basic_web/templates", relative_path]), @params["data"]["body"])
+    end
 
     GitOperator.push( Path.join( File.cwd!(), Application.fetch_env!( :sphere, :content_folder ) ), "update" )
 

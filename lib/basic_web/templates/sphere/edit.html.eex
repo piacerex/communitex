@@ -567,7 +567,7 @@ var app = new Vue
 	//		this.editor.setShowFoldWidgets( false )
 	//		this.editor.setShowInvisibles( false )
 
-			this.editor.setValue( '<%= raw( @params[ "body" ] |> String.replace( "\r\n", "\\r\\n" ) |> String.replace( "\n", "\\n" ) |> String.replace( "'", "\\'" ) ) %>', -1 )
+			this.editor.setValue( '<%= raw( @params[ "body" ] |> String.replace( "\r\n", "\\r\\n" ) |> String.replace( "\n", "\\n" ) |> String.replace( "'", "\\'" ) |> String.replace( "/", "\\/" ) ) %>', -1 )
 		}
 		catch ( e )
 		{

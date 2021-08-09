@@ -13,15 +13,15 @@ defmodule BasicWeb.UserRegistrationController do
   def create(conn, %{"user" => user_params}) do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
-        {state, return_value} =
+        {result, url} =
           Accounts.deliver_user_confirmation_instructions(
             user,
             &Routes.user_confirmation_url(conn, :confirm, &1)
           )
-        info_message = if :unsent == state do
-          return_value
-        else
-          ""
+
+        info_message = case result do
+          :unsent -> url
+          _ -> ""
         end
 
         conn

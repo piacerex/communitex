@@ -1,7 +1,13 @@
 <h1>仮登録完了</h1>
 
+<%= if get_flash(@conn, :info) != "" do %>
+  <div class="alert alert-warning">
+    <p>メール送信が未設定のため、下記URLをクリックして、本登録を完了させて下さい</p>
+    <p><a href="<%= get_flash(@conn, :info) %>"><%= get_flash(@conn, :info) %></a></p>
+    <p></p>
+  </div>
+<% end %>
+
 <p>仮登録が完了しました</p>
 
 <p>確認メールのURLをクリックして、本登録を完了させて下さい</p>
-
-<p><%= get_flash(@conn, :info) %></p>

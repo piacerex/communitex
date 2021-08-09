@@ -45,10 +45,9 @@ defmodule Basic.Accounts.UserNotifier do
       Application.fetch_env!(:sphere, :mail_url_domain))
     parsed = Markdown.dispatch( filename, File.read!( Path.join( SphereShared.mail_folder(), filename ) ), nil, nil )
 
-    if [] == Application.get_env(:basic, Basic.Mailer, []) do
-      {:unsent, url}
-    else
-      deliver(user.email, parsed["title"], parsed["body"] |> EEx.eval_string(url: url))
+    case Application.get_env(:basic, Basic.Mailer, []) do
+      [] -> {:unsent, url}
+      _ -> deliver(user.email, parsed["title"], parsed["body"] |> EEx.eval_string(url: url))      
     end
 
   end

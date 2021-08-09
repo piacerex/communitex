@@ -16,7 +16,7 @@ config :sphere,
 # Mailer Setting
 
 # Browsing mail from browser access to /sent_emails
-#config :basic, Basic.Mailer, adapter: Bamboo.LocalAdapter
+config :basic, Basic.Mailer, adapter: Bamboo.LocalAdapter
 
 # smtp example
 # config :basic, Basic.Mailer,

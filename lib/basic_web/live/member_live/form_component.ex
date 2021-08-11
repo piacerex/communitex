@@ -14,7 +14,7 @@ defmodule BasicWeb.MemberLive.FormComponent do
      |> assign(assigns)
      |> assign(:changeset, changeset)
      |> assign(:uploaded_files, [])
-     |> allow_upload(:avatar, accept: :any, max_entries: 3)}
+     |> allow_upload(:avatar, accept: :any, max_entries: 1)}
   end
 
   @impl true

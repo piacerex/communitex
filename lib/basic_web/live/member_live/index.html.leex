@@ -12,15 +12,15 @@
 <nav class="pagination">
   <ul class="pagination-body">
     <li class="is-prev">
-      <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="nav" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
+      <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
     </li>
 <%= for idx <- Enum.to_list(1..@total_pages) do %>
     <li <%= if @page == idx, do: raw( "class=\"is-current\"" ), else: "" %>>
-    <a  <%= if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="nav" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
+    <a  <%= if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
     </li>
 <% end %>
     <li class="is-next">
-      <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="nav" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
+      <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
     </li>
   </ul>
 </nav>
@@ -96,15 +96,15 @@
 <nav class="pagination">
   <ul class="pagination-body">
     <li class="is-prev">
-      <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="nav" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
+      <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
     </li>
 <%= for idx <- Enum.to_list(1..@total_pages) do %>
     <li <%= if @page == idx, do: raw( "class=\"is-current\"" ), else: "" %>>
-    <a  <%= if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="nav" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
+    <a  <%= if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
     </li>
 <% end %>
     <li class="is-next">
-      <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="nav" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
+      <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
     </li>
   </ul>
 </nav>

@@ -9,11 +9,11 @@ defmodule BasicWeb.MemberLive.Index do
     {:ok, assign(socket, members: Members.list_members())}
   end
 
-  def handle_event("nav", %{"page" => page, "search" => ""}, socket) do
+  def handle_event("page", %{"page" => page, "search" => ""}, socket) do
     {:noreply, push_redirect(socket, to: Routes.member_index_path(socket, :index, page: page))}
   end
 
-  def handle_event("nav", %{"page" => page, "search" => search}, socket) do
+  def handle_event("page", %{"page" => page, "search" => search}, socket) do
     {:noreply, push_redirect(socket, to: Routes.member_index_path(socket, :index, page: page, search: search))}
   end
 

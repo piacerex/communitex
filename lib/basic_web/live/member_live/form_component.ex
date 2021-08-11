@@ -45,7 +45,7 @@ defmodule BasicWeb.MemberLive.FormComponent do
       {:ok, _member} ->
         {:noreply,
         socket
-        |> put_flash(:info, "Member updated successfully")
+#        |> put_flash(:info, "Member updated successfully")
         |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -63,7 +63,7 @@ defmodule BasicWeb.MemberLive.FormComponent do
       {:ok, _member} ->
         {:noreply,
         socket
-        |> put_flash(:info, "Member created successfully")
+#        |> put_flash(:info, "Member created successfully")
         |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -88,10 +88,11 @@ defmodule BasicWeb.MemberLive.FormComponent do
   end
 
   def binary_upload_file(socket) do
-    consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry ->
-      File.read!(path)
-    end)
+    consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry -> File.read!(path) end)
     |> List.last  # "Last" here means the first choised file
-    |> Base.encode64
+    |> case do
+         nil    -> nil
+         binary -> Base.encode64(binary)
+       end
   end
 end

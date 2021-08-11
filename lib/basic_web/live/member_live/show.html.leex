@@ -1,12 +1,16 @@
 <h1>Show Member</h1>
 
+<%
+alias Basic.Members.Member
+member = %Member{} |> Map.merge(Map.take(@member, Map.keys(%Member{})))
+%>
 <%= if @live_action in [:edit] do %>
   <%= live_modal @socket, BasicWeb.MemberLive.FormComponent,
     id: @member.id,
     title: @page_title,
     action: @live_action,
-    member: @member,
-    return_to: Routes.member_show_path(@socket, :show, @member.id) %>
+    member: member,
+    return_to: Routes.member_show_path(@socket, :show, member ) %>
 <% end %>
 
 <ul>

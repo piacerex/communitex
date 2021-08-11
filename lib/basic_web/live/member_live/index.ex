@@ -58,7 +58,7 @@ defmodule BasicWeb.MemberLive.Index do
   defp apply_action(socket, :edit, %{"id" => id, "page" => page, "search" => search, "total_pages" => total_pages} = params) do
     socket
     |> assign(:page_title, "Edit Member")
-    |> assign(:member, List.first(Members.get_member!(id)))
+    |> assign(:member, Members.get_member!(id))
     |> assign(:page, String.to_integer(page))
     |> assign(:search, search)
     |> assign(:total_pages, String.to_integer(total_pages))
@@ -80,8 +80,7 @@ defmodule BasicWeb.MemberLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id, "page" => page, "search" => search} = params, socket) do
-#    member = Members.get_member!(id)
-    member = Members.get_delete_member!(id)
+    member = Members.get_member!(id)
     {:ok, _} = Members.delete_member(member)
 
     {:noreply, assign(socket, get_and_assign_page(page, search))}

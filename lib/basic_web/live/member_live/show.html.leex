@@ -51,7 +51,10 @@
     <%= if is_nil(@member.image) do %>
       <td><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="200"></td>
     <% else %>
-      <td><img src="<%= Routes.static_path(@socket, @member.image) %>" width="200"></td>
+<!--
+      <td><img src="<%= #Routes.static_path(@socket, @member.image) %>" width="200"></td>
+-->
+      <td><img src="data:images/jpeg;base64,<%= @member.image %>" width="200"></td>
     <% end %>
   </li>
 

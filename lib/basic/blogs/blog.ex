@@ -5,7 +5,7 @@ defmodule Basic.Blogs.Blog do
   schema "blogs" do
     field :body, :string
     field :deleted_at, :naive_datetime
-    field :image, :binary
+    field :image, :string
     field :likes, :integer
     field :post_id, :string
     field :tags, :string

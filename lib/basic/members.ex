@@ -34,21 +34,22 @@ defmodule Basic.Members do
       ** (Ecto.NoResultsError)
 
   """
-  def get_member!(id) do
+  def get_member!(id), do: Repo.get!(Member, id)
+
+  def get_member_with_user(id) do
     users = from user in User
     fields = Member.__schema__(:fields)
-    Repo.all(from member in Member, where: member.id == ^id,
-              join: user in User,
-              on: [ id: member.user_id ],
-              select: {
-                  map( member, ^fields ),
-                  map( user, [ :email ] ) 
-                }
-            ) |> Enum.map( & Map.merge( elem( &1, 0 ), elem( &1, 1 ) ) )
-
+    Repo.all(
+      from(member in Member, 
+        where: member.id == ^id,
+        join: user in User,
+          on: [id: member.user_id],
+        select: {map(member, ^fields), map(user, [:email])}
+      ) 
+    )
+    |> Enum.map(& Map.merge(elem(&1, 0), elem(&1, 1)))
+    |> List.first
   end
-
-  def get_delete_member!(id), do: Repo.get!(Member, id)
 
   @doc """
   Creates a member.
@@ -80,12 +81,11 @@ defmodule Basic.Members do
       {:error, %Ecto.Changeset{}}
 
   """
+#  def update_member(%Member{} = member, attrs) do
   def update_member(member, attrs) do
-
-    data = %Member{}
-      |> Map.merge(Map.take(member, Map.keys(%Member{})))
-      |> Member.changeset(attrs)
-      |> Repo.update()
+    member
+    |> Member.changeset(attrs)
+    |> Repo.update()
   end
 
   @doc """
@@ -113,34 +113,36 @@ defmodule Basic.Members do
       %Ecto.Changeset{data: %Member{}}
 
   """
+#  def change_member(%Member{} = member, attrs \\ %{}) do
   def change_member(member, attrs \\ %{}) do
-    data = %Member{}
-      |> Map.merge(Map.take(member, Map.keys(%Member{})))
-    Member.changeset(data, attrs)
+    %Member{}
+    |> Map.merge(Map.take(member, Map.keys(%Member{})))
+    |> Member.changeset(attrs)
   end
 
   def paginate_members(page \\ 1, search \\ "") do
     fields = Member.__schema__(:fields)
     query = 
-      from( member in Member,
+      from(member in Member,
         join: user in User, 
           on: [id: member.user_id],
+        order_by: [desc: :user_id], 
         select: {map(member, ^fields), map(user, [:email])}
       )
 
-    query = if search != "" do
-      from( member in query, 
-        join: user in User,
-          on: [id: member.user_id],
-      where: like(member.last_name,  ^"%#{search}%") 
-          or like(member.first_name, ^"%#{search}%") 
-          or like(user.email,        ^"%#{search}%")
-      )
-    else
-      query
+    result = case search do
+      ""     -> query
+      search -> 
+        from(member in query, 
+          join: user in User,
+            on: [id: member.user_id],
+        where: like(member.last_name,  ^"%#{search}%") 
+            or like(member.first_name, ^"%#{search}%") 
+            or like(user.email,        ^"%#{search}%")
+        )
     end
+    |> Repo.paginate([page: page])
 
-    result = Repo.paginate(query, [page: page])
     Map.put(result, :entries, Enum.map(result.entries, & Map.merge(elem(&1, 0), elem(&1, 1))))
   end
 end

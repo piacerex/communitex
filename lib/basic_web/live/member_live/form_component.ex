@@ -31,16 +31,17 @@ defmodule BasicWeb.MemberLive.FormComponent do
     save_member(socket, socket.assigns.action, member_params)
   end
 
-  def save_member(socket, :edit, params) do
-    image = case copy_upload_file(socket, params) do
-      []   -> socket.assigns.member.image  # In the case of [], the file is not choised
-      path -> 
-        if socket.assigns.member.image != nil do
-          File.rm(Path.join(Application.fetch_env!(:sphere, :content_folder), socket.assigns.member.image))
-        end
-        path
-    end
-    case Members.update_member(socket.assigns.member, Map.put(params, "image", image)) do
+  defp save_member(socket, :edit, member_params) do
+#    image = case copy_upload_file(socket, member_params) do
+#      []   -> socket.assigns.member.image  # In the case of [], the file is not choised
+#      path -> 
+#        if socket.assigns.member.image != nil do
+#          File.rm(Path.join(Application.fetch_env!(:sphere, :content_folder), socket.assigns.member.image))
+#        end
+#        path
+#    end
+    image = binary_upload_file(socket)
+    case Members.update_member(socket.assigns.member, Map.put(member_params, "image", image)) do
       {:ok, _member} ->
         {:noreply,
         socket
@@ -52,12 +53,13 @@ defmodule BasicWeb.MemberLive.FormComponent do
     end
   end
 
-  def save_member(socket, :new, params) do
-    image = case copy_upload_file(socket, params) do
-      []   -> socket.assigns.member.image  # In the case of [], the file is not choised
-      path -> path
-    end
-    case Members.create_member(Map.put(params, "image", image)) do
+  defp save_member(socket, :new, member_params) do
+#    image = case copy_upload_file(socket, member_params) do
+#      []   -> socket.assigns.member.image  # In the case of [], the file is not choised
+#      path -> path
+#    end
+    image = binary_upload_file(socket)
+    case Members.create_member(Map.put(member_params, "image", image)) do
       {:ok, _member} ->
         {:noreply,
         socket
@@ -83,5 +85,13 @@ defmodule BasicWeb.MemberLive.FormComponent do
       Routes.static_path(socket, "/images/data/#{Path.basename(dest)}")
     end)
     |> List.last  # "Last" here means the first choised file
+  end
+
+  def binary_upload_file(socket) do
+    consume_uploaded_entries(socket, :avatar, fn %{path: path}, _entry ->
+      File.read!(path)
+    end)
+    |> List.last  # "Last" here means the first choised file
+    |> Base.encode64
   end
 end

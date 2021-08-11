@@ -9,7 +9,7 @@ defmodule Basic.Repo.Migrations.CreateMembers do
       add :last_name_kana, :string
       add :first_name_kana, :string
       add :detail, :text
-      add :image, :string
+      add :image, :text
       add :birthday, :naive_datetime
       add :corporate_id, :integer
       add :corporate_name, :string

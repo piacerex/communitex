@@ -6,7 +6,7 @@ defmodule Basic.Repo.Migrations.CreateBlogs do
       add :post_id, :string
       add :user_id, :integer
       add :title, :string
-      add :image, :binary
+      add :image, :text
       add :tags, :string
       add :body, :text
       add :likes, :integer

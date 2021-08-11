@@ -37,7 +37,7 @@
 <table>
   <thead>
     <tr>
-      <th>メンバーID</th>
+      <th>ユーザID</th>
       <th>姓</th>
       <th>名</th>
       <th>セイ</th>
@@ -67,7 +67,10 @@
         <%= if is_nil(member.image) do %>
           <td><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="80"></td>
         <% else %>
-          <td><img src="<%= Routes.static_path(@socket, member.image) %>" width="80"></td>
+<!--
+          <td><img src="<%= #Routes.static_path(@socket, member.image) %>" width="80"></td>
+-->
+          <td><img src="data:images/jpeg;base64,<%= member.image %>" width="80"></td>
         <% end %>
         <td><%= member.birthday %></td>
         <td><%= member.corporate_name %></td>

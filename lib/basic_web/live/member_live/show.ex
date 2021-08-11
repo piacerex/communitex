@@ -13,7 +13,7 @@ defmodule BasicWeb.MemberLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:member, List.first(Members.get_member!(id)))}
+     |> assign(:member, Members.get_member_with_user(id))}
   end
 
   defp page_title(:show), do: "Show Member"

@@ -108,11 +108,19 @@ mix shotrize.apply
 ```
 
 ```
-mix phx.gen.live Members Member members user_id:integer last_name:string first_name:string last_name_kana:string first_name_kana:string detail:text image:string birthday:datetime corporate_id:integer corporate_name:string industry:string department:string position:string deleted_at:datetime
+mix phx.gen.live Members Member members user_id:integer last_name:string first_name:string last_name_kana:string first_name_kana:string detail:text image:text birthday:datetime corporate_id:integer corporate_name:string industry:string department:string position:string deleted_at:datetime
 
 mix phx.gen.live Accounts User users email:string hashed_password:string confirmed_at:datetime deleted_at:datetime
 
-mix phx.gen.live Blogs Blog blogs post_id:string user_id:integer title:string image:binary tags:string body:text likes:integer views:integer deleted_at:datetime
+mix phx.gen.live Blogs Blog blogs post_id:string user_id:integer title:string image:text tags:string body:text likes:integer views:integer deleted_at:datetime
+```
+
+```
+mix ecto.gen.migration alter_users_auth_tables
+```
+
+```
+mix ecto.gen.migration alter_users_auth_tables
 ```
 
 ```elixir:20210714094501_alter_users_auth_tables.exs
@@ -122,6 +130,23 @@ defmodule Basic.Repo.Migrations.AlterUsersAuthTables do
   def change do
     alter table(:users) do
       add :deleted_at, :naive_datetime
+    end
+  end
+end
+```
+
+```
+mix ecto.gen.migration alter_members
+```
+
+```elixir:20210811122859_alter_members.exs
+defmodule Basic.Repo.Migrations.AlterMembers do
+  use Ecto.Migration
+
+  def change do
+    alter table(:members) do
+      remove :image
+      add :image, :binary
     end
   end
 end

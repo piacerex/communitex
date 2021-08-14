@@ -138,3 +138,15 @@ mix phx.gen.live Members Member members user_id:integer last_name:string first_n
 ```
 mix phx.gen.live Blogs Blog blogs post_id:string user_id:integer title:string image:text tags:string body:text likes:integer views:integer deleted_at:datetime
 ```
+
+```
+mix phx.gen.live Corporates   Corporate   corporates                   name:string postal:string prefecture:string city:string address1:string address2:string tel:string deleted_at:datetime
+mix phx.gen.live Grants       Grant       grants       user_id:integer corporate_id:integer role:string                                                                   deleted_at:datetime
+
+mix phx.gen.live Items        Item        items        name:string detail:text image:text   distributor_id:integer price:float start_date:datetime end_date:datetime open_date:datetime close_date:datetime is_open:boolean area:string occupation:string alls:integer stocks:integer deleted_at:datetime
+
+mix phx.gen.live Distributors Distributor distributors brand:string    corporate_id:integer                                                                     deleted_at:datetime
+mix phx.gen.live Agencies     Agency      agencies     brand:string    corporate_id:integer distributor_id:integer             discount:float boost:float       deleted_at:datetime
+mix phx.gen.live Agents       Agent       agents       user_id:integer agency_id:integer                                       discount:float boost:float       deleted_at:datetime
+mix phx.gen.live Orders       Order       orders       user_id:integer item_id:integer      order_date:date        price:float discount:float is_cancel:boolean deleted_at:datetime
+```

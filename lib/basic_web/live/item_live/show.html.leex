@@ -1,0 +1,92 @@
+<h1>Show Item</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.ItemLive.FormComponent,
+    id: @item.id,
+    title: @page_title,
+    action: @live_action,
+    item: @item,
+    return_to: Routes.item_show_path(@socket, :show, @item) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @item.name %>
+  </li>
+
+  <li>
+    <strong>Detail:</strong>
+    <%= @item.detail %>
+  </li>
+
+  <li>
+    <strong>Image:</strong>
+    <%= @item.image %>
+  </li>
+
+  <li>
+    <strong>Distributor:</strong>
+    <%= @item.distributor_id %>
+  </li>
+
+  <li>
+    <strong>Price:</strong>
+    <%= @item.price %>
+  </li>
+
+  <li>
+    <strong>Start date:</strong>
+    <%= @item.start_date %>
+  </li>
+
+  <li>
+    <strong>End date:</strong>
+    <%= @item.end_date %>
+  </li>
+
+  <li>
+    <strong>Open date:</strong>
+    <%= @item.open_date %>
+  </li>
+
+  <li>
+    <strong>Close date:</strong>
+    <%= @item.close_date %>
+  </li>
+
+  <li>
+    <strong>Is open:</strong>
+    <%= @item.is_open %>
+  </li>
+
+  <li>
+    <strong>Area:</strong>
+    <%= @item.area %>
+  </li>
+
+  <li>
+    <strong>Occupation:</strong>
+    <%= @item.occupation %>
+  </li>
+
+  <li>
+    <strong>Alls:</strong>
+    <%= @item.alls %>
+  </li>
+
+  <li>
+    <strong>Stocks:</strong>
+    <%= @item.stocks %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @item.deleted_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.item_show_path(@socket, :edit, @item), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.item_index_path(@socket, :index) %></span>

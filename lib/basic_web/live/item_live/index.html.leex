@@ -1,0 +1,63 @@
+<h1>Listing Items</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, BasicWeb.ItemLive.FormComponent,
+    id: @item.id || :new,
+    title: @page_title,
+    action: @live_action,
+    item: @item,
+    return_to: Routes.item_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Detail</th>
+      <th>Image</th>
+      <th>Distributor</th>
+      <th>Price</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Open date</th>
+      <th>Close date</th>
+      <th>Is open</th>
+      <th>Area</th>
+      <th>Occupation</th>
+      <th>Alls</th>
+      <th>Stocks</th>
+      <th>Deleted at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="items">
+    <%= for item <- @items do %>
+      <tr id="item-<%= item.id %>">
+        <td><%= item.name %></td>
+        <td><%= item.detail %></td>
+        <td><%= item.image %></td>
+        <td><%= item.distributor_id %></td>
+        <td><%= item.price %></td>
+        <td><%= item.start_date %></td>
+        <td><%= item.end_date %></td>
+        <td><%= item.open_date %></td>
+        <td><%= item.close_date %></td>
+        <td><%= item.is_open %></td>
+        <td><%= item.area %></td>
+        <td><%= item.occupation %></td>
+        <td><%= item.alls %></td>
+        <td><%= item.stocks %></td>
+        <td><%= item.deleted_at %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.item_show_path(@socket, :show, item) %></span>
+          <span><%= live_patch "Edit", to: Routes.item_index_path(@socket, :edit, item) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: item.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Item", to: Routes.item_index_path(@socket, :new) %></span>

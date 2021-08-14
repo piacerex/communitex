@@ -1,0 +1,42 @@
+<h1>Show Agent</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.AgentLive.FormComponent,
+    id: @agent.id,
+    title: @page_title,
+    action: @live_action,
+    agent: @agent,
+    return_to: Routes.agent_show_path(@socket, :show, @agent) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>User:</strong>
+    <%= @agent.user_id %>
+  </li>
+
+  <li>
+    <strong>Agency:</strong>
+    <%= @agent.agency_id %>
+  </li>
+
+  <li>
+    <strong>Discount:</strong>
+    <%= @agent.discount %>
+  </li>
+
+  <li>
+    <strong>Boost:</strong>
+    <%= @agent.boost %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @agent.deleted_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.agent_show_path(@socket, :edit, @agent), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.agent_index_path(@socket, :index) %></span>

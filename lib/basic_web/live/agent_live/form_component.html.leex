@@ -1,0 +1,30 @@
+<h2><%= @title %></h2>
+
+<%= f = form_for @changeset, "#",
+  id: "agent-form",
+  phx_target: @myself,
+  phx_change: "validate",
+  phx_submit: "save" %>
+
+  <%= label f, :user_id %>
+  <%= number_input f, :user_id %>
+  <%= error_tag f, :user_id %>
+
+  <%= label f, :agency_id %>
+  <%= number_input f, :agency_id %>
+  <%= error_tag f, :agency_id %>
+
+  <%= label f, :discount %>
+  <%= number_input f, :discount, step: "any" %>
+  <%= error_tag f, :discount %>
+
+  <%= label f, :boost %>
+  <%= number_input f, :boost, step: "any" %>
+  <%= error_tag f, :boost %>
+
+  <%= label f, :deleted_at %>
+  <%= datetime_select f, :deleted_at %>
+  <%= error_tag f, :deleted_at %>
+
+  <%= submit "Save", phx_disable_with: "Saving..." %>
+</form>

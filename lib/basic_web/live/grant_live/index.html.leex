@@ -1,0 +1,41 @@
+<h1>Listing Grants</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, BasicWeb.GrantLive.FormComponent,
+    id: @grant.id || :new,
+    title: @page_title,
+    action: @live_action,
+    grant: @grant,
+    return_to: Routes.grant_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Corporate</th>
+      <th>Role</th>
+      <th>Deleted at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="grants">
+    <%= for grant <- @grants do %>
+      <tr id="grant-<%= grant.id %>">
+        <td><%= grant.user_id %></td>
+        <td><%= grant.corporate_id %></td>
+        <td><%= grant.role %></td>
+        <td><%= grant.deleted_at %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.grant_show_path(@socket, :show, grant) %></span>
+          <span><%= live_patch "Edit", to: Routes.grant_index_path(@socket, :edit, grant) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: grant.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Grant", to: Routes.grant_index_path(@socket, :new) %></span>

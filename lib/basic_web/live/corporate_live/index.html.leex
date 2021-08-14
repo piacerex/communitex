@@ -1,0 +1,49 @@
+<h1>Listing Corporates</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, BasicWeb.CorporateLive.FormComponent,
+    id: @corporate.id || :new,
+    title: @page_title,
+    action: @live_action,
+    corporate: @corporate,
+    return_to: Routes.corporate_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Postal</th>
+      <th>Prefecture</th>
+      <th>City</th>
+      <th>Address1</th>
+      <th>Address2</th>
+      <th>Tel</th>
+      <th>Deleted at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="corporates">
+    <%= for corporate <- @corporates do %>
+      <tr id="corporate-<%= corporate.id %>">
+        <td><%= corporate.name %></td>
+        <td><%= corporate.postal %></td>
+        <td><%= corporate.prefecture %></td>
+        <td><%= corporate.city %></td>
+        <td><%= corporate.address1 %></td>
+        <td><%= corporate.address2 %></td>
+        <td><%= corporate.tel %></td>
+        <td><%= corporate.deleted_at %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.corporate_show_path(@socket, :show, corporate) %></span>
+          <span><%= live_patch "Edit", to: Routes.corporate_index_path(@socket, :edit, corporate) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: corporate.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Corporate", to: Routes.corporate_index_path(@socket, :new) %></span>

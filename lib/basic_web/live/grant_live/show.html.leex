@@ -1,0 +1,37 @@
+<h1>Show Grant</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.GrantLive.FormComponent,
+    id: @grant.id,
+    title: @page_title,
+    action: @live_action,
+    grant: @grant,
+    return_to: Routes.grant_show_path(@socket, :show, @grant) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>User:</strong>
+    <%= @grant.user_id %>
+  </li>
+
+  <li>
+    <strong>Corporate:</strong>
+    <%= @grant.corporate_id %>
+  </li>
+
+  <li>
+    <strong>Role:</strong>
+    <%= @grant.role %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @grant.deleted_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.grant_show_path(@socket, :edit, @grant), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.grant_index_path(@socket, :index) %></span>

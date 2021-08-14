@@ -1,0 +1,45 @@
+<h1>Listing Agencies</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, BasicWeb.AgencyLive.FormComponent,
+    id: @agency.id || :new,
+    title: @page_title,
+    action: @live_action,
+    agency: @agency,
+    return_to: Routes.agency_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Brand</th>
+      <th>Corporate</th>
+      <th>Distributor</th>
+      <th>Discount</th>
+      <th>Boost</th>
+      <th>Deleted at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="agencies">
+    <%= for agency <- @agencies do %>
+      <tr id="agency-<%= agency.id %>">
+        <td><%= agency.brand %></td>
+        <td><%= agency.corporate_id %></td>
+        <td><%= agency.distributor_id %></td>
+        <td><%= agency.discount %></td>
+        <td><%= agency.boost %></td>
+        <td><%= agency.deleted_at %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.agency_show_path(@socket, :show, agency) %></span>
+          <span><%= live_patch "Edit", to: Routes.agency_index_path(@socket, :edit, agency) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: agency.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Agency", to: Routes.agency_index_path(@socket, :new) %></span>

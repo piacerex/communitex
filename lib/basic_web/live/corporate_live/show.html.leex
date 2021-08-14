@@ -1,0 +1,57 @@
+<h1>Show Corporate</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.CorporateLive.FormComponent,
+    id: @corporate.id,
+    title: @page_title,
+    action: @live_action,
+    corporate: @corporate,
+    return_to: Routes.corporate_show_path(@socket, :show, @corporate) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @corporate.name %>
+  </li>
+
+  <li>
+    <strong>Postal:</strong>
+    <%= @corporate.postal %>
+  </li>
+
+  <li>
+    <strong>Prefecture:</strong>
+    <%= @corporate.prefecture %>
+  </li>
+
+  <li>
+    <strong>City:</strong>
+    <%= @corporate.city %>
+  </li>
+
+  <li>
+    <strong>Address1:</strong>
+    <%= @corporate.address1 %>
+  </li>
+
+  <li>
+    <strong>Address2:</strong>
+    <%= @corporate.address2 %>
+  </li>
+
+  <li>
+    <strong>Tel:</strong>
+    <%= @corporate.tel %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @corporate.deleted_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.corporate_show_path(@socket, :edit, @corporate), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.corporate_index_path(@socket, :index) %></span>

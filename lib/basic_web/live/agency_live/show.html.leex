@@ -1,0 +1,47 @@
+<h1>Show Agency</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.AgencyLive.FormComponent,
+    id: @agency.id,
+    title: @page_title,
+    action: @live_action,
+    agency: @agency,
+    return_to: Routes.agency_show_path(@socket, :show, @agency) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Brand:</strong>
+    <%= @agency.brand %>
+  </li>
+
+  <li>
+    <strong>Corporate:</strong>
+    <%= @agency.corporate_id %>
+  </li>
+
+  <li>
+    <strong>Distributor:</strong>
+    <%= @agency.distributor_id %>
+  </li>
+
+  <li>
+    <strong>Discount:</strong>
+    <%= @agency.discount %>
+  </li>
+
+  <li>
+    <strong>Boost:</strong>
+    <%= @agency.boost %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @agency.deleted_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.agency_show_path(@socket, :edit, @agency), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.agency_index_path(@socket, :index) %></span>

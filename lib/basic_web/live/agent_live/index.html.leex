@@ -1,0 +1,43 @@
+<h1>Listing Agents</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, BasicWeb.AgentLive.FormComponent,
+    id: @agent.id || :new,
+    title: @page_title,
+    action: @live_action,
+    agent: @agent,
+    return_to: Routes.agent_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Agency</th>
+      <th>Discount</th>
+      <th>Boost</th>
+      <th>Deleted at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="agents">
+    <%= for agent <- @agents do %>
+      <tr id="agent-<%= agent.id %>">
+        <td><%= agent.user_id %></td>
+        <td><%= agent.agency_id %></td>
+        <td><%= agent.discount %></td>
+        <td><%= agent.boost %></td>
+        <td><%= agent.deleted_at %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.agent_show_path(@socket, :show, agent) %></span>
+          <span><%= live_patch "Edit", to: Routes.agent_index_path(@socket, :edit, agent) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: agent.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Agent", to: Routes.agent_index_path(@socket, :new) %></span>

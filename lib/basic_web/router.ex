@@ -130,6 +130,48 @@ defmodule BasicWeb.Router do
     live "/blogs/:id", BlogLive.Show, :show
     live "/blogs/:id/show/edit", BlogLive.Show, :edit
 
+    live "/corporates", CorporateLive.Index, :index
+    live "/corporates/new", CorporateLive.Index, :new
+    live "/corporates/:id/edit", CorporateLive.Index, :edit
+    live "/corporates/:id", CorporateLive.Show, :show
+    live "/corporates/:id/show/edit", CorporateLive.Show, :edit
+
+    live "/grants", GrantLive.Index, :index
+    live "/grants/new", GrantLive.Index, :new
+    live "/grants/:id/edit", GrantLive.Index, :edit
+    live "/grants/:id", GrantLive.Show, :show
+    live "/grants/:id/show/edit", GrantLive.Show, :edit
+
+    live "/items", ItemLive.Index, :index
+    live "/items/new", ItemLive.Index, :new
+    live "/items/:id/edit", ItemLive.Index, :edit
+    live "/items/:id", ItemLive.Show, :show
+    live "/items/:id/show/edit", ItemLive.Show, :edit
+
+    live "/distributors", DistributorLive.Index, :index
+    live "/distributors/new", DistributorLive.Index, :new
+    live "/distributors/:id/edit", DistributorLive.Index, :edit
+    live "/distributors/:id", DistributorLive.Show, :show
+    live "/distributors/:id/show/edit", DistributorLive.Show, :edit
+
+    live "/agencies", AgencyLive.Index, :index
+    live "/agencies/new", AgencyLive.Index, :new
+    live "/agencies/:id/edit", AgencyLive.Index, :edit
+    live "/agencies/:id", AgencyLive.Show, :show
+    live "/agencies/:id/show/edit", AgencyLive.Show, :edit
+
+    live "/agents", AgentLive.Index, :index
+    live "/agents/new", AgentLive.Index, :new
+    live "/agents/:id/edit", AgentLive.Index, :edit
+    live "/agents/:id", AgentLive.Show, :show
+    live "/agents/:id/show/edit", AgentLive.Show, :edit
+
+    live "/orders", OrderLive.Index, :index
+    live "/orders/new", OrderLive.Index, :new
+    live "/orders/:id/edit", OrderLive.Index, :edit
+    live "/orders/:id", OrderLive.Show, :show
+    live "/orders/:id/show/edit", OrderLive.Show, :edit
+
     live "/*path_", SphereLive, :index
 
 #    live "/", PageLive, :index

@@ -1,0 +1,70 @@
+<h2><%= @title %></h2>
+
+<%= f = form_for @changeset, "#",
+  id: "item-form",
+  phx_target: @myself,
+  phx_change: "validate",
+  phx_submit: "save" %>
+
+  <%= label f, :name %>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+
+  <%= label f, :detail %>
+  <%= textarea f, :detail %>
+  <%= error_tag f, :detail %>
+
+  <%= label f, :image %>
+  <%= textarea f, :image %>
+  <%= error_tag f, :image %>
+
+  <%= label f, :distributor_id %>
+  <%= number_input f, :distributor_id %>
+  <%= error_tag f, :distributor_id %>
+
+  <%= label f, :price %>
+  <%= number_input f, :price, step: "any" %>
+  <%= error_tag f, :price %>
+
+  <%= label f, :start_date %>
+  <%= datetime_select f, :start_date %>
+  <%= error_tag f, :start_date %>
+
+  <%= label f, :end_date %>
+  <%= datetime_select f, :end_date %>
+  <%= error_tag f, :end_date %>
+
+  <%= label f, :open_date %>
+  <%= datetime_select f, :open_date %>
+  <%= error_tag f, :open_date %>
+
+  <%= label f, :close_date %>
+  <%= datetime_select f, :close_date %>
+  <%= error_tag f, :close_date %>
+
+  <%= label f, :is_open %>
+  <%= checkbox f, :is_open %>
+  <%= error_tag f, :is_open %>
+
+  <%= label f, :area %>
+  <%= text_input f, :area %>
+  <%= error_tag f, :area %>
+
+  <%= label f, :occupation %>
+  <%= text_input f, :occupation %>
+  <%= error_tag f, :occupation %>
+
+  <%= label f, :alls %>
+  <%= number_input f, :alls %>
+  <%= error_tag f, :alls %>
+
+  <%= label f, :stocks %>
+  <%= number_input f, :stocks %>
+  <%= error_tag f, :stocks %>
+
+  <%= label f, :deleted_at %>
+  <%= datetime_select f, :deleted_at %>
+  <%= error_tag f, :deleted_at %>
+
+  <%= submit "Save", phx_disable_with: "Saving..." %>
+</form>

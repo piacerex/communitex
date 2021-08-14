@@ -1,26 +1,31 @@
-<h1>Register</h1>
+<h1>ユーザ登録
+<p>Register</p>
+</h1>
 
 <%= form_for @changeset, Routes.user_registration_path(@conn, :create), fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+      <p>ご入力いただいた内容にエラーがあります</p>
     </div>
   <% end %>
 
-  <%= label f, :email %>
+  <p>下記をご記入いただき、ユーザ登録を行ってください</p>
+
+  <%= label f, :email, "メールアドレス" %>
   <%= email_input f, :email, required: true %>
   <%= error_tag f, :email %>
 
-  <%= label f, :password %>
+  <%= label f, :password, "パスワード" %>
   <%= password_input f, :password, required: true %>
   <%= error_tag f, :password %>
 
   <div>
-    <%= submit "Register" %>
+    <%= submit "ユーザ登録する" %>
   </div>
-<% end %>
 
-<p>
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %> |
-  <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
-</p>
+  <br>
+  <p>
+    <%= link "パスワードを忘れた場合はこちら", to: Routes.user_reset_password_path(@conn, :new) %> |
+    <%= link "ユーザ登録確認メールの再送", to: Routes.user_confirmation_path(@conn, :new) %>
+  </p>
+<% end %>

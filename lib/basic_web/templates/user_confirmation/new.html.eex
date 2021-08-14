@@ -1,15 +1,15 @@
-<h1>Resend confirmation instructions</h1>
+<h1>ユーザ登録確認の再送
+<p>Resend confirmation instructions</p>
+</h1>
 
 <%= form_for :user, Routes.user_confirmation_path(@conn, :create), fn f -> %>
+  <p>ユーザ登録確認用のURLをメールにて再送します</p>
+  <p>下記にメールアドレスをご記入いただき、メール再送を行ってください</p>
+
   <%= label f, :email %>
   <%= email_input f, :email, required: true %>
 
   <div>
-    <%= submit "Resend confirmation instructions" %>
+    <%= submit "ユーザ登録確認メールを再送する" %>
   </div>
 <% end %>
-
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %>
-</p>

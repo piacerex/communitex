@@ -1,15 +1,15 @@
-<h1>Forgot your password?</h1>
+<h1>パスワードを忘れた場合は…
+<p>If you forget your password...</p>
+</h1>
 
 <%= form_for :user, Routes.user_reset_password_path(@conn, :create), fn f -> %>
-  <%= label f, :email %>
+  <p>パスワードリセット用のURLをメールにてご案内します</p>
+  <p>下記にメールアドレスをご記入いただき、パスワードリセットを開始してください</p>
+
+  <%= label f, :email, "メールアドレス" %>
   <%= email_input f, :email, required: true %>
 
   <div>
-    <%= submit "Send instructions to reset password" %>
+    <%= submit "パスワードリセットを開始する" %>
   </div>
 <% end %>
-
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %>
-</p>

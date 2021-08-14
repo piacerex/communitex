@@ -9,25 +9,23 @@
     return_to: Routes.member_index_path(@socket, :index, page: @page, search: @search) %>
 <% end %>
 
-<nav class="pagination">
-  <ul class="pagination-body">
-    <li class="is-prev">
-      <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
-    </li>
+<ul class="pagination">
+  <li class="is-prev">
+    <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
+  </li>
 <%= for idx <- Enum.to_list(1..@total_pages) do %>
-    <li <%= if @page == idx, do: raw( "class=\"is-current\"" ), else: "" %>>
-    <a  <%= if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
-    </li>
+  <li <%= if @page == idx, do: raw( "class=\"is-current\"" ), else: "" %>>
+  <a  <%= if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
+  </li>
 <% end %>
-    <li class="is-next">
-      <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
-    </li>
-  </ul>
-</nav>
+  <li class="is-next">
+    <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
+  </li>
+</ul>
 
 <br>
 
-<form phx-change="search">
+<form phx-change="search" class="table-form">
 <div class="search">
   <input type="search" class="input" name="search" phx-debounce="300" placeholder="名前、メールアドレスで絞り込み" value="<%= @search %>">
   <i class="icon fas fa-search"></i>
@@ -93,21 +91,19 @@
 
 <span><%= live_patch "New Member", to: Routes.member_index_path(@socket, :new, page: @page, search: @search) %></span>
 
-<nav class="pagination">
-  <ul class="pagination-body">
-    <li class="is-prev">
-      <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
-    </li>
+<ul class="pagination">
+  <li class="is-prev">
+    <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
+  </li>
 <%= for idx <- Enum.to_list(1..@total_pages) do %>
-    <li <%= if @page == idx, do: raw( "class=\"is-current\"" ), else: "" %>>
-    <a  <%= if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
-    </li>
+  <li <%= if @page == idx, do: raw( "class=\"is-current\"" ), else: "" %>>
+  <a  <%= if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
+  </li>
 <% end %>
-    <li class="is-next">
-      <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
-    </li>
-  </ul>
-</nav>
+  <li class="is-next">
+    <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
+  </li>
+</ul>
 
 <br>
 <br>

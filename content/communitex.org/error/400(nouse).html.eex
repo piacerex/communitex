@@ -9,23 +9,13 @@ Updater:
 <h1>
 <br>
 お探しのページが見つかりません
-<p style="font-size: 1rem;">404 Not Found</p>
+<p>404 Not Found</p>
 </h1>
 
-<div class="main">
-  <div class="page-content-container">
-    <div class="box01">
-      <div class="box01__content">
-        <div class="text-unit">
-          <p class="text-center">
-            入力されたURLやお使いのブラウザのキャッシュ破損があり得ます。<br>
-            閲覧履歴データやCookieを消去してから再度アクセスを行ってください。<br>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="btn-group-center">
-      <button onclick="location.href='/'">トップページに戻る</v-btn>
-    </div>
-  </div>
+<div class="main centered">
+  <p>
+    入力されたURLやお使いのブラウザのキャッシュ破損があり得ます。<br>
+    閲覧履歴データやCookieを消去してから再度アクセスを行ってください。<br>
+  </p>
+  <button onclick="location.href='/'">トップページに戻る</button>
 </div>

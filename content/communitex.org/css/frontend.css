@@ -16,6 +16,9 @@ body
 
 
 
+/*--------------------------------------------------------------------------------------------------
+  ページ全体レイアウト（フッター縦幅固定用）
+--------------------------------------------------------------------------------------------------*/
 .v-main__wrap
 {
   display: flex;
@@ -23,24 +26,30 @@ body
   outline: 3px solid #04122c;
 }
 
-.container
+/*--------------------------------------------------------------------------------------------------
+  寄せ
+--------------------------------------------------------------------------------------------------*/
+.lefted
 {
-  min-height: 1px;
-  max-width: none;
-  padding: 0!important;
+  margin: 0 auto 0 0;
+  text-align: left;
 }
 
-.main
+.righted
 {
-  max-width: 100%;
-  max-width: 1200px;
-  padding: 0;
+  margin: 0 0 0 auto;
+  text-align: right;
 }
 
+.centered
+{
+  margin: 0 auto 0 auto;
+  text-align: center;
+}
 
-
-
-
+/*--------------------------------------------------------------------------------------------------
+  ヘッダー
+--------------------------------------------------------------------------------------------------*/
 .header
 {
   width: 100%;
@@ -57,19 +66,23 @@ body
   justify-content: flex-start;
   align-items: center;
   height: 70px;
-  padding:0 50px;
+  padding: 0 50px;
 }
 
-.header-control
+/*--------------------------------------------------------------------------------------------------
+  コンテナ（ヘッダー配下）
+--------------------------------------------------------------------------------------------------*/
+.container
 {
-  margin: 0 0 0 auto;
+  min-height: 1px;
+  max-width: none;
+  padding: 0 !important;
 }
 
-
-
-
-
-#footer.footer
+/*--------------------------------------------------------------------------------------------------
+  フッター
+--------------------------------------------------------------------------------------------------*/
+.footer
 {
   width: 100%;
   min-height: 1px;
@@ -77,37 +90,138 @@ body
   margin-top: auto;
 }
 
-#footer .footer-nav-body
+.footer-body
 {
   list-style: none;
   margin: 0;
   padding: 0 0 0 40px;
 }
 
-#footer .footer-nav-item
+.footer-item
 {
   margin: 1em;
   padding: 0;
   font-size: 15px;
-  color: #fff;
+  color: #ffffff;
   text-align: center;
 }
 
+/*--------------------------------------------------------------------------------------------------
+  中央絞り込み
+--------------------------------------------------------------------------------------------------*/
+.narrowed
+{
+  margin: 0 auto 80px !important;
+  max-width: 1200px;
+}
 
+/*--------------------------------------------------------------------------------------------------
+  nペインレイアウト（各ペインは左寄せ）の親
+--------------------------------------------------------------------------------------------------*/
+.lefted-pane
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: top;
+  margin-top: 0;
+}
 
+/*--------------------------------------------------------------------------------------------------
+  nペインレイアウト（各ペインは中央寄せ）の親
+--------------------------------------------------------------------------------------------------*/
+.centered-pane
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: top;
+  margin-top: 0;
+}
 
+/*--------------------------------------------------------------------------------------------------
+  3等分（2ペインレイアウトやGoogle Keep的メーソンリィレイアウトを作るのに利用）
+  
+  2ペインレイアウト：<div class="trisect"><div class="trisect-double">
+  メーソンリィレイアウト：<div class="trisect"><div class="trisect"><div class="trisect">
+--------------------------------------------------------------------------------------------------*/
+.trisect
+{
+  width: 33%;
+  padding: 0;
+  margin: 0;
+}
 
+.trisect-double
+{
+  width: 67%;
+  padding: 0;
+  margin: 0;
+}
 
+/*--------------------------------------------------------------------------------------------------
+  4等分（3ペインレイアウトを作るのに利用）
+  
+  3ペインレイアウト：<div class="quadrisect"><div class="quadrisect-double"><div class="quadrisect">
+--------------------------------------------------------------------------------------------------*/
+.quadrisect
+{
+  width: 25%;
+  padding: 0;
+  margin: 0;
+}
 
+.quadrisect-double
+{
+  width: 50%;
+  padding: 0;
+  margin: 0;
+}
 
+.quadrisect-triple
+{
+  width: 75%;
+  padding: 0;
+  margin: 0;
+}
+
+/*--------------------------------------------------------------------------------------------------
+  マークダウン用では無い見出し
+--------------------------------------------------------------------------------------------------*/
+.not-markdown-h2
+{
+  margin: 0 !important;
+  padding: 0 0 25px 0 !important;
+
+  font-weight: 700;
+  margin-bottom: 1em;
+  font-size: 24px !important;
+  border-bottom: none !important;
+}
+
+/*--------------------------------------------------------------------------------------------------
+  本文（見やすさのために左右スペースを置く）
+--------------------------------------------------------------------------------------------------*/
+.article
+{
+  padding: 0 3rem;
+}
+
+/*--------------------------------------------------------------------------------------------------
+  以下、自動生成HTML向け
+--------------------------------------------------------------------------------------------------*/
 h1
 {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+
   max-width: 100%;
   padding: 30px 30px 35px 30px;
+  /* margin: 0; */
 
   background-image: url(/images/caption-background.png);
   background-position: center center;
@@ -119,21 +233,39 @@ h1
   font-weight: 700;
 }
 
-h1 p
+h1 > p
 {
-  font-size: 3rem;
+  font-size: 1.2rem;
+}
+
+h3
+{
+  margin: 30px 10% 20px 10%;
+  max-width: 92%;
+}
+
+form
+{
+  margin: 0 10%;
+  max-width: 92%;
+}
+
+.table-form
+{
+  margin: 0 4%;
+  max-width: 92%;
 }
 
 table
 {
-  margin: 0px 4%;
+  margin: 0 4%;
   text-align: center;
   max-width: 92%;
 }
 
 th, td
 {
-  margin: 0px;
+  margin: 0;
   padding: 5px;
 
   text-align: center;
@@ -147,72 +279,71 @@ span
 
 ul
 {
-  margin: 0px 4%;
+  margin: 0 4%;
   max-width: 92%;
-}
-
-
-
-
-label,legend
-{
-  display: block;
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-fieldset,input,label,legend,select,textarea
-{
-  margin-bottom: 0;
 }
 
 button
 {
-  margin: 30px 0px 0px 0px;
+  margin: 30px 0 0 0;
 
   height: 35px;
   line-height: 35px;
   border-radius: 30px;
-  border: 0px;
+  border: 0;
 
-  background-color: #1976d2!important;
+  background-color: #1976d2 !important;
 
-  color: white!important;
+  color: white !important;
 }
 
 .button
 {
-  margin: 0px 20px 0px 0px;
+  margin: 0 20px 0 0;
 
   height: 35px;
   line-height: 35px;
   border-radius: 30px;
-  border: 0px;
+  border: 0;
 
-  background-color: #1976d2!important;
+  background-color: #1976d2 !important;
+  /* background-color: #2869ca !important; */
 
-  color: white!important;
+  color: white !important;
   font-weight: normal;
   text-transform: none;
 }
 
 button:hover
 {
-  color: white!important;
-  background-color: #2092da!important;
+  color: white !important;
+  background-color: #2092da !important;
 }
 
 .button:hover
 {
-  color: white!important;
-  background-color: #2092da!important;
+  color: white !important;
+  background-color: #2092da !important;
+  /* background-color: #2879ea !important; */
+}
+
+label, legend
+{
+  margin: 25px 0 0 0;
+
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+input[type=file], fieldset, input, label, legend, select, textarea
+{
+  margin-bottom: 0;
 }
 
 input[type=text], input[type=password], input[type=search], input[type=number], input[type=email], input[type=tel], input[type=date], input[type=url], select, textarea
 {
-  width: 100%;
   height: auto;
-  padding: 0 8px;
+  padding: 0 30px 0 0;
 
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -228,49 +359,67 @@ input[type=text], input[type=password], input[type=search], input[type=number], 
   box-sizing: inherit;
 }
 
-button.mb0.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--rounded.theme--dark.elevation-2.v-size--large.indigo.darken-4
+.invalid-feedback
 {
-  margin: 0;
+  display: inline;
+  line-height: 3em;
+}
+
+.checkbox-pane
+{
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: baseline;
+}
+
+input:-webkit-autofill
+{
+  transition: background-color 5000s ease-in-out 0s !important;
 }
 
 .v-btn
 {
+  margin: 0;
   text-transform: none;
 }
 
-
-
-
-
-
-.pagination-body
+/*--------------------------------------------------------------------------------------------------
+  ページネータUI
+--------------------------------------------------------------------------------------------------*/
+.pagination
 {
   display: inline-flex;
   justify-content: center;
+  align-items: center;
+
   margin: 0;
   padding: 0;
   width: 100%;
   max-width: 100%;
+
   list-style: none;
-  align-items: center;
   list-style-type: none;
 }
 
-.pagination-body > li
+.pagination > li
 {
   display: flex;
   align-items: center;
 }
 
-.pagination-body > li > a
+.pagination > li > a
 {
-  display:flex;
-  align-items: center;
+  display: flex;
   justify-content: center;  
+  align-items: center;
+
   width: auto;
   height: 42px;  
   border-radius: 4px;
-  line-height:1;
+
+  line-height: 1;
   font-size: 15px;
   margin: .3rem;
   min-width: 34px;
@@ -278,46 +427,52 @@ button.mb0.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--rounded.theme--dark.ele
   text-decoration: none;
   transition: .3s cubic-bezier(0,0,.2,1);
   box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
-  background: #fff;
+  background: #ffffff;
   color: rgba(0,0,0,.87);
 }
 
-.pagination-body > li.is-current > a
+.pagination > li.is-current > a
 {
   background: #1976d2 !important;
-  color: #fff !important;
-  pointer-events:none;
+  color: #ffffff !important;
+  pointer-events: none;
 }
 
-.pagination-body > .is-prev > a,
-.pagination-body > .is-next > a
+.pagination > .is-prev > a,
+.pagination > .is-next > a
 {
-  color: #999;
-  font-weigth:bold;
+  color: #999999;
+  font-weigth: bold;
 }
 
+/*--------------------------------------------------------------------------------------------------
+  検索UI
+--------------------------------------------------------------------------------------------------*/
 .search
 {
   text-align: right;
   position: relative;
+  margin: 0 0 30px 0;
 }
 
 .search .input
 {
-  margin: 0px 4%;
+  margin: 0;
   width: 400px;
 }
 
 .search .icon
 {
   position: absolute;
-  right: 5%;
-  top: 0px;
+  right: 0;
+  top: 0;
   font-size: 20px;
   color: gray;
 }
 
-
+/*--------------------------------------------------------------------------------------------------
+  LiveViewモーダルダイアログ
+--------------------------------------------------------------------------------------------------*/
 .phx-modal
 {
   
@@ -326,58 +481,4 @@ button.mb0.v-btn.v-btn--is-elevated.v-btn--has-bg.v-btn--rounded.theme--dark.ele
 .phx-modal-content
 {
   margin: 4% auto;
-}
-
-
-
-
-
-
-
-.article-unit
-{
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  align-items: flex-start
-}
-
-.article-unit-chamber>:first-child,
-.article-unit-content>:first-child,
-.v-application .article-unit-chamber>:first-child,
-.v-application .article-unit-content>:first-child
-{
-  margin-top: 0;
-}
-
-.article-unit-content
-{
-  width: 57%;
-  max-width: 57%;
-}
-
-.article-unit-content>:last-child,
-.v-application .article-unit-content>:last-child,
-.v-application .article-unit-content__text p:last-child,
-.v-application .v-card__text p:last-child
-{
-  margin-bottom: 0
-}
-
-.v-application .article-unit-content__title
-{
-  font-weight: 700;
-  margin-bottom: 1em;
-  line-height: 1.4;
-  font-size: 24px;
-  border-bottom: none
-}
-
-.btn-group-center
-{
-  width: 100%;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-items: stretch;
 }

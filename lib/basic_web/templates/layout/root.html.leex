@@ -69,28 +69,22 @@ current_js   = if  JsSwitcher.is_alive(), do:  JsSwitcher.current(),  else: ""
 <!-- ヘッダーここから -->
 <header class="header">
   <div class="header__inner">
-    <div class="header-logo">
-      <a href="/"><img src="/images/logo-header.png"></a>
-    </div>
+    <a href="/"><img src="/images/logo-header.png"></a>
 
-    <div class="header-control">
+    <div class="righted">
 <%= if @current_user do %>
-      <div class="header-userinfo">
-        <v-menu offset-y open-on-hover>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" v-on="on"><v-icon dark left>mdi-account</v-icon>{{ current_user.email }}</v-btn>
-          </template>
-          <v-list>
-            <v-list-item v-for="( item, i ) in [ { title: 'メールアドレス／パスワード変更', href: '/users/settings/' }, { title: 'ログアウト', href: '/users/log_out/' } ]" :key="i" :href="item.href">
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-          </v-menu>
-      </div>
+      <v-menu offset-y open-on-hover>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" v-on="on"><v-icon dark left>mdi-account</v-icon>{{ current_user.email }}</v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="( item, i ) in [ { title: 'メールアドレス／パスワード変更', href: '/users/settings/' }, { title: 'ログアウト', href: '/users/log_out/' } ]" :key="i" :href="item.href">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
 <% else %>
-      <div class="header-btn-group">
-        <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" v-on:click="location = '/users/log_in'">ログイン</v-btn>
-      </div>
+      <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" v-on:click="location = '/users/log_in'">ログイン</v-btn>
 <% end %>
     </div>
   </div>
@@ -100,11 +94,13 @@ current_js   = if  JsSwitcher.is_alive(), do:  JsSwitcher.current(),  else: ""
 <%= @inner_content %>
 
 <!-- フッターここから -->
-<div id="footer" class="footer">
-  <ul class="footer-nav-body">
-    <li class="footer-nav-item">© 2021 communitex.org</li>
+<br>
+<br>
+<footer class="footer">
+  <ul class="footer-body">
+    <li class="footer-item">© 2021 communitex.org</li>
   </ul>
-</div>
+</footer>
 <!-- フッターここまで -->
 
 </v-main></v-app></div>

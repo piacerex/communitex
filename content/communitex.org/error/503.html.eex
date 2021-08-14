@@ -9,23 +9,13 @@ Updater:
 <h1>
 <br>
 一時的にアクセスできません
-<p style="font-size: 1rem;">503 Service Unavailable</p>
+<p>503 Service Unavailable</p>
 </h1>
 
-<div class="main">
-  <div class="page-content-container">
-    <div class="box01">
-      <div class="box01__content">
-        <div class="text-unit">
-          <p class="text-center">
-            サーバーにアクセスが集中しているか、メンテナンスを実施中のため、一時的にアクセスできない状態です。<br>
-            少し時間を空けてから再度アクセスを行ってください。<br>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="btn-group-center">
-      <button onclick="location.href='/'">トップページに戻る</v-btn>
-    </div>
-  </div>
+<div class="main centered">
+  <p>
+    サーバーにアクセスが集中しているか、メンテナンスを実施中のため、一時的にアクセスできない状態です。<br>
+    少し時間を空けてから再度アクセスを行ってください。<br>
+  </p>
+  <button onclick="location.href='/'">トップページに戻る</button>
 </div>

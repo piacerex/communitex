@@ -180,12 +180,10 @@ td.hljs-ln-code
 -----------------------------------------------------------------------*/
 .main
 {
-	margin: 20px auto 80px; 
+	margin: 20px auto 80px auto;
 	/*width:  90vw;*/
-	max-width:1200px;
-	
+	max-width: 1200px;
 }
-
 
 .main table tr th:nth-of-type(2)
 {
@@ -219,7 +217,6 @@ td.hljs-ln-code
 	display: block;
 
 	max-width: 100%;
-	margin-top:    30px;
 	margin-bottom: 30px;
 }
 
@@ -376,10 +373,3 @@ td.hljs-ln-code
 {
 	color: #000000;
 }
-
-a:hover
-{
-	color: red;
-}
-
-

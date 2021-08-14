@@ -5,7 +5,7 @@ defmodule BasicWeb.SphereLive do
   def mount(params, _session, socket) do
     ContentFolder.start_link()
     pysical_content_root_folder = Path.join(Application.fetch_env!(:sphere, :local_root), "content")
-    content = folder_in_between_if_exists(params["content"], pysical_content_root_folder, "communitex.org")  #TODO: "communitex"のようなデフォルトをconfigで指定可能に
+    content = folder_in_between_if_exists(params["content"], pysical_content_root_folder, Path.split(Application.fetch_env!(:sphere, :content_folder)) |> List.last)
     content_folder = Path.join("content", content)
 
     content_path = if params["path_"] == [], do: "", else: Path.join(params["path_"])
@@ -35,7 +35,7 @@ defmodule BasicWeb.SphereLive do
 
     ContentFolder.start_link()
     pysical_content_root_folder = Path.join(Application.fetch_env!(:sphere, :local_root), "content")
-    content = folder_in_between_if_exists(params["content"], pysical_content_root_folder, "communitex.org")  #TODO: "communitex"のようなデフォルトをconfigで指定可能に
+    content = folder_in_between_if_exists(params["content"], pysical_content_root_folder, Path.split(Application.fetch_env!(:sphere, :content_folder)) |> List.last)
     content_folder = Path.join("content", content)
 
     try do
@@ -122,13 +122,13 @@ defmodule BasicWeb.SphereLive do
   def folder_in_between_if_exists(folder_name, prefix_pysical_folder_path, no_exist_folder_name) do
     if folder_name == nil || folder_name == "" do
         no_exist_folder_name
+    else
+      if File.exists?(Path.join(prefix_pysical_folder_path, folder_name)) do
+        folder_name <> "/"
       else
-        if File.exists?(Path.join(prefix_pysical_folder_path, folder_name)) do
-          folder_name <> "/"
-        else
-          no_exist_folder_name
-        end
+        no_exist_folder_name
       end
+    end
   end
 
 end

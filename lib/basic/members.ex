@@ -18,7 +18,7 @@ defmodule Basic.Members do
       [%Member{}, ...]
 
   """
-  def list_members, do: paginate_members
+  def list_members, do: paginate_members()
 
   @doc """
   Gets a single member.
@@ -126,7 +126,7 @@ defmodule Basic.Members do
       from(member in Member,
         join: user in User, 
           on: [id: member.user_id],
-        order_by: [desc: :user_id], 
+        order_by: [desc: member.id], 
         select: {map(member, ^fields), map(user, [:email])}
       )
 

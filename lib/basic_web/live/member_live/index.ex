@@ -64,13 +64,13 @@ defmodule BasicWeb.MemberLive.Index do
     |> assign(:total_pages, String.to_integer(total_pages))
   end
 
-  defp apply_action(socket, :new, %{"page" => _page, "search" => _search, "total_pages" => _total_pages}) do
+  defp apply_action(socket, :new, %{"page" => page, "search" => search, "total_pages" => total_pages}) do
     socket
     |> assign(:page_title, "New Member")
     |> assign(:member, %Member{})
-    |> assign(:page, 1)
-    |> assign(:search, "")
-    |> assign(:total_pages, 1)
+    |> assign(:page, String.to_integer(page))
+    |> assign(:search, search)
+    |> assign(:total_pages, String.to_integer(total_pages))
   end
 
   defp apply_action(socket, :index, params) do

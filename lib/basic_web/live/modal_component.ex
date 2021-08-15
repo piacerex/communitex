@@ -13,7 +13,13 @@ defmodule BasicWeb.ModalComponent do
 
       <div class="phx-modal-content">
         <%= live_patch raw("&times;"), to: @return_to, class: "phx-modal-close" %>
-        <%= live_component @socket, @component, @opts %>
+        <%
+        opts = case Keyword.fetch!(@opts, :action) do
+          :new -> @opts |> Keyword.replace!(:return_to, Keyword.fetch!(@opts, :return_to) |> String.replace(~r/\?.*/, ""))
+          _    -> @opts
+        end
+        %>
+        <%= live_component @socket, @component, opts %>
       </div>
     </div>
     """

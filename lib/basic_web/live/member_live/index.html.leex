@@ -35,6 +35,7 @@
 <table>
   <thead>
     <tr>
+      <th>メンバID</th>
       <th>ユーザID</th>
       <th>姓</th>
       <th>名</th>
@@ -55,6 +56,7 @@
   <tbody id="members">
     <%= for member <- @members do %>
       <tr id="member-<%= member.id %>">
+        <td><%= member.id %></td>
         <td><%= member.user_id %></td>
         <td><%= member.last_name %></td>
         <td><%= member.first_name %></td>

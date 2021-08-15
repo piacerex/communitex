@@ -9,6 +9,7 @@
     return_to: Routes.member_index_path(@socket, :index, page: @page, search: @search, total_pages: @total_pages) %>
 <% end %>
 
+<%= if @params["card"] == nil do %>
 <ul class="pagination">
   <li class="is-prev">
     <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
@@ -106,3 +107,73 @@
     <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
   </li>
 </ul>
+
+<% else %>
+<div class="main lefted-pane">
+
+  <nav class="quadrisect navigation">
+    <form phx-change="search" class="table-form">
+    <div class="search">
+      <input type="search" class="input" name="search" phx-debounce="300" placeholder="Search" value="<%= @search %>">
+      <i class="icon fas fa-search"></i>
+    </div>
+    </form>
+
+    <h2 class="not-markdown-h2">Simple.</h2>
+
+    <table>
+    <tr>
+      <td style="text-align: left;">Home</td>
+    </tr>
+    <tr>
+     <td style="text-align: left;">Accessories</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;">Denim</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;">Footwear</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;">Jeans</td>
+    </tr>
+    <tr>
+     <td style="text-align: left;">Outerwear</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;">Pants</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;">Shirts</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;">T-Shirts</td>
+    </tr>
+    <tr>
+      <td style="text-align: left;">Shorts</td>
+    </tr>
+    </table>
+  </nav>
+
+  <div class="quadrisect-triple centered-pane">
+
+    <ul class="card">
+<%= for member <- @members do %>
+      <li>
+  <%= if is_nil(member.image) do %>
+        <img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>">
+  <% else %>
+        <img src="data:images/jpeg;base64,<%= member.image %>">
+  <% end %>
+        <p style="text-align: center; margin-top: 10px;">
+          <%= member.last_name %> - <%= member.first_name %><br>
+          <%= member.email %><br>
+        </p>
+    </li>
+<% end %>
+    </ul>
+
+  </div>
+
+</div>
+<% end %>

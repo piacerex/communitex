@@ -5,8 +5,8 @@ defmodule BasicWeb.MemberLive.Index do
   alias Basic.Members.Member
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, members: Members.list_members())}
+  def mount(params, _session, socket) do
+    {:ok, assign(socket, members: Members.list_members(), params: params)}
   end
 
   def handle_event("page", %{"page" => page, "search" => ""}, socket) do

@@ -151,6 +151,9 @@ body
   width: 33%;
   padding: 0;
   margin: 0;
+
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 .trisect-double
@@ -158,6 +161,9 @@ body
   width: 67%;
   padding: 0;
   margin: 0;
+
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 /*--------------------------------------------------------------------------------------------------
@@ -170,6 +176,9 @@ body
   width: 25%;
   padding: 0;
   margin: 0;
+
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 .quadrisect-double
@@ -177,6 +186,9 @@ body
   width: 50%;
   padding: 0;
   margin: 0;
+
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 .quadrisect-triple
@@ -184,6 +196,9 @@ body
   width: 75%;
   padding: 0;
   margin: 0;
+
+  overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 /*--------------------------------------------------------------------------------------------------
@@ -468,6 +483,21 @@ input:-webkit-autofill
   top: 0;
   font-size: 20px;
   color: gray;
+}
+
+/*--------------------------------------------------------------------------------------------------
+  カードUI
+--------------------------------------------------------------------------------------------------*/
+.card
+{
+  content: "";
+  list-style: none;
+}
+
+.card > li
+{
+  float: left;
+  width: calc((100% - 4rem) / 3);
 }
 
 /*--------------------------------------------------------------------------------------------------

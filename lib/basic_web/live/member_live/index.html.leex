@@ -6,7 +6,7 @@
     title: @page_title,
     action: @live_action,
     member: @member,
-    return_to: Routes.member_index_path(@socket, :index, page: @page, search: @search) %>
+    return_to: Routes.member_index_path(@socket, :index, page: @page, search: @search, total_pages: @total_pages) %>
 <% end %>
 
 <ul class="pagination">
@@ -89,7 +89,7 @@
   </tbody>
 </table>
 
-<span><%= live_patch "New Member", to: Routes.member_index_path(@socket, :new, page: @page, search: @search) %></span>
+<span><%= live_patch "New Member", to: Routes.member_index_path(@socket, :new, page: @page, search: @search, total_pages: @total_pages) %></span>
 
 <ul class="pagination">
   <li class="is-prev">
@@ -104,8 +104,3 @@
     <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
   </li>
 </ul>
-
-<br>
-<br>
-<br>
-<br>

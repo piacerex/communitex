@@ -55,7 +55,7 @@ defmodule BasicWeb.MemberLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id, "page" => page, "search" => search, "total_pages" => total_pages} = params) do
+  defp apply_action(socket, :edit, %{"id" => id, "page" => page, "search" => search, "total_pages" => total_pages}) do
     socket
     |> assign(:page_title, "Edit Member")
     |> assign(:member, Members.get_member!(id))
@@ -64,12 +64,13 @@ defmodule BasicWeb.MemberLive.Index do
     |> assign(:total_pages, String.to_integer(total_pages))
   end
 
-  defp apply_action(socket, :new, %{"page" => _page, "search" => _search}) do
+  defp apply_action(socket, :new, %{"page" => _page, "search" => _search, "total_pages" => _total_pages}) do
     socket
     |> assign(:page_title, "New Member")
     |> assign(:member, %Member{})
     |> assign(:page, 1)
     |> assign(:search, "")
+    |> assign(:total_pages, 1)
   end
 
   defp apply_action(socket, :index, params) do

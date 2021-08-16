@@ -7,7 +7,7 @@
   phx_submit: "save" %>
 
   <%= label f, :email %>
-  <%= textarea f, :email %>
+  <%= text_input f, :email %>
   <%= error_tag f, :email %>
 
   <%= submit "Save", phx_disable_with: "Saving..." %>

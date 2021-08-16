@@ -15,11 +15,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ```
 mix deps.get
-mix ecto.create
-mix ecto.migrate
-cd assets
-npm install
-cd ..
+mix ecto.setup
 iex -S mix phx.server
 ```
 

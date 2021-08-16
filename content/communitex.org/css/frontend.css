@@ -491,9 +491,80 @@ input:-webkit-autofill
   padding: 0 !important;
 }
 
+.card > li
+{
+  margin: 10px;
+  padding: 0;
+}
+
+.round, .round > li
+{
+  border-radius: 5px;
+}
+
+.shadow, .shadow > li
+{
+  box-shadow: 1px 1px 4px #c0c0c0;
+}
+
+.shadow:hover, .shadow > li:hover
+{
+  box-shadow: 3px 5px 12px #c0c0c0;
+}
+
 .card > li > img
 {
   margin: 0 auto;
+}
+
+.rich
+{
+  position: relative;
+  margin-bottom: -1rem;
+}
+
+.rich > p.overlap
+{
+  position: absolute;
+  bottom: 8px;
+  left: 15px;
+
+  margin: 0 !important;
+
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.rich > p.badge
+{
+  position: absolute;
+  top: -9px;
+  right: -14px;
+
+  display: block;
+  padding: 16px 14px;
+  margin: 0;
+
+  text-align: center;
+  vertical-align: middle;
+
+  background:#d05060;
+  border-radius: 50%;
+
+  color: white;
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
+.silver
+{
+  color: #f0f0f0;
+  text-shadow: 1px 1px 1px black;
+}
+
+.gray
+{
+  color: gray;
 }
 
 /*--------------------------------------------------------------------------------------------------
@@ -554,6 +625,12 @@ input:-webkit-autofill
     width: calc((100% - 4rem));
   }
 
+/*
+  h1
+  {
+    color: green;
+  }
+*/
 }
 
 /*--------------------------------------------------------------------------------------------------
@@ -579,6 +656,19 @@ input:-webkit-autofill
     display: none !important;
   }
 
+  /* ナビゲーション以外は左寄せに変更 */
+  .main, .lefted-pane
+  {
+    justify-content: start;
+    text-align: left;
+  }
+
+  /* ナビゲーションは表示 */
+  .navigation
+  {
+    display: block;
+  }
+
   /*------------------------------------------------------------------------------------------------
     カードUI（可変部分）
   ------------------------------------------------------------------------------------------------*/
@@ -588,6 +678,12 @@ input:-webkit-autofill
     width: calc((100% - 4rem) / 2);
   }
 
+/*
+  h1
+  {
+    color: red;
+  }
+*/
 }
 
 /*--------------------------------------------------------------------------------------------------
@@ -613,6 +709,19 @@ input:-webkit-autofill
     display: inherit;
   }
 
+  /* ナビゲーション以外は左寄せに変更 */
+  .main, .lefted-pane
+  {
+    justify-content: start;
+    text-align: left;
+  }
+
+  /* ナビゲーションは表示 */
+  .navigation
+  {
+    display: block;
+  }
+
   /*------------------------------------------------------------------------------------------------
     カードUI（可変部分）
   ------------------------------------------------------------------------------------------------*/
@@ -622,4 +731,10 @@ input:-webkit-autofill
     width: calc((100% - 4rem) / 3);
   }
 
+/*
+  h1
+  {
+    color: blue;
+  }
+*/
 }

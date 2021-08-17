@@ -12,12 +12,12 @@
 <table>
   <thead>
     <tr>
-      <th>Brand</th>
-      <th>Corporate</th>
-      <th>Distributor</th>
-      <th>Discount</th>
-      <th>Boost</th>
-      <th>Deleted at</th>
+      <th>名称</th>
+      <th>企業ID</th>
+      <th>ディストリビューターID</th>
+      <th>割引</th>
+      <th>ブースト</th>
+<!--      <th>Deleted at</th>-->
 
       <th></th>
     </tr>
@@ -30,7 +30,7 @@
         <td><%= agency.distributor_id %></td>
         <td><%= agency.discount %></td>
         <td><%= agency.boost %></td>
-        <td><%= agency.deleted_at %></td>
+<!--        <td><%= agency.deleted_at %></td>-->
 
         <td>
           <span><%= live_redirect "Show", to: Routes.agency_show_path(@socket, :show, agency) %></span>

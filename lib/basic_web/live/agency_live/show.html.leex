@@ -12,35 +12,35 @@
 <ul>
 
   <li>
-    <strong>Brand:</strong>
+    <strong>名称:</strong>
     <%= @agency.brand %>
   </li>
 
   <li>
-    <strong>Corporate:</strong>
+    <strong>企業ID:</strong>
     <%= @agency.corporate_id %>
   </li>
 
   <li>
-    <strong>Distributor:</strong>
+    <strong>ディストリビューターID:</strong>
     <%= @agency.distributor_id %>
   </li>
 
   <li>
-    <strong>Discount:</strong>
+    <strong>割引:</strong>
     <%= @agency.discount %>
   </li>
 
   <li>
-    <strong>Boost:</strong>
+    <strong>ブースト:</strong>
     <%= @agency.boost %>
   </li>
-
+<!--
   <li>
     <strong>Deleted at:</strong>
     <%= @agency.deleted_at %>
   </li>
-
+-->
 </ul>
 
 <span><%= live_patch "Edit", to: Routes.agency_show_path(@socket, :edit, @agency), class: "button" %></span>

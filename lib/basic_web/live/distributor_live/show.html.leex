@@ -12,20 +12,20 @@
 <ul>
 
   <li>
-    <strong>Brand:</strong>
+    <strong>名称:</strong>
     <%= @distributor.brand %>
   </li>
 
   <li>
-    <strong>Corporate:</strong>
+    <strong>企業ID:</strong>
     <%= @distributor.corporate_id %>
   </li>
-
+<!--
   <li>
     <strong>Deleted at:</strong>
     <%= @distributor.deleted_at %>
   </li>
-
+-->
 </ul>
 
 <span><%= live_patch "Edit", to: Routes.distributor_show_path(@socket, :edit, @distributor), class: "button" %></span>

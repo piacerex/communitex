@@ -17,6 +17,6 @@ defmodule Basic.Agencies.Agency do
   def changeset(agency, attrs) do
     agency
     |> cast(attrs, [:brand, :corporate_id, :distributor_id, :discount, :boost, :deleted_at])
-    |> validate_required([:brand, :corporate_id, :distributor_id, :discount, :boost, :deleted_at])
+    |> validate_required([:brand, :corporate_id, :distributor_id, :discount, :boost])
   end
 end

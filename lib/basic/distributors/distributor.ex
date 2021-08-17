@@ -14,6 +14,6 @@ defmodule Basic.Distributors.Distributor do
   def changeset(distributor, attrs) do
     distributor
     |> cast(attrs, [:brand, :corporate_id, :deleted_at])
-    |> validate_required([:brand, :corporate_id, :deleted_at])
+    |> validate_required([:brand, :corporate_id])
   end
 end

@@ -5,8 +5,8 @@ defmodule BasicWeb.BlogLive.Index do
   alias Basic.Blogs.Blog
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :blogs, list_blogs())}
+  def mount(params, _session, socket) do
+    {:ok, assign(socket, blogs: list_blogs(), params: params)}
   end
 
   @impl true

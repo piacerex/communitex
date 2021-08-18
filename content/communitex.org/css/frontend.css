@@ -568,6 +568,265 @@ input:-webkit-autofill
 }
 
 /*--------------------------------------------------------------------------------------------------
+  カルーセル
+--------------------------------------------------------------------------------------------------*/
+@keyframes tonext 
+{
+  75% 
+  {
+    left: 0;
+  }
+  95% 
+  {
+    left: 100%;
+  }
+  98% 
+  {
+    left: 100%;
+  }
+  99% 
+  {
+    left: 0;
+  }
+}
+
+@keyframes tostart 
+{
+  75% 
+  {
+    left: 0;
+  }
+  95% 
+  {
+    left: -300%;
+  }
+  98% 
+  {
+    left: -300%;
+  }
+  99% 
+  {
+    left: 0;
+  }
+}
+
+@keyframes snap 
+{
+  96% 
+  {
+    scroll-snap-align: center;
+  }
+  97% 
+  {
+    scroll-snap-align: none;
+  }
+  99% 
+  {
+    scroll-snap-align: none;
+  }
+  100% 
+  {
+    scroll-snap-align: center;
+  }
+}
+
+.carousel 
+{
+  position: relative;
+}
+
+.carousel > ol, li 
+{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel > ol
+{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: 400px;
+
+  display: flex;
+  overflow-x: scroll;
+  counter-reset: item;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+.carousel > ol > li
+{
+  position: relative;
+  flex: 0 0 100%;
+  width: 100%;
+  background-color: paleturquoise;
+}
+
+.carousel > ol > li:nth-child(even)
+{
+  background-color: palevioletred;
+}
+
+.carousel > ol > li:nth-child(3)
+{
+  background-color: greenyellow;
+}
+
+.carousel > ol > li:before
+{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%,-40%,70px);
+  color: #fff;
+  font-size: 2em;
+}
+
+.carousel > * 
+{
+  box-sizing: border-box;
+  scrollbar-color: transparent transparent; /* thumb and track color */
+  scrollbar-width: 0px;
+  -ms-overflow-style: none;
+}
+
+.carousel > *::-webkit-scrollbar 
+{
+  width: 0;
+}
+
+.carousel > *::-webkit-scrollbar-track 
+{
+  background: transparent;
+}
+
+.carousel > *::-webkit-scrollbar-thumb 
+{
+  background: transparent;
+  border: none;
+}
+
+.carousel__snapper 
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: center;
+}
+
+@media (hover: hover) 
+{
+  .carousel__snapper 
+  {
+    animation-name: tonext, snap;
+    animation-timing-function: ease;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+  }
+
+  .carousel__slide:last-child .carousel__snapper 
+  {
+    animation-name: tostart, snap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) 
+{
+  .carousel__snapper 
+  {
+    animation-name: none;
+  }
+}
+
+.carousel:hover .carousel__snapper, .carousel:focus-within .carousel__snapper 
+{
+  animation-name: none;
+}
+
+.carousel > nav
+{
+  position: absolute;
+  right: 0;
+  top: 320px;
+  left: 0;
+  text-align: center;
+}
+
+.carousel > nav > ol, .carousel > nav > ol > li
+{
+  display: inline-block;
+}
+
+.carousel > nav > ol > li > a
+{
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+
+  background-color: #707070;
+  background-clip: content-box;
+  border: 0.25rem solid transparent;
+  border-radius: 50%;
+  font-size: 0;
+  transition: transform 0.1s;
+}
+
+.carousel::before, .carousel::after, .carousel-prev, .carousel-next
+{
+  position: absolute;
+  top: 200px;
+  width: 3rem;
+  height: 3rem;
+
+  transform: translateY(-50%);
+  border-radius: 50%;
+  font-size: 0;
+  outline: 0;
+}
+
+.carousel::before, .carousel-prev
+{
+  left: 20px;
+}
+
+.carousel::after, .carousel-next
+{
+  right: 20px;
+}
+
+.carousel::before, .carousel::after 
+{
+  content: '';
+  z-index: 1;
+  background-color: #707070;
+  background-size: 1.5rem 1.5rem;
+  background-repeat: no-repeat;
+  background-position: center center;
+  color: #ffffff;
+  font-size: 2rem;
+  line-height: 3rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.carousel::before
+{
+  content: "<";
+}
+
+.carousel::after
+{
+  content: ">";
+}
+
+/*--------------------------------------------------------------------------------------------------
   LiveViewモーダルダイアログ
 --------------------------------------------------------------------------------------------------*/
 .phx-modal

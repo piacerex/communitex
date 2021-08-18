@@ -9,6 +9,8 @@
     return_to: Routes.blog_index_path(@socket, :index) %>
 <% end %>
 
+<%= if @params["carousel"] == nil do %>
+
 <table>
   <thead>
     <tr>
@@ -49,3 +51,35 @@
 </table>
 
 <span><%= live_patch "New Blog", to: Routes.blog_index_path(@socket, :new) %></span>
+
+<% else %>
+
+<section class="carousel">
+  <ol>
+    <li id="carousel-1" tabindex="0">
+      <div class="carousel__snapper">
+        <a href="#carousel-3" class="carousel-prev">Go to last slide</a>
+        <a href="#carousel-2" class="carousel-next">Go to next slide</a>
+      </div>
+    </li>
+    <li id="carousel-2" tabindex="0">
+      <div class="carousel__snapper"></div>
+      <a href="#carousel-1" class="carousel-prev">Go to previous slide</a>
+      <a href="#carousel-3" class="carousel-next">Go to next slide</a>
+    </li>
+    <li id="carousel-3" tabindex="0">
+      <div class="carousel__snapper"></div>
+      <a href="#carousel-2" class="carousel-prev">Go to previous slide</a>
+      <a href="#carousel-1" class="carousel-next">Go to next slide</a>
+    </li>
+  </ol>
+  <nav>
+    <ol>
+      <li class="nav-item"><a href="#carousel-1" class="nav-button">1</a>
+      <li class="nav-item"><a href="#carousel-2" class="nav-button">2</a>
+      <li class="nav-item"><a href="#carousel-3" class="nav-button">3</a>
+    </ol>
+  </nav>
+</section>
+
+<% end %>

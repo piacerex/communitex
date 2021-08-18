@@ -19,6 +19,6 @@ defmodule Basic.Corporates.Corporate do
   def changeset(corporate, attrs) do
     corporate
     |> cast(attrs, [:name, :postal, :prefecture, :city, :address1, :address2, :tel, :deleted_at])
-    |> validate_required([:name, :postal, :prefecture, :city, :address1, :address2, :tel, :deleted_at])
+    |> validate_required([:name])
   end
 end

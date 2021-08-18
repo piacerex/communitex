@@ -12,45 +12,45 @@
 <ul>
 
   <li>
-    <strong>Name:</strong>
+    <strong>企業名:</strong>
     <%= @corporate.name %>
   </li>
 
   <li>
-    <strong>Postal:</strong>
+    <strong>郵便番号:</strong>
     <%= @corporate.postal %>
   </li>
 
   <li>
-    <strong>Prefecture:</strong>
+    <strong>都道府県:</strong>
     <%= @corporate.prefecture %>
   </li>
 
   <li>
-    <strong>City:</strong>
+    <strong>市区町村:</strong>
     <%= @corporate.city %>
   </li>
 
   <li>
-    <strong>Address1:</strong>
+    <strong>番地:</strong>
     <%= @corporate.address1 %>
   </li>
 
   <li>
-    <strong>Address2:</strong>
+    <strong>マンション名など:</strong>
     <%= @corporate.address2 %>
   </li>
 
   <li>
-    <strong>Tel:</strong>
+    <strong>電話番号:</strong>
     <%= @corporate.tel %>
   </li>
-
+<!--
   <li>
     <strong>Deleted at:</strong>
     <%= @corporate.deleted_at %>
   </li>
-
+-->
 </ul>
 
 <span><%= live_patch "Edit", to: Routes.corporate_show_path(@socket, :edit, @corporate), class: "button" %></span>

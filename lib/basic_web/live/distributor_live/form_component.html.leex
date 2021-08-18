@@ -6,17 +6,17 @@
   phx_change: "validate",
   phx_submit: "save" %>
 
-  <%= label f, :brand %>
+  <%= label f, :brand, "名称" %>
   <%= text_input f, :brand %>
   <%= error_tag f, :brand %>
 
-  <%= label f, :corporate_id %>
+  <%= label f, :corporate_id, "企業ID" %>
   <%= number_input f, :corporate_id %>
   <%= error_tag f, :corporate_id %>
-
+<!--
   <%= label f, :deleted_at %>
   <%= datetime_select f, :deleted_at %>
   <%= error_tag f, :deleted_at %>
-
+-->
   <%= submit "Save", phx_disable_with: "Saving..." %>
 </form>

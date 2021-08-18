@@ -12,21 +12,23 @@
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Detail</th>
+      <th>募集名</th>
+      <th>詳細</th>
       <th>Image</th>
-      <th>Distributor</th>
-      <th>Price</th>
-      <th>Start date</th>
-      <th>End date</th>
-      <th>Open date</th>
-      <th>Close date</th>
-      <th>Is open</th>
-      <th>Area</th>
-      <th>Occupation</th>
-      <th>Alls</th>
-      <th>Stocks</th>
+      <th>ディストリビューターID</th>
+      <th>価格</th>
+      <th>開始日</th>
+      <th>終了日</th>
+      <th>募集開始日</th>
+      <th>募集終了日</th>
+      <th>募集中か</th>
+      <th>エリア</th>
+      <th>業種</th>
+      <th>募集数</th>
+      <th>残</th>
+<!--
       <th>Deleted at</th>
+-->
 
       <th></th>
     </tr>
@@ -48,7 +50,9 @@
         <td><%= item.occupation %></td>
         <td><%= item.alls %></td>
         <td><%= item.stocks %></td>
+<!--
         <td><%= item.deleted_at %></td>
+-->
 
         <td>
           <span><%= live_redirect "Show", to: Routes.item_show_path(@socket, :show, item) %></span>

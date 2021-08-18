@@ -6,7 +6,7 @@
   phx_change: "validate",
   phx_submit: "save" %>
 
-  <%= label f, :brand, "名称" %>
+  <%= label f, :brand, "代理店名称" %>
   <%= text_input f, :brand %>
   <%= error_tag f, :brand %>
 
@@ -14,7 +14,7 @@
   <%= number_input f, :corporate_id %>
   <%= error_tag f, :corporate_id %>
 
-  <%= label f, :distributor_id, "ディストリビューターID" %>
+  <%= label f, :distributor_id, "卸者ID" %>
   <%= number_input f, :distributor_id %>
   <%= error_tag f, :distributor_id %>
 

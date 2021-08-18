@@ -14,7 +14,9 @@
     <tr>
       <th>名称</th>
       <th>企業ID</th>
-<!--      <th>Deleted at</th>-->
+<!--
+      <th>Deleted at</th>
+-->
 
       <th></th>
     </tr>
@@ -24,7 +26,9 @@
       <tr id="distributor-<%= distributor.id %>">
         <td><%= distributor.brand %></td>
         <td><%= distributor.corporate_id %></td>
-<!--        <td><%= distributor.deleted_at %></td>-->
+<!--
+        <td><%= distributor.deleted_at %></td>
+-->
 
         <td>
           <span><%= live_redirect "Show", to: Routes.distributor_show_path(@socket, :show, distributor.id) %></span>

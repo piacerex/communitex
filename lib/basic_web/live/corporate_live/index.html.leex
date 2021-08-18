@@ -19,7 +19,9 @@
       <th>番地</th>
       <th>マンション名など</th>
       <th>電話番号</th>
-<!--      <th>Deleted at</th>-->
+<!--
+      <th>Deleted at</th>
+-->
 
       <th></th>
     </tr>
@@ -34,7 +36,9 @@
         <td><%= corporate.address1 %></td>
         <td><%= corporate.address2 %></td>
         <td><%= corporate.tel %></td>
-<!--        <td><%= corporate.deleted_at %></td>-->
+<!--
+        <td><%= corporate.deleted_at %></td>
+-->
 
         <td>
           <span><%= live_redirect "Show", to: Routes.corporate_show_path(@socket, :show, corporate) %></span>

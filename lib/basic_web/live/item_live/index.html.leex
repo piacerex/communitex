@@ -26,7 +26,9 @@
       <th>業種</th>
       <th>募集数</th>
       <th>残</th>
-<!--      <th>Deleted at</th>-->
+<!--
+      <th>Deleted at</th>
+-->
 
       <th></th>
     </tr>
@@ -48,7 +50,9 @@
         <td><%= item.occupation %></td>
         <td><%= item.alls %></td>
         <td><%= item.stocks %></td>
-<!--        <td><%= item.deleted_at %></td>-->
+<!--
+        <td><%= item.deleted_at %></td>
+-->
 
         <td>
           <span><%= live_redirect "Show", to: Routes.item_show_path(@socket, :show, item) %></span>

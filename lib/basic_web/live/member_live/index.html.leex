@@ -157,15 +157,21 @@
 
   <div class="quadrisect-triple centered-pane">
 
-    <ul class="card">
+    <ul class="card round shadow">
 <%= for member <- @members do %>
       <li>
+        <div class="rich">
   <%= if is_nil(member.image) do %>
-        <img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>">
+          <img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>">
   <% else %>
-        <img src="data:images/jpeg;base64,<%= member.image %>">
+          <img src="data:images/jpeg;base64,<%= member.image %>">
   <% end %>
-        <p style="text-align: center; margin-top: 10px;">
+          <p class="overlap silver"><%= member.last_name %></p>
+          <%= if member.last_name_kana == "Sale" do %>
+          <p class="badge">Sale</p>
+          <% end #TODO: ここはお試し（itemsに移す） %>
+        </div>
+        <p>
           <%= member.last_name %> - <%= member.first_name %><br>
           <%= member.email %><br>
         </p>

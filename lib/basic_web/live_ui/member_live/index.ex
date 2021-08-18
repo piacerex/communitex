@@ -1,4 +1,4 @@
-defmodule BasicWeb.MemberLive.Index do
+defmodule BasicWeb.MemberUiLive.Index do
   use BasicWeb, :live_view
 
   alias Basic.Members

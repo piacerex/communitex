@@ -109,7 +109,7 @@ defmodule BasicWeb.Router do
     get "/edit/*path_", SphereController, :edit
   end
 
-  scope "/", BasicWeb do
+  scope "/admin", BasicWeb do
     pipe_through :browser
 
     live "/members", MemberLive.Index, :index
@@ -171,6 +171,13 @@ defmodule BasicWeb.Router do
     live "/orders/:id/edit", OrderLive.Index, :edit
     live "/orders/:id", OrderLive.Show, :show
     live "/orders/:id/show/edit", OrderLive.Show, :edit
+  end
+
+  scope "/", BasicWeb do
+    pipe_through :browser
+
+    live "/members", MemberUiLive.Index, :index
+    live "/members/:id", MemberUiLive.Show, :show
 
     live "/*path_", SphereLive, :index
 

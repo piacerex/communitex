@@ -1,0 +1,20 @@
+<h1>Show Member</h1>
+
+<%
+alias Basic.Members.Member
+member = %Member{} |> Map.merge(Map.take(@member, Map.keys(%Member{})))
+%>
+
+<div class="main">
+
+<p><%= @member.user_id %></p>
+<p><%= @member.email %></p>
+<p>
+<%= if is_nil(@member.image) do %>
+  <img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="200">
+<% else %>
+  <img src="data:images/jpeg;base64,<%= @member.image %>" width="200">
+<% end %>
+</p>
+
+</div>

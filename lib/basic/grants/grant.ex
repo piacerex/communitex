@@ -15,6 +15,6 @@ defmodule Basic.Grants.Grant do
   def changeset(grant, attrs) do
     grant
     |> cast(attrs, [:user_id, :organization_id, :role, :deleted_at])
-    |> validate_required([:user_id, :corporate_id, :role, :deleted_at])
+    |> validate_required([:user_id, :organization_id, :role, :deleted_at])
   end
 end

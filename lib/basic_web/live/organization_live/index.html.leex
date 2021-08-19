@@ -12,15 +12,16 @@
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Postal</th>
-      <th>Prefecture</th>
-      <th>City</th>
-      <th>Address1</th>
-      <th>Address2</th>
-      <th>Tel</th>
+      <th>所属組織名</th>
+      <th>郵便番号</th>
+      <th>都道府県</th>
+      <th>市区町村</th>
+      <th>番地</th>
+      <th>マンション名など</th>
+      <th>電話番号</th>
+<!--
       <th>Deleted at</th>
-
+-->
       <th></th>
     </tr>
   </thead>
@@ -34,8 +35,9 @@
         <td><%= organization.address1 %></td>
         <td><%= organization.address2 %></td>
         <td><%= organization.tel %></td>
+<!--
         <td><%= organization.deleted_at %></td>
-
+-->
         <td>
           <span><%= live_redirect "Show", to: Routes.organization_show_path(@socket, :show, organization) %></span>
           <span><%= live_patch "Edit", to: Routes.organization_index_path(@socket, :edit, organization) %></span>

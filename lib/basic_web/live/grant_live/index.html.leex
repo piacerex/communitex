@@ -13,7 +13,7 @@
   <thead>
     <tr>
       <th>User</th>
-      <th>Corporate</th>
+      <th>Organization</th>
       <th>Role</th>
       <th>Deleted at</th>
 
@@ -24,7 +24,7 @@
     <%= for grant <- @grants do %>
       <tr id="grant-<%= grant.id %>">
         <td><%= grant.user_id %></td>
-        <td><%= grant.corporate_id %></td>
+        <td><%= grant.organization_id %></td>
         <td><%= grant.role %></td>
         <td><%= grant.deleted_at %></td>
 

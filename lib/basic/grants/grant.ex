@@ -3,7 +3,7 @@ defmodule Basic.Grants.Grant do
   import Ecto.Changeset
 
   schema "grants" do
-    field :corporate_id, :integer
+    field :organization_id, :integer
     field :deleted_at, :naive_datetime
     field :role, :string
     field :user_id, :integer
@@ -14,7 +14,7 @@ defmodule Basic.Grants.Grant do
   @doc false
   def changeset(grant, attrs) do
     grant
-    |> cast(attrs, [:user_id, :corporate_id, :role, :deleted_at])
+    |> cast(attrs, [:user_id, :organization_id, :role, :deleted_at])
     |> validate_required([:user_id, :corporate_id, :role, :deleted_at])
   end
 end

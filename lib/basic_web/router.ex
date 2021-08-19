@@ -38,6 +38,12 @@ defmodule BasicWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+
+    live "/agents", AgentLive.Index, :index
+    live "/agents/new", AgentLive.Index, :new
+    live "/agents/:id/edit", AgentLive.Index, :edit
+    live "/agents/:id", AgentLive.Show, :show
+    live "/agents/:id/show/edit", AgentLive.Show, :edit
   end
 
   scope "/", BasicWeb do
@@ -160,11 +166,11 @@ defmodule BasicWeb.Router do
     live "/agencies/:id", AgencyLive.Show, :show
     live "/agencies/:id/show/edit", AgencyLive.Show, :edit
 
-    live "/agents", AgentLive.Index, :index
-    live "/agents/new", AgentLive.Index, :new
-    live "/agents/:id/edit", AgentLive.Index, :edit
-    live "/agents/:id", AgentLive.Show, :show
-    live "/agents/:id/show/edit", AgentLive.Show, :edit
+#    live "/agents", AgentLive.Index, :index
+#    live "/agents/new", AgentLive.Index, :new
+#    live "/agents/:id/edit", AgentLive.Index, :edit
+#    live "/agents/:id", AgentLive.Show, :show
+#    live "/agents/:id/show/edit", AgentLive.Show, :edit
 
     live "/orders", OrderLive.Index, :index
     live "/orders/new", OrderLive.Index, :new

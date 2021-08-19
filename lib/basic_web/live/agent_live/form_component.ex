@@ -45,6 +45,8 @@ defmodule BasicWeb.AgentLive.FormComponent do
       {:ok, _agent} ->
         {:noreply,
          socket
+         |> assign(:agents, Agents.select_agents(socket.assigns.current_user_id, String.to_integer(agent_params["agency_id"])))
+         |> assign(:selected_agency, agent_params["agency_id"])
          |> put_flash(:info, "Agent created successfully")
          |> push_redirect(to: socket.assigns.return_to)}
 

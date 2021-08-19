@@ -6,17 +6,35 @@
     title: @page_title,
     action: @live_action,
     agent: @agent,
+    agencies: @agencies,
+    search: @search,
+    candidate: @candidate,
+    current_user_id: @current_user_id,
     return_to: Routes.agent_index_path(@socket, :index) %>
 <% end %>
+
+<%= f = form_for :survey, "#", id: "agent-index", phx_change: "validate" %>
+<table>
+  <%= label f, :agency_id, "代理店名" %>
+  <%= select f, :agency_id, @agencies |> Enum.map( fn x -> {x.brand, x.id} end), selected: @selected_agency %>
+  <%= error_tag f, :agency_id %>
+</table>
+</form>
 
 <table>
   <thead>
     <tr>
+<!--
       <th>User</th>
       <th>Agency</th>
       <th>Discount</th>
       <th>Boost</th>
       <th>Deleted at</th>
+-->
+      <th>ユーザID</th>
+      <th>ユーザEmail</th>
+      <th>割引</th>
+      <th>ブースト</th>
 
       <th></th>
     </tr>
@@ -24,15 +42,21 @@
   <tbody id="agents">
     <%= for agent <- @agents do %>
       <tr id="agent-<%= agent.id %>">
+<!--
         <td><%= agent.user_id %></td>
         <td><%= agent.agency_id %></td>
         <td><%= agent.discount %></td>
         <td><%= agent.boost %></td>
         <td><%= agent.deleted_at %></td>
+-->
+        <td><%= agent.user_id %></td>
+        <td><%= agent.user_email %></td>
+        <td><%= agent.discount %></td>
+        <td><%= agent.boost %></td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.agent_show_path(@socket, :show, agent) %></span>
-          <span><%= live_patch "Edit", to: Routes.agent_index_path(@socket, :edit, agent) %></span>
+          <span><%= live_redirect "Show", to: Routes.agent_show_path(@socket, :show, agent.id) %></span>
+          <span><%= live_patch "Edit", to: Routes.agent_index_path(@socket, :edit, agent.id) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: agent.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>

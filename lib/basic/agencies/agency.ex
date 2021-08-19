@@ -5,7 +5,7 @@ defmodule Basic.Agencies.Agency do
   schema "agencies" do
     field :boost, :float
     field :brand, :string
-    field :corporate_id, :integer
+    field :organization_id, :integer
     field :deleted_at, :naive_datetime
     field :discount, :float
     field :distributor_id, :integer
@@ -16,7 +16,7 @@ defmodule Basic.Agencies.Agency do
   @doc false
   def changeset(agency, attrs) do
     agency
-    |> cast(attrs, [:brand, :corporate_id, :distributor_id, :discount, :boost, :deleted_at])
-    |> validate_required([:brand, :corporate_id, :distributor_id, :discount, :boost])
+    |> cast(attrs, [:brand, :organization_id, :distributor_id, :discount, :boost, :deleted_at])
+    |> validate_required([:brand, :organization_id, :distributor_id, :discount, :boost])
   end
 end

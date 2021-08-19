@@ -13,7 +13,7 @@
   <thead>
     <tr>
       <th>代理店名称</th>
-      <th>企業ID</th>
+      <th>所属組織ID</th>
       <th>卸者ID</th>
       <th>割引</th>
       <th>ブースト</th>
@@ -28,7 +28,7 @@
     <%= for agency <- @agencies do %>
       <tr id="agency-<%= agency.id %>">
         <td><%= agency.brand %></td>
-        <td><%= agency.corporate_id %></td>
+        <td><%= agency.organization_id %></td>
         <td><%= agency.distributor_id %></td>
         <td><%= agency.discount %></td>
         <td><%= agency.boost %></td>

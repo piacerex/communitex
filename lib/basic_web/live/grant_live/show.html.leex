@@ -12,25 +12,25 @@
 <ul>
 
   <li>
-    <strong>User:</strong>
+    <strong>ユーザID:</strong>
     <%= @grant.user_id %>
   </li>
 
   <li>
-    <strong>Corporate:</strong>
-    <%= @grant.corporate_id %>
+    <strong>所属組織ID:</strong>
+    <%= @grant.organization_id %>
   </li>
 
   <li>
-    <strong>Role:</strong>
+    <strong>ロール:</strong>
     <%= @grant.role %>
   </li>
-
+<!--
   <li>
     <strong>Deleted at:</strong>
     <%= @grant.deleted_at %>
   </li>
-
+-->
 </ul>
 
 <span><%= live_patch "Edit", to: Routes.grant_show_path(@socket, :edit, @grant), class: "button" %></span>

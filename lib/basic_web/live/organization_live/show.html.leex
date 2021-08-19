@@ -1,0 +1,57 @@
+<h1>Show Organization</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.OrganizationLive.FormComponent,
+    id: @organization.id,
+    title: @page_title,
+    action: @live_action,
+    organization: @organization,
+    return_to: Routes.organization_show_path(@socket, :show, @organization) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>所属組織名:</strong>
+    <%= @organization.name %>
+  </li>
+
+  <li>
+    <strong>郵便番号:</strong>
+    <%= @organization.postal %>
+  </li>
+
+  <li>
+    <strong>都道府県:</strong>
+    <%= @organization.prefecture %>
+  </li>
+
+  <li>
+    <strong>市区町村:</strong>
+    <%= @organization.city %>
+  </li>
+
+  <li>
+    <strong>番地:</strong>
+    <%= @organization.address1 %>
+  </li>
+
+  <li>
+    <strong>マンション名など:</strong>
+    <%= @organization.address2 %>
+  </li>
+
+  <li>
+    <strong>電話番号:</strong>
+    <%= @organization.tel %>
+  </li>
+<!--
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @organization.deleted_at %>
+  </li>
+-->
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.organization_show_path(@socket, :edit, @organization), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.organization_index_path(@socket, :index) %></span>

@@ -1,0 +1,51 @@
+<h1>Listing Organizations</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, BasicWeb.OrganizationLive.FormComponent,
+    id: @organization.id || :new,
+    title: @page_title,
+    action: @live_action,
+    organization: @organization,
+    return_to: Routes.organization_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>所属組織名</th>
+      <th>郵便番号</th>
+      <th>都道府県</th>
+      <th>市区町村</th>
+      <th>番地</th>
+      <th>マンション名など</th>
+      <th>電話番号</th>
+<!--
+      <th>Deleted at</th>
+-->
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="organizations">
+    <%= for organization <- @organizations do %>
+      <tr id="organization-<%= organization.id %>">
+        <td><%= organization.name %></td>
+        <td><%= organization.postal %></td>
+        <td><%= organization.prefecture %></td>
+        <td><%= organization.city %></td>
+        <td><%= organization.address1 %></td>
+        <td><%= organization.address2 %></td>
+        <td><%= organization.tel %></td>
+<!--
+        <td><%= organization.deleted_at %></td>
+-->
+        <td>
+          <span><%= live_redirect "Show", to: Routes.organization_show_path(@socket, :show, organization) %></span>
+          <span><%= live_patch "Edit", to: Routes.organization_index_path(@socket, :edit, organization) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: organization.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Organization", to: Routes.organization_index_path(@socket, :new) %></span>

@@ -83,6 +83,11 @@ defmodule Basic.Members do
   """
 #  def update_member(%Member{} = member, attrs) do
   def update_member(member, attrs) do
+    attrs = case attrs["image"] do
+      nil -> Map.delete(attrs, "image")
+      _ -> attrs
+    end
+  
     member
     |> Member.changeset(attrs)
     |> Repo.update()

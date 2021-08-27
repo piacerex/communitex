@@ -2,10 +2,14 @@
 
 <%= if @live_action in [:new, :edit] do %>
   <%= live_modal @socket, BasicWeb.GrantLive.FormComponent,
-    id: @grant.id || :new,
+    id: List.first(@grant).id || :new,
     title: @page_title,
     action: @live_action,
     grant: @grant,
+    organizations: @organizations,
+    role_list: @role_list,
+    search: @search,
+    candidate: @candidate,
     return_to: Routes.grant_index_path(@socket, :index) %>
 <% end %>
 
@@ -13,7 +17,11 @@
   <thead>
     <tr>
       <th>ユーザID</th>
+      <th>ユーザEmail</th>
+<!--
       <th>所属組織ID</th>
+-->
+      <th>所属組織名</th>
       <th>ロール</th>
 <!--
       <th>Deleted at</th>
@@ -23,17 +31,21 @@
   </thead>
   <tbody id="grants">
     <%= for grant <- @grants do %>
-      <tr id="grant-<%= grant.id %>">
-        <td><%= grant.user_id %></td>
-        <td><%= grant.organization_id %></td>
-        <td><%= grant.role %></td>
+      <tr id="grant-<%= List.first(grant).id %>">
+        <td><%= List.first(grant).user_id %></td>
+        <td><%= Enum.at(grant, 1).email %></td>
 <!--
-        <td><%= grant.deleted_at %></td>
+        <td><%= List.first(grant).organization_id %></td>
+-->
+        <td><%= List.last(grant).name %></td>
+        <td><%= Enum.find(@role_list, fn x -> x.name == List.first(grant).role end).display %></td>
+<!--
+        <td><%= List.first(grant).deleted_at %></td>
 -->
         <td>
-          <span><%= live_redirect "Show", to: Routes.grant_show_path(@socket, :show, grant) %></span>
-          <span><%= live_patch "Edit", to: Routes.grant_index_path(@socket, :edit, grant) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: grant.id, data: [confirm: "Are you sure?"] %></span>
+          <span><%= live_redirect "Show", to: Routes.grant_show_path(@socket, :show, List.first(grant).id) %></span>
+          <span><%= live_patch "Edit", to: Routes.grant_index_path(@socket, :edit, List.first(grant).id) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: List.first(grant).id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
     <% end %>

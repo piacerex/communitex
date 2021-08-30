@@ -130,12 +130,6 @@ defmodule BasicWeb.Router do
     live "/blogs/:id", BlogLive.Show, :show
     live "/blogs/:id/show/edit", BlogLive.Show, :edit
 
-#    live "/corporates", CorporateLive.Index, :index
-#    live "/corporates/new", CorporateLive.Index, :new
-#    live "/corporates/:id/edit", CorporateLive.Index, :edit
-#    live "/corporates/:id", CorporateLive.Show, :show
-#    live "/corporates/:id/show/edit", CorporateLive.Show, :edit
-
     live "/organizations", OrganizationLive.Index, :index
     live "/organizations/new", OrganizationLive.Index, :new
     live "/organizations/:id/edit", OrganizationLive.Index, :edit

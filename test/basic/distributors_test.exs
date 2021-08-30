@@ -6,9 +6,9 @@ defmodule Basic.DistributorsTest do
   describe "distributors" do
     alias Basic.Distributors.Distributor
 
-    @valid_attrs %{brand: "some brand", corporate_id: 42, deleted_at: ~N[2010-04-17 14:00:00]}
-    @update_attrs %{brand: "some updated brand", corporate_id: 43, deleted_at: ~N[2011-05-18 15:01:01]}
-    @invalid_attrs %{brand: nil, corporate_id: nil, deleted_at: nil}
+    @valid_attrs %{brand: "some brand", organization_id: 42, deleted_at: ~N[2010-04-17 14:00:00]}
+    @update_attrs %{brand: "some updated brand", organization_id: 43, deleted_at: ~N[2011-05-18 15:01:01]}
+    @invalid_attrs %{brand: nil, organization_id: nil, deleted_at: nil}
 
     def distributor_fixture(attrs \\ %{}) do
       {:ok, distributor} =
@@ -32,7 +32,7 @@ defmodule Basic.DistributorsTest do
     test "create_distributor/1 with valid data creates a distributor" do
       assert {:ok, %Distributor{} = distributor} = Distributors.create_distributor(@valid_attrs)
       assert distributor.brand == "some brand"
-      assert distributor.corporate_id == 42
+      assert distributor.organization_id == 42
       assert distributor.deleted_at == ~N[2010-04-17 14:00:00]
     end
 
@@ -44,7 +44,7 @@ defmodule Basic.DistributorsTest do
       distributor = distributor_fixture()
       assert {:ok, %Distributor{} = distributor} = Distributors.update_distributor(distributor, @update_attrs)
       assert distributor.brand == "some updated brand"
-      assert distributor.corporate_id == 43
+      assert distributor.organization_id == 43
       assert distributor.deleted_at == ~N[2011-05-18 15:01:01]
     end
 

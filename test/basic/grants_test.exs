@@ -6,9 +6,9 @@ defmodule Basic.GrantsTest do
   describe "grants" do
     alias Basic.Grants.Grant
 
-    @valid_attrs %{corporate_id: 42, deleted_at: ~N[2010-04-17 14:00:00], role: "some role", user_id: 42}
-    @update_attrs %{corporate_id: 43, deleted_at: ~N[2011-05-18 15:01:01], role: "some updated role", user_id: 43}
-    @invalid_attrs %{corporate_id: nil, deleted_at: nil, role: nil, user_id: nil}
+    @valid_attrs %{organization_id: 42, deleted_at: ~N[2010-04-17 14:00:00], role: "some role", user_id: 42}
+    @update_attrs %{organization_id: 43, deleted_at: ~N[2011-05-18 15:01:01], role: "some updated role", user_id: 43}
+    @invalid_attrs %{organization_id: nil, deleted_at: nil, role: nil, user_id: nil}
 
     def grant_fixture(attrs \\ %{}) do
       {:ok, grant} =
@@ -31,7 +31,7 @@ defmodule Basic.GrantsTest do
 
     test "create_grant/1 with valid data creates a grant" do
       assert {:ok, %Grant{} = grant} = Grants.create_grant(@valid_attrs)
-      assert grant.corporate_id == 42
+      assert grant.organization_id == 42
       assert grant.deleted_at == ~N[2010-04-17 14:00:00]
       assert grant.role == "some role"
       assert grant.user_id == 42
@@ -44,7 +44,7 @@ defmodule Basic.GrantsTest do
     test "update_grant/2 with valid data updates the grant" do
       grant = grant_fixture()
       assert {:ok, %Grant{} = grant} = Grants.update_grant(grant, @update_attrs)
-      assert grant.corporate_id == 43
+      assert grant.organization_id == 43
       assert grant.deleted_at == ~N[2011-05-18 15:01:01]
       assert grant.role == "some updated role"
       assert grant.user_id == 43

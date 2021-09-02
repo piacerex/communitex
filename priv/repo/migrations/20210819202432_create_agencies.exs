@@ -4,7 +4,7 @@ defmodule Basic.Repo.Migrations.CreateAgencies do
   def change do
     create table(:agencies) do
       add :brand, :string
-      add :corporate_id, :integer
+      add :organization_id, :integer
       add :distributor_id, :integer
       add :discount, :float
       add :boost, :float

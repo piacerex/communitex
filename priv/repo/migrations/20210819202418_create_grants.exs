@@ -4,7 +4,7 @@ defmodule Basic.Repo.Migrations.CreateGrants do
   def change do
     create table(:grants) do
       add :user_id, :integer
-      add :corporate_id, :integer
+      add :organization_id, :integer
       add :role, :string
       add :deleted_at, :naive_datetime
 

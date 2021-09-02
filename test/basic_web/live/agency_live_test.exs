@@ -5,9 +5,9 @@ defmodule BasicWeb.AgencyLiveTest do
 
   alias Basic.Agencies
 
-  @create_attrs %{boost: 120.5, brand: "some brand", corporate_id: 42, deleted_at: ~N[2010-04-17 14:00:00], discount: 120.5, distributor_id: 42}
-  @update_attrs %{boost: 456.7, brand: "some updated brand", corporate_id: 43, deleted_at: ~N[2011-05-18 15:01:01], discount: 456.7, distributor_id: 43}
-  @invalid_attrs %{boost: nil, brand: nil, corporate_id: nil, deleted_at: nil, discount: nil, distributor_id: nil}
+  @create_attrs %{boost: 120.5, brand: "some brand", organization_id: 42, deleted_at: ~N[2010-04-17 14:00:00], discount: 120.5, distributor_id: 42}
+  @update_attrs %{boost: 456.7, brand: "some updated brand", organization_id: 43, deleted_at: ~N[2011-05-18 15:01:01], discount: 456.7, distributor_id: 43}
+  @invalid_attrs %{boost: nil, brand: nil, organization_id: nil, deleted_at: nil, discount: nil, distributor_id: nil}
 
   defp fixture(:agency) do
     {:ok, agency} = Agencies.create_agency(@create_attrs)

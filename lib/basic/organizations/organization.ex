@@ -1,8 +1,8 @@
-defmodule Basic.Corporates.Corporate do
+defmodule Basic.Organizations.Organization do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "corporates" do
+  schema "organizations" do
     field :address1, :string
     field :address2, :string
     field :city, :string
@@ -16,8 +16,8 @@ defmodule Basic.Corporates.Corporate do
   end
 
   @doc false
-  def changeset(corporate, attrs) do
-    corporate
+  def changeset(organization, attrs) do
+    organization
     |> cast(attrs, [:name, :postal, :prefecture, :city, :address1, :address2, :tel, :deleted_at])
     |> validate_required([:name])
   end

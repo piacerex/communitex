@@ -13,7 +13,7 @@
   <thead>
     <tr>
       <th>卸者名称</th>
-      <th>企業ID</th>
+      <th>所属組織ID</th>
 <!--
       <th>Deleted at</th>
 -->
@@ -25,7 +25,7 @@
     <%= for distributor <- @distributors do %>
       <tr id="distributor-<%= distributor.id %>">
         <td><%= distributor.brand %></td>
-        <td><%= distributor.corporate_id %></td>
+        <td><%= distributor.organization_id %></td>
 <!--
         <td><%= distributor.deleted_at %></td>
 -->

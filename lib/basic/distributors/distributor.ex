@@ -4,7 +4,7 @@ defmodule Basic.Distributors.Distributor do
 
   schema "distributors" do
     field :brand, :string
-    field :corporate_id, :integer
+    field :organization_id, :integer
     field :deleted_at, :naive_datetime
 
     timestamps()
@@ -13,7 +13,7 @@ defmodule Basic.Distributors.Distributor do
   @doc false
   def changeset(distributor, attrs) do
     distributor
-    |> cast(attrs, [:brand, :corporate_id, :deleted_at])
-    |> validate_required([:brand, :corporate_id])
+    |> cast(attrs, [:brand, :organization_id, :deleted_at])
+    |> validate_required([:brand, :organization_id])
   end
 end

@@ -1,7 +1,7 @@
-defmodule BasicWeb.CorporateLive.Show do
+defmodule BasicWeb.OrganizationLive.Show do
   use BasicWeb, :live_view
 
-  alias Basic.Corporates
+  alias Basic.Organizations
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,9 +13,9 @@ defmodule BasicWeb.CorporateLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:corporate, Corporates.get_corporate!(id))}
+     |> assign(:organization, Organizations.get_organization!(id))}
   end
 
-  defp page_title(:show), do: "Show Corporate"
-  defp page_title(:edit), do: "Edit Corporate"
+  defp page_title(:show), do: "Show Organization"
+  defp page_title(:edit), do: "Edit Organization"
 end

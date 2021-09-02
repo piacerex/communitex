@@ -5,9 +5,9 @@ defmodule BasicWeb.MemberLiveTest do
 
   alias Basic.Members
 
-  @create_attrs %{birthday: ~N[2010-04-17 14:00:00], corporate_id: 42, corporate_name: "some corporate_name", deleted_at: ~N[2010-04-17 14:00:00], department: "some department", detail: "some detail", first_name: "some first_name", first_name_kana: "some first_name_kana", image: "some image", industry: "some industry", last_name: "some last_name", last_name_kana: "some last_name_kana", position: "some position", user_id: 42}
-  @update_attrs %{birthday: ~N[2011-05-18 15:01:01], corporate_id: 43, corporate_name: "some updated corporate_name", deleted_at: ~N[2011-05-18 15:01:01], department: "some updated department", detail: "some updated detail", first_name: "some updated first_name", first_name_kana: "some updated first_name_kana", image: "some updated image", industry: "some updated industry", last_name: "some updated last_name", last_name_kana: "some updated last_name_kana", position: "some updated position", user_id: 43}
-  @invalid_attrs %{birthday: nil, corporate_id: nil, corporate_name: nil, deleted_at: nil, department: nil, detail: nil, first_name: nil, first_name_kana: nil, image: nil, industry: nil, last_name: nil, last_name_kana: nil, position: nil, user_id: nil}
+  @create_attrs %{birthday: ~N[2010-04-17 14:00:00], organization_id: 42, organization_name: "some organization_name", deleted_at: ~N[2010-04-17 14:00:00], department: "some department", detail: "some detail", first_name: "some first_name", first_name_kana: "some first_name_kana", image: "some image", industry: "some industry", last_name: "some last_name", last_name_kana: "some last_name_kana", position: "some position", user_id: 42}
+  @update_attrs %{birthday: ~N[2011-05-18 15:01:01], organization_id: 43, organization_name: "some updated organization_name", deleted_at: ~N[2011-05-18 15:01:01], department: "some updated department", detail: "some updated detail", first_name: "some updated first_name", first_name_kana: "some updated first_name_kana", image: "some updated image", industry: "some updated industry", last_name: "some updated last_name", last_name_kana: "some updated last_name_kana", position: "some updated position", user_id: 43}
+  @invalid_attrs %{birthday: nil, organization_id: nil, organization_name: nil, deleted_at: nil, department: nil, detail: nil, first_name: nil, first_name_kana: nil, image: nil, industry: nil, last_name: nil, last_name_kana: nil, position: nil, user_id: nil}
 
   defp fixture(:member) do
     {:ok, member} = Members.create_member(@create_attrs)
@@ -26,7 +26,7 @@ defmodule BasicWeb.MemberLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.member_index_path(conn, :index))
 
       assert html =~ "Listing Members"
-      assert html =~ member.corporate_name
+      assert html =~ member.organization_name
     end
 
     test "saves new member", %{conn: conn} do
@@ -48,7 +48,7 @@ defmodule BasicWeb.MemberLiveTest do
         |> follow_redirect(conn, Routes.member_index_path(conn, :index))
 
       assert html =~ "Member created successfully"
-      assert html =~ "some corporate_name"
+      assert html =~ "some organization_name"
     end
 
     test "updates member in listing", %{conn: conn, member: member} do
@@ -70,7 +70,7 @@ defmodule BasicWeb.MemberLiveTest do
         |> follow_redirect(conn, Routes.member_index_path(conn, :index))
 
       assert html =~ "Member updated successfully"
-      assert html =~ "some updated corporate_name"
+      assert html =~ "some updated organization_name"
     end
 
     test "deletes member in listing", %{conn: conn, member: member} do
@@ -88,7 +88,7 @@ defmodule BasicWeb.MemberLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.member_show_path(conn, :show, member))
 
       assert html =~ "Show Member"
-      assert html =~ member.corporate_name
+      assert html =~ member.organization_name
     end
 
     test "updates member within modal", %{conn: conn, member: member} do
@@ -110,7 +110,7 @@ defmodule BasicWeb.MemberLiveTest do
         |> follow_redirect(conn, Routes.member_show_path(conn, :show, member))
 
       assert html =~ "Member updated successfully"
-      assert html =~ "some updated corporate_name"
+      assert html =~ "some updated organization_name"
     end
   end
 end

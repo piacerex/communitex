@@ -110,7 +110,7 @@ defmodule BasicWeb.Router do
   end
 
   scope "/admin", BasicWeb do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user]
 
     live "/members", MemberLive.Index, :index
     live "/members/new", MemberLive.Index, :new

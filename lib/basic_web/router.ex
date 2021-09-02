@@ -173,6 +173,12 @@ defmodule BasicWeb.Router do
     live "/orders/:id/edit", OrderLive.Index, :edit
     live "/orders/:id", OrderLive.Show, :show
     live "/orders/:id/show/edit", OrderLive.Show, :edit
+
+    live "/contacts", ContactLive.Index, :index
+    live "/contacts/new", ContactLive.Index, :new
+    live "/contacts/:id/edit", ContactLive.Index, :edit
+    live "/contacts/:id", ContactLive.Show, :show
+    live "/contacts/:id/show/edit", ContactLive.Show, :edit
   end
 
   scope "/", BasicWeb do

@@ -149,3 +149,7 @@ mix phx.gen.live Agencies      Agency       agencies      brand:string    organi
 mix phx.gen.live Agents        Agent        agents        user_id:integer agency_id:integer                                          discount:float boost:float       deleted_at:datetime
 mix phx.gen.live Orders        Order        orders        user_id:integer item_id:integer         order_date:date        price:float discount:float is_cancel:boolean deleted_at:datetime
 ```
+
+```
+mix phx.gen.live Contacts Contact contacts logined_user_id:integer email:string last_name:string first_name:string last_name_kana:string first_name_kana:string type:string body:text deleted_at:datetime
+```

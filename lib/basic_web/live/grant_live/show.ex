@@ -2,10 +2,17 @@ defmodule BasicWeb.GrantLive.Show do
   use BasicWeb, :live_view
 
   alias Basic.Grants
+  alias Basic.Organizations
+  alias Basic.Accounts
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(_params, session, socket) do
+    current_user = Accounts.get_user_by_session_token(session["user_token"])
+    {:ok, 
+      socket
+      |> assign(:organizations, Organizations.list_organizations())
+      |> assign(:role_list, Grants.get_role_list(current_user.id))
+    }
   end
 
   @impl true
@@ -13,7 +20,8 @@ defmodule BasicWeb.GrantLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:grant, Grants.get_grant!(id))}
+     |> assign(:grant, Grants.get_grant!(id))
+    }
   end
 
   defp page_title(:show), do: "Show Grant"

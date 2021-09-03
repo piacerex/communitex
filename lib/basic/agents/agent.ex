@@ -19,6 +19,6 @@ defmodule Basic.Agents.Agent do
     agent
     |> cast(attrs, [:user_id, :agency_id, :discount, :boost, :deleted_at])
     |> validate_required([:user_id, :agency_id, :discount, :boost])
-    |> validate_inclusion(:user_id, Agents.check_user_id(), message: "ユーザIDが無効です")
+    |> validate_inclusion(:user_id, Agents.not_registered_user_ids(), message: "ユーザIDが無効です")
   end
 end

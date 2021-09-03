@@ -17,8 +17,8 @@
 
   <%= if @title == "New Agent" do %>
     <%= label f, :user_id, "ユーザ" %>
-    <%= if @candidate != "" do %>
-      <%= select f, :user_id, @candidate |> Enum.map( fn x -> {x.email <> " " <> x.last_name <> " " <> x.first_name, x.id} end ) %>
+    <%= if @candidate_users != "" do %>
+      <%= select f, :user_id, @candidate_users |> Enum.map( fn x -> {x.email <> " " <> x.last_name <> " " <> x.first_name, x.id} end ) %>
     <% end %>
   <% end %>
 <!--

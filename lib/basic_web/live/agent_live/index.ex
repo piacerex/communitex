@@ -6,9 +6,6 @@ defmodule BasicWeb.AgentLive.Index do
   alias Basic.Accounts
 
   @impl true
-#  def mount(_params, _session, socket) do
-#    {:ok, assign(socket, :agents, list_agents())}
-#  end
   def mount(params, session, socket) do
     a_id = if Map.has_key?(params, "agency_id") do
       String.to_integer(params["agency_id"])
@@ -20,16 +17,16 @@ defmodule BasicWeb.AgentLive.Index do
     {:ok, 
       socket
       |> assign(:current_user_id, current_user.id)
-      |> assign(:agents, Agents.select_agents(current_user.id, a_id))
-      |> assign(:agencies, Agents.get_relate_agancies(current_user.id))
+      |> assign(:agents, Agents.get_selected_agents(current_user.id, a_id))
+      |> assign(:agencies, Agents.get_granted_agencies(current_user.id))
       |> assign(:selected_agency, a_id)
       |> assign(:search, "")
-      |> assign(:candidate, "")
+      |> assign(:candidate_users, "")
     }
   end
 
   def handle_event("search", %{"search" => search} = params, socket) do
-    {:noreply, assign(socket, :candidate, Agents.search_user(search))}
+    {:noreply, assign(socket, :candidate_users, Agents.search_users(search))}
   end
 
   @impl true
@@ -42,7 +39,7 @@ defmodule BasicWeb.AgentLive.Index do
         {:noreply, 
           socket
           |> assign(:selected_agency, params["agency_id"])
-          |> assign(:agents, Agents.select_agents(socket.assigns.current_user_id, String.to_integer(params["agency_id"])))
+          |> assign(:agents, Agents.get_selected_agents(socket.assigns.current_user_id, String.to_integer(params["agency_id"])))
           |> push_patch(to: "/agents" <> "?agency_id=" <> params["agency_id"], replace: true)
         }
     end
@@ -57,7 +54,7 @@ defmodule BasicWeb.AgentLive.Index do
     socket
     |> assign(:page_title, "Edit Agent")
     |> assign(:agent, List.first(Agents.get_agent!(id)))
-    |> assign(:agencies, Agents.get_relate_agancies(socket.assigns.current_user_id))
+    |> assign(:agencies, Agents.get_granted_agencies(socket.assigns.current_user_id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -65,28 +62,22 @@ defmodule BasicWeb.AgentLive.Index do
     |> assign(:page_title, "New Agent")
     |> assign(:agent, %Agent{})
     |> assign(:current_user_id, socket.assigns.current_user_id)
-    |> assign(:agencies, Agents.get_relate_agancies(socket.assigns.current_user_id))
+    |> assign(:agencies, Agents.get_granted_agencies(socket.assigns.current_user_id))
     |> assign(:selected_agency, "")
     |> assign(:search, "")
-    |> assign(:candidate, "")
+    |> assign(:candidate_users, "")
   end
 
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Agents")
     |> assign(:agent, nil)
-    |> assign(:agencies, Agents.get_relate_agancies(socket.assigns.current_user_id))
+    |> assign(:agencies, Agents.get_granted_agencies(socket.assigns.current_user_id))
     |> assign(:search, "")
-    |> assign(:candidate, "")
+    |> assign(:candidate_users, "")
   end
 
   @impl true
-#  def handle_event("delete", %{"id" => id}, socket) do
-#    agent = Agents.get_agent!(id)
-#    {:ok, _} = Agents.delete_agent(agent)
-#
-#    {:noreply, assign(socket, :agents, list_agents())}
-#  end
   def handle_event("delete", %{"id" => id}, socket) do
     agent = Agents.get_delete_agent!(id)
     {:ok, _} = Agents.delete_agent(agent)
@@ -94,11 +85,11 @@ defmodule BasicWeb.AgentLive.Index do
     {:noreply, 
       socket
       |> assign(:current_user_id, socket.assigns.current_user_id)
-      |> assign(:agents, Agents.select_agents(socket.assigns.current_user_id, ""))
-      |> assign(:agencies, Agents.get_relate_agancies(socket.assigns.current_user_id))
+      |> assign(:agents, Agents.get_selected_agents(socket.assigns.current_user_id, ""))
+      |> assign(:agencies, Agents.get_granted_agencies(socket.assigns.current_user_id))
       |> assign(:selected_agency, "")
       |> assign(:search, "")
-      |> assign(:candidate, "")
+      |> assign(:candidate_users, "")
     }
   end
 

@@ -22,9 +22,6 @@ defmodule Basic.Agents do
       [%Agent{}, ...]
 
   """
-#  def list_agents do
-#    Repo.all(Agent)
-#  end
   def list_agents do
     users = from user in User
     agencies = from agency in Agency
@@ -47,18 +44,17 @@ defmodule Basic.Agents do
     )
   end
 
-  def select_agents(user_id, agency_id) do
-    relate_agencies = get_relate_agancies(user_id)
-    show_agency = if agency_id == "" do
-      List.first(relate_agencies).id
-    else
-      agency_id
+  def get_selected_agents(user_id, agency_id) do
+    related_agencies = get_granted_agencies(user_id)
+    selected_agency = case agency_id do
+      "" -> List.first(related_agencies).id
+      _  -> agency_id
     end
 
     users = from user in User
     agencies = from agency in Agency
     query = from agent in Agent,
-            where: agent.agency_id == ^show_agency,
+            where: agent.agency_id == ^selected_agency,
             join: user in ^users,
             on: [id: agent.user_id],
             join: agency in ^agencies,
@@ -73,14 +69,14 @@ defmodule Basic.Agents do
               discount: agent.discount,
               deleted_at: agent.deleted_at
             }
-    agent = Repo.all(query)
+    Repo.all(query)
   end
 
-  def get_relate_agancies(user_id) do
-    grant = List.first(Grants.get_user_grant!(user_id))
+  def get_granted_agencies(user_id) do
+    grant = List.first(Grants.get_user_grants!(user_id))
     query = from agency in Agency,
-            where: agency.corporate_id == ^grant.corporate_id
-    relate_agencies = Repo.all(query) 
+            where: agency.organization_id == ^grant.organization_id
+    Repo.all(query) 
   end
 
   @doc """
@@ -97,7 +93,6 @@ defmodule Basic.Agents do
       ** (Ecto.NoResultsError)
 
   """
-#  def get_agent!(id), do: Repo.get!(Agent, id)
   def get_agent!(id) do
     users = from user in User
     agencies = from agency in Agency
@@ -151,11 +146,6 @@ defmodule Basic.Agents do
       {:error, %Ecto.Changeset{}}
 
   """
-#  def update_agent(%Agent{} = agent, attrs) do
-#    agent
-#    |> Agent.changeset(attrs)
-#    |> Repo.update()
-#  end
   def update_agent(agent, attrs) do
     data = %Agent{}
             |> Map.put(:id, agent.id)
@@ -184,9 +174,6 @@ defmodule Basic.Agents do
   """
   def get_delete_agent!(id), do: Repo.get!(Agent, id)
 
-#  def delete_agent(%Agent{} = agent) do
-#    Repo.delete(agent)
-#  end
   def delete_agent(agent) do
     data = %Agent{}
             |> Map.put(:id, agent.id)
@@ -208,9 +195,6 @@ defmodule Basic.Agents do
       %Ecto.Changeset{data: %Agent{}}
 
   """
-#  def change_agent(%Agent{} = agent, attrs \\ %{}) do
-#    Agent.changeset(agent, attrs)
-#  end
   def change_agent(agent, attrs \\ %{}) do
     data = %Agent{}
             |> Map.put(:id, agent.id)
@@ -223,14 +207,14 @@ defmodule Basic.Agents do
     Agent.changeset(data, attrs)
   end
 
-  def check_user_id() do
+  def not_registered_user_ids() do
     agents_user = from agent in Agent, select: agent.user_id
     query = from user in User, select: user.id, except_all: ^agents_user
-    candidate_user_id = Repo.all(query)
+    Repo.all(query)
   end
 
-  def search_user(search) do
-    candidate_user_id = check_user_id()
+  def search_users(search) do
+    candidate_user_ids = not_registered_user_ids()
 
     query = 
       from( member in Member,
@@ -249,7 +233,7 @@ defmodule Basic.Agents do
       )
 
     Repo.all(query)
-    |> Enum.filter(&(Enum.member?(candidate_user_id, &1.id)))
+    |> Enum.filter(&(Enum.member?(candidate_user_ids, &1.id)))
     |> Enum.map(fn map -> Enum.reduce([:last_name, :first_name], map, fn key, acc -> Map.put(acc, key, (if is_nil(map[key]), do: "", else: map[key])) end) end)
   end
 end

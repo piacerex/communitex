@@ -37,7 +37,7 @@ defmodule Basic.Grants do
   """
   def get_grant!(id), do: Repo.get!(Grant, id)
 
-  def get_user_grant!(user_id) do
+  def get_user_grants!(user_id) do
     query = from grant in Grant,
             where: grant.user_id == ^user_id
     Repo.all(query)

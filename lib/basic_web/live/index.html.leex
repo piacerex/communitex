@@ -1,17 +1,18 @@
 <%
 menus = 
 [
-  "grants", 
-  "contacts", 
-  "users", 
-  "members",
-  "organizations", 
-  "distributors", 
-  "items", 
-  "orders", 
-  "agencies", 
-  "agents", 
-  "blogs", 
+  "/sphere/edit",
+  "/admin/grants", 
+  "/admin/contacts", 
+  "/admin/users", 
+  "/admin/members",
+  "/admin/organizations", 
+  "/admin/distributors", 
+  "/admin/items", 
+  "/admin/orders", 
+  "/admin/agencies", 
+  "/admin/agents", 
+  "/admin/blogs", 
 ]
 %>
 <h1>Admin</h1>
@@ -22,7 +23,7 @@ menus =
     <table>
 <%= for menu <- menus do %>
     <tr>
-      <td style="text-align: left;"><a href="/admin/<%= menu %>"><%= menu %></a></td>
+      <td style="text-align: left;"><a href="<%= menu %>"><%= menu %></a></td>
     </tr>
 <% end %>
     </table>

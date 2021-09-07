@@ -67,6 +67,12 @@ defmodule Basic.Grants do
     List.first(Repo.all(query))
   end
 
+  def get_user_grants!(user_id) do
+    query = from grant in Grant,
+            where: grant.user_id == ^user_id
+    Repo.all(query)
+  end
+
   @doc """
   Creates a grant.
 

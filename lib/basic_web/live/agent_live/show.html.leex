@@ -6,37 +6,48 @@
     title: @page_title,
     action: @live_action,
     agent: @agent,
-    return_to: Routes.agent_show_path(@socket, :show, @agent) %>
+    agencies: @agencies,
+    return_to: Routes.agent_show_path(@socket, :show, @agent.id) %>
 <% end %>
 
 <ul>
 
   <li>
-    <strong>User:</strong>
+    <strong>ユーザID:</strong>
     <%= @agent.user_id %>
   </li>
 
   <li>
+    <strong>ユーザEmail:</strong>
+    <%= @agent.user_email %>
+  </li>
+<!--
+  <li>
     <strong>Agency:</strong>
     <%= @agent.agency_id %>
   </li>
+-->
+  <li>
+    <strong>代理店名:</strong>
+    <%= @agent.agency_brand %>
+  </li>
 
   <li>
-    <strong>Discount:</strong>
+    <strong>割引:</strong>
     <%= @agent.discount %>
   </li>
 
   <li>
-    <strong>Boost:</strong>
+    <strong>ブースト:</strong>
     <%= @agent.boost %>
   </li>
-
+<!--
   <li>
     <strong>Deleted at:</strong>
     <%= @agent.deleted_at %>
   </li>
-
+-->
 </ul>
 
-<span><%= live_patch "Edit", to: Routes.agent_show_path(@socket, :edit, @agent), class: "button" %></span>
+<span><%= live_patch "Edit", to: Routes.agent_show_path(@socket, :edit, @agent.id), class: "button" %></span>
 <span><%= live_redirect "Back", to: Routes.agent_index_path(@socket, :index) %></span>

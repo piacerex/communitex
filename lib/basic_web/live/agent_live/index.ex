@@ -7,19 +7,18 @@ defmodule BasicWeb.AgentLive.Index do
 
   @impl true
   def mount(params, session, socket) do
-    a_id = if Map.has_key?(params, "agency_id") do
-      String.to_integer(params["agency_id"])
-    else
-      ""
+    agency_id = case Map.has_key?(params, "agency_id") do
+      true -> String.to_integer(params["agency_id"])
+      _ -> ""
     end
 
-    current_user = Accounts.get_user_by_session_token(session["user_token"])
+    current_user_id = Accounts.get_user_by_session_token(session["user_token"]).id
     {:ok, 
       socket
-      |> assign(:current_user_id, current_user.id)
-      |> assign(:agents, Agents.get_selected_agents(current_user.id, a_id))
-      |> assign(:agencies, Agents.get_granted_agencies(current_user.id))
-      |> assign(:selected_agency, a_id)
+      |> assign(:current_user_id, current_user_id)
+      |> assign(:agents, Agents.get_selected_agents(current_user_id, agency_id))
+      |> assign(:agencies, Agents.get_granted_agencies(current_user_id))
+      |> assign(:selected_agency, agency_id)
       |> assign(:search, "")
       |> assign(:candidate_users, "")
     }

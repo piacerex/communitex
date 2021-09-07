@@ -102,47 +102,16 @@ defmodule BasicWeb.Router do
     plug :fetch_current_user
   end
 
+  import BasicWeb.Grant
   scope "/sphere/", BasicWeb do
-#    pipe_through [:sphere_browser, :require_authenticated_user]
-    pipe_through :sphere_browser
+    pipe_through [:sphere_browser, :require_authenticated_user, :content_editor_grant]
+#    pipe_through :sphere_browser
 
     get "/edit/*path_", SphereController, :edit
   end
 
   scope "/admin", BasicWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    live "/", AdminLive.Index, :index
-
-    live "/members", MemberLive.Index, :index
-    live "/members/new", MemberLive.Index, :new
-    live "/members/:id/edit", MemberLive.Index, :edit
-    live "/members/:id", MemberLive.Show, :show
-    live "/members/:id/show/edit", MemberLive.Show, :edit
-
-    live "/users", UserLive.Index, :index
-    live "/users/new", UserLive.Index, :new
-    live "/users/:id/edit", UserLive.Index, :edit
-    live "/users/:id", UserLive.Show, :show
-    live "/users/:id/show/edit", UserLive.Show, :edit
-
-    live "/blogs", BlogLive.Index, :index
-    live "/blogs/new", BlogLive.Index, :new
-    live "/blogs/:id/edit", BlogLive.Index, :edit
-    live "/blogs/:id", BlogLive.Show, :show
-    live "/blogs/:id/show/edit", BlogLive.Show, :edit
-
-    live "/organizations", OrganizationLive.Index, :index
-    live "/organizations/new", OrganizationLive.Index, :new
-    live "/organizations/:id/edit", OrganizationLive.Index, :edit
-    live "/organizations/:id", OrganizationLive.Show, :show
-    live "/organizations/:id/show/edit", OrganizationLive.Show, :edit
-
-    live "/grants", GrantLive.Index, :index
-    live "/grants/new", GrantLive.Index, :new
-    live "/grants/:id/edit", GrantLive.Index, :edit
-    live "/grants/:id", GrantLive.Show, :show
-    live "/grants/:id/show/edit", GrantLive.Show, :edit
+    pipe_through [:browser, :require_authenticated_user, :distributor_admin_grant]
 
     live "/items", ItemLive.Index, :index
     live "/items/new", ItemLive.Index, :new
@@ -155,12 +124,10 @@ defmodule BasicWeb.Router do
     live "/distributors/:id/edit", DistributorLive.Index, :edit
     live "/distributors/:id", DistributorLive.Show, :show
     live "/distributors/:id/show/edit", DistributorLive.Show, :edit
+  end
 
-    live "/agencies", AgencyLive.Index, :index
-    live "/agencies/new", AgencyLive.Index, :new
-    live "/agencies/:id/edit", AgencyLive.Index, :edit
-    live "/agencies/:id", AgencyLive.Show, :show
-    live "/agencies/:id/show/edit", AgencyLive.Show, :edit
+  scope "/admin", BasicWeb do
+    pipe_through [:browser, :require_authenticated_user, :agency_admin_grant]
 
     live "/agents", AgentLive.Index, :index
     live "/agents/new", AgentLive.Index, :new
@@ -174,11 +141,61 @@ defmodule BasicWeb.Router do
     live "/orders/:id", OrderLive.Show, :show
     live "/orders/:id/show/edit", OrderLive.Show, :edit
 
+    live "/agencies", AgencyLive.Index, :index
+    live "/agencies/new", AgencyLive.Index, :new
+    live "/agencies/:id/edit", AgencyLive.Index, :edit
+    live "/agencies/:id", AgencyLive.Show, :show
+    live "/agencies/:id/show/edit", AgencyLive.Show, :edit
+  end
+
+  scope "/admin", BasicWeb do
+    pipe_through [:browser, :require_authenticated_user, :organization_admin_grant]
+
+    live "/members", MemberLive.Index, :index
+    live "/members/new", MemberLive.Index, :new
+    live "/members/:id/edit", MemberLive.Index, :edit
+    live "/members/:id", MemberLive.Show, :show
+    live "/members/:id/show/edit", MemberLive.Show, :edit
+
+    live "/users", UserLive.Index, :index
+    live "/users/new", UserLive.Index, :new
+    live "/users/:id/edit", UserLive.Index, :edit
+    live "/users/:id", UserLive.Show, :show
+    live "/users/:id/show/edit", UserLive.Show, :edit
+
+    live "/organizations", OrganizationLive.Index, :index
+    live "/organizations/new", OrganizationLive.Index, :new
+    live "/organizations/:id/edit", OrganizationLive.Index, :edit
+    live "/organizations/:id", OrganizationLive.Show, :show
+    live "/organizations/:id/show/edit", OrganizationLive.Show, :edit
+  end
+
+  scope "/admin", BasicWeb do
+    pipe_through [:browser, :require_authenticated_user, :any_admin_grant]
+
+    live "/grants", GrantLive.Index, :index
+    live "/grants/new", GrantLive.Index, :new
+    live "/grants/:id/edit", GrantLive.Index, :edit
+    live "/grants/:id", GrantLive.Show, :show
+    live "/grants/:id/show/edit", GrantLive.Show, :edit
+
     live "/contacts", ContactLive.Index, :index
     live "/contacts/new", ContactLive.Index, :new
     live "/contacts/:id/edit", ContactLive.Index, :edit
     live "/contacts/:id", ContactLive.Show, :show
     live "/contacts/:id/show/edit", ContactLive.Show, :edit
+  end
+
+  scope "/admin", BasicWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/", AdminLive.Index, :index
+
+    live "/blogs", BlogLive.Index, :index
+    live "/blogs/new", BlogLive.Index, :new
+    live "/blogs/:id/edit", BlogLive.Index, :edit
+    live "/blogs/:id", BlogLive.Show, :show
+    live "/blogs/:id/show/edit", BlogLive.Show, :edit
   end
 
   scope "/", BasicWeb do

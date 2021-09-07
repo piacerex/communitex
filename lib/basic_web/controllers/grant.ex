@@ -11,6 +11,11 @@ defmodule BasicWeb.Grant do
       needs -> needs
     end
     case conn.assigns[:current_user] do
+      nil -> 
+        conn
+        |> put_flash(:error, "本ページにアクセスする際は、ログインを行ってください")
+        |> redirect(to: Routes.user_session_path(conn, :new))
+        |> halt()
       current_user -> 
         case Grants.find_user_grants!(current_user.id, roles |> Enum.map(& &1.name)) do
           [] -> 
@@ -21,11 +26,6 @@ defmodule BasicWeb.Grant do
           _ -> 
             conn
         end
-      _ -> 
-        conn
-        |> put_flash(:error, "本ページにアクセスする際は、ログインを行ってください")
-        |> redirect(to: Routes.user_session_path(conn, :new))
-        |> halt()
     end
   end
 

@@ -45,6 +45,11 @@ defmodule BasicWeb.GrantLive.Index do
   end
 
   @impl true
+  def handle_event("search", %{"search" => search}, socket) do
+    {:noreply, assign(socket, :candidate, Grants.search_user(search))}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     grant = Grants.get_grant!(id)
     {:ok, _} = Grants.delete_grant(List.first(grant))
@@ -54,9 +59,5 @@ defmodule BasicWeb.GrantLive.Index do
 
   defp list_grants do
     Grants.list_grants()
-  end
-
-  def handle_event("search", %{"search" => search} = params, socket) do
-    {:noreply, assign(socket, :candidate, Grants.search_user(search))}
   end
 end

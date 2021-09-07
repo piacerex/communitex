@@ -2,8 +2,6 @@ defmodule Basic.Grants.Grant do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Basic.Grants
-
   schema "grants" do
     field :organization_id, :integer
     field :deleted_at, :naive_datetime

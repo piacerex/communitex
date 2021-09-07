@@ -71,7 +71,7 @@ defmodule BasicWeb.SphereController do  #TODO: 本来のコントローラ副作
 
   def show( conn, %{ "path_" => path_ } ), do: render( conn |> put_layout( "plane.html" ), "show.html", params: dispatch( conn, path_ ) )
 
-  def dispatch( conn, path_ ) do
+  def dispatch(_conn, path_) do
     content_path = if path_ == [], do: "blank.html", else: Path.join( path_ )
     paths = build_paths( content_path, Application.fetch_env!( :sphere, :content_folder ) )
     body = Fl.read_if_exist( paths.absolute_path )

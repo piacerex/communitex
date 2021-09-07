@@ -3,7 +3,6 @@ defmodule BasicWeb.UserRegistrationController do
 
   alias Basic.Accounts
   alias Basic.Accounts.User
-  alias BasicWeb.UserAuth
 
   def new(conn, _params) do
     changeset = Accounts.change_user_registration(%User{})

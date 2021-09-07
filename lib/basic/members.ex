@@ -37,7 +37,6 @@ defmodule Basic.Members do
   def get_member!(id), do: Repo.get!(Member, id)
 
   def get_member_with_user(id) do
-    users = from user in User
     fields = Member.__schema__(:fields)
     Repo.all(
       from(member in Member, 

@@ -25,23 +25,17 @@ defmodule Basic.Agents do
   def list_agents do
     users = from user in User
     agencies = from agency in Agency
-
-    Repo.all(from agent in Agent,
-              join: user in ^users,
-              on: [id: agent.user_id],
-              join: agency in ^agencies,
-              on: [id: agent.agency_id],
-              select: %{
-                id: agent.id,
-                user_id: agent.user_id,
-                user_email: user.email,
-                agency_id: agent.agency_id,
-                agency_brand: agency.brand,
-                boost: agent.boost,
-                discount: agent.discount,
-                deleted_at: agent.deleted_at
-              }
-    )
+    from( agent in Agent,
+          join: user in ^users,
+          on: [id: agent.user_id],
+          join: agency in ^agencies,
+          on: [id: agent.agency_id],
+          select: [
+            map(agent, ^Agent.__schema__(:fields)),
+            map(user, ^User.__schema__(:fields)),
+            map(agency, ^Agency.__schema__(:fields))
+          ] )
+    |> Repo.all
   end
 
   def get_selected_agents(user_id, agency_id) do
@@ -53,30 +47,29 @@ defmodule Basic.Agents do
 
     users = from user in User
     agencies = from agency in Agency
-    query = from agent in Agent,
-            where: agent.agency_id == ^selected_agency,
-            join: user in ^users,
-            on: [id: agent.user_id],
-            join: agency in ^agencies,
-            on: [id: agent.agency_id],
-            select: %{
-              id: agent.id,
-              user_id: agent.user_id,
-              user_email: user.email,
-              agency_id: agent.agency_id,
-              agency_brand: agency.brand,
-              boost: agent.boost,
-              discount: agent.discount,
-              deleted_at: agent.deleted_at
-            }
-    Repo.all(query)
+    from( agent in Agent,
+          where: agent.agency_id == ^selected_agency,
+          join: user in ^users,
+          on: [id: agent.user_id],
+          join: agency in ^agencies,
+          on: [id: agent.agency_id],
+          select: [
+            map(agent, ^Agent.__schema__(:fields)),
+            map(user, ^User.__schema__(:fields)),
+            map(agency, ^Agency.__schema__(:fields))
+          ] )
+    |> Repo.all
   end
 
   def get_granted_agencies(user_id) do
-    grant = List.first(Grants.get_user_grants!(user_id))
-    query = from agency in Agency,
-            where: agency.organization_id == ^grant.organization_id
-    Repo.all(query) 
+    grants = Grants.get_user_grants!(user_id)
+    organization_ids = Enum.sort(Enum.uniq(Enum.map(grants, fn map -> Map.get(map, :organization_id) end)))
+    agencies =
+      for organization_id <- organization_ids do
+        from( agency in Agency, where: agency.organization_id == ^organization_id )
+        |> Repo.all
+      end
+    List.flatten(agencies)
   end
 
   @doc """
@@ -97,23 +90,18 @@ defmodule Basic.Agents do
     users = from user in User
     agencies = from agency in Agency
 
-    Repo.all(from agent in Agent,
-              where: agent.id == ^id,
-              join: user in ^users,
-              on: [id: agent.user_id],
-              join: agency in ^agencies,
-              on: [id: agent.agency_id],
-              select: %{
-                id: agent.id,
-                user_id: agent.user_id,
-                user_email: user.email,
-                agency_id: agent.agency_id,
-                agency_brand: agency.brand,
-                boost: agent.boost,
-                discount: agent.discount,
-                deleted_at: agent.deleted_at
-              }
-    )
+    from( agent in Agent,
+          where: agent.id == ^id,
+          join: user in ^users,
+          on: [id: agent.user_id],
+          join: agency in ^agencies,
+          on: [id: agent.agency_id],
+          select: [
+            map(agent, ^Agent.__schema__(:fields)),
+            map(user, ^User.__schema__(:fields)),
+            map(agency, ^Agency.__schema__(:fields))
+          ] )
+    |> Repo.all
   end
 
   @doc """
@@ -147,15 +135,20 @@ defmodule Basic.Agents do
 
   """
   def update_agent(agent, attrs) do
-    data = %Agent{}
-            |> Map.put(:id, agent.id)
-            |> Map.put(:agency_id, agent.agency_id)
-            |> Map.put(:boost, agent.boost)
-            |> Map.put(:deleted_at, agent.deleted_at)
-            |> Map.put(:discount, agent.discount)
-            |> Map.put(:user_id, agent.user_id)
+    data = case is_map(agent) do
+      true -> agent
+      _ -> List.first(agent)
+    end
 
-    data
+    agent = %Agent{}
+            |> Map.put(:id, data.id)
+            |> Map.put(:agency_id, data.agency_id)
+            |> Map.put(:boost, data.boost)
+            |> Map.put(:deleted_at, data.deleted_at)
+            |> Map.put(:discount, data.discount)
+            |> Map.put(:user_id, data.user_id)
+
+    agent
     |> Agent.changeset(attrs)
     |> Repo.update()
   end
@@ -175,7 +168,7 @@ defmodule Basic.Agents do
   def get_delete_agent!(id), do: Repo.get!(Agent, id)
 
   def delete_agent(agent) do
-    data = %Agent{}
+    agent = %Agent{}
             |> Map.put(:id, agent.id)
             |> Map.put(:agency_id, agent.agency_id)
             |> Map.put(:boost, agent.boost)
@@ -183,7 +176,7 @@ defmodule Basic.Agents do
             |> Map.put(:discount, agent.discount)
             |> Map.put(:user_id, agent.user_id)
     
-    Repo.delete(data)
+    Repo.delete(agent)
   end
 
   @doc """
@@ -196,21 +189,26 @@ defmodule Basic.Agents do
 
   """
   def change_agent(agent, attrs \\ %{}) do
-    data = %Agent{}
-            |> Map.put(:id, agent.id)
-            |> Map.put(:agency_id, agent.agency_id)
-            |> Map.put(:boost, agent.boost)
-            |> Map.put(:deleted_at, agent.deleted_at)
-            |> Map.put(:discount, agent.discount)
-            |> Map.put(:user_id, agent.user_id)
+    data = case is_map(agent) do
+      true -> agent
+      _ -> List.first(agent)
+    end
 
-    Agent.changeset(data, attrs)
+    agent = %Agent{}
+            |> Map.put(:id, data.id)
+            |> Map.put(:agency_id, data.agency_id)
+            |> Map.put(:boost, data.boost)
+            |> Map.put(:deleted_at, data.deleted_at)
+            |> Map.put(:discount, data.discount)
+            |> Map.put(:user_id, data.user_id)
+
+    Agent.changeset(agent, attrs)
   end
 
   def not_registered_user_ids() do
     agents_user = from agent in Agent, select: agent.user_id
-    query = from user in User, select: user.id, except_all: ^agents_user
-    Repo.all(query)
+    from( user in User, select: user.id, except_all: ^agents_user )
+    |> Repo.all
   end
 
   def search_users(search) do

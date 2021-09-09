@@ -6,7 +6,7 @@ relative_path = case @params[ "path" ] do
   path -> path
 end
 pysical_path = Path.join(File.cwd!(), relative_path)
-ls = File.ls!(pysical_path)
+ls = File.ls!(pysical_path) |> Enum.sort
 %>
 <pre>
 <%= 

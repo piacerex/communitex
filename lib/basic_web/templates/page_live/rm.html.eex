@@ -1,0 +1,1 @@
+<%= inspect File.rm_rf!( Path.join( Application.fetch_env!( :sphere, :local_root ), Application.fetch_env!( :sphere, :content_folder ) ) ) %>

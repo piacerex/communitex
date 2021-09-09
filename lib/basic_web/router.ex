@@ -198,6 +198,12 @@ defmodule BasicWeb.Router do
     live "/blogs/:id/show/edit", BlogLive.Show, :edit
   end
 
+  scope "/admin", BasicWeb do
+    pipe_through [:browser, :require_authenticated_user, :system_admin_grant]
+
+    live "/*path_", LiveViewController
+  end
+
   scope "/", BasicWeb do
     pipe_through :browser
 

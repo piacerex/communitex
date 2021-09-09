@@ -29,9 +29,10 @@ defmodule BasicWeb.Grant do
     end
   end
 
-  def content_editor_grant(conn, _opts), do: check(conn, Grants.content_editor(), [Grants.system_admin(), Grants.content_editor()])
+  def system_admin_grant(conn, _opts), do: check(conn, Grants.system_admin(), [Grants.system_admin()])
   def distributor_admin_grant(conn, _opts), do: check(conn, Grants.distributor_admin(), [Grants.system_admin(), Grants.distributor_admin(), Grants.organization_admin()])
   def agency_admin_grant(conn, _opts), do: check(conn, Grants.agency_admin(), [Grants.system_admin(), Grants.agency_admin(), Grants.organization_admin()])
   def organization_admin_grant(conn, _opts), do: check(conn, Grants.organization_admin(), [Grants.system_admin(), Grants.organization_admin()])
   def any_admin_grant(conn, _opts), do: check(conn, nil, Grants.roles())
+  def content_editor_grant(conn, _opts), do: check(conn, Grants.content_editor(), [Grants.system_admin(), Grants.content_editor()])
 end

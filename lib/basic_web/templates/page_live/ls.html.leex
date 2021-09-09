@@ -1,0 +1,19 @@
+<h1>ls</h1>
+
+<%
+relative_path = case @params[ "path" ] do
+  nil  -> Path.join(Application.fetch_env!(:sphere, :content_root), Application.fetch_env!(:sphere, :content_folder))
+  path -> path
+end
+pysical_path = Path.join(File.cwd!(), relative_path)
+ls = File.ls!(pysical_path)
+%>
+<pre>
+<%= 
+for file <- ls do 
+  case File.dir?(Path.join(pysical_path, file)) do
+    true -> raw("<a href=\"/admin/ls?path=#{ Path.join(relative_path, file) }\">#{ file }/</a>\n")
+    _    -> raw("<a href=\"/admin/cat?path=#{ Path.join(relative_path, file) }\">#{ file }</a>\n")
+  end 
+end %>
+</pre>

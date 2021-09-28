@@ -28,7 +28,7 @@
   <%= error_tag f, :organization_id %>
 -->
   <%= label f, :organization_id, "所属組織名" %>
-  <%= select f, :organization_id, @organizations |> Enum.map( fn x -> {x.name, x.id} end ) %>
+  <%= select f, :organization_id, @organizations |> Enum.map( fn x -> {x.name, x.id} end ), prompt: "-- 選択してください --" %>
   <%= error_tag f, :organization_id %>
 
   <%= label f, :role, "ロール" %>

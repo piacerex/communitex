@@ -30,16 +30,17 @@ defmodule BasicWeb.GrantLive.FormComponent do
     end
 
     cond do
-      is_nil(grant_params["user_id"]) ->
+      is_nil(grant_params["user_id"]) or
+      grant_params["user_id"] == "" or
+      grant_params["organization_id"] == "" or
+      grant_params["role"] == "" ->
+        changeset =
+          List.first(socket.assigns.grant)
+          |> Grants.change_grant(grant_params)
+          |> Map.put(:action, :validate)
         {:noreply,
           socket
-          |> assign(:candidate_users, candidate_users)
-          |> assign(:role_list, Grants.get_role_list(socket.assigns.current_user_id, grant_params["organization_id"]))
-        }
-
-      grant_params["user_id"] == "" ->
-        {:noreply,
-          socket
+          |> assign(:changeset, changeset)
           |> assign(:candidate_users, candidate_users)
           |> assign(:role_list, Grants.get_role_list(socket.assigns.current_user_id, grant_params["organization_id"]))
         }
@@ -77,27 +78,39 @@ defmodule BasicWeb.GrantLive.FormComponent do
   end
 
   def handle_event("save", %{"grant" => grant_params}, socket) do
-    error = validate_params(grant_params)
     cond do
-      error == "" ->
-        save_grant(socket, socket.assigns.action, grant_params)
-
-      String.contains?(error, "下位管理者での登録は削除されます") ->
-        grant = Grants.get_grant!(List.first(Grants.get_grant_id(grant_params)).id)
-        {:ok, _} = Grants.delete_grant(List.first(grant))
-
-        {:noreply, assign(socket, :grants, Grants.list_grants(socket.assigns.current_user_id))}
-
-        save_grant(socket, socket.assigns.action, grant_params)
-
-      true ->
+      grant_params["user_id"] == "" or
+      grant_params["organization_id"] == "" or
+      grant_params["role"] == "" ->
         changeset =
           List.first(socket.assigns.grant)
           |> Grants.change_grant(grant_params)
           |> Map.put(:action, :validate)
-          |> add_error(:role, error)
-
         {:noreply, assign(socket, :changeset, changeset)}
+
+      true ->
+        error = validate_params(grant_params)
+        cond do
+          error == "" ->
+            save_grant(socket, socket.assigns.action, grant_params)
+
+          String.contains?(error, "削除されます") ->
+            grant = Grants.get_grant!(List.first(Grants.get_grant_id(grant_params)).id)
+            {:ok, _} = Grants.delete_grant(List.first(grant))
+
+            {:noreply, assign(socket, :grants, Grants.list_grants(socket.assigns.current_user_id))}
+
+            save_grant(socket, socket.assigns.action, grant_params)
+
+          true ->
+            changeset =
+              List.first(socket.assigns.grant)
+              |> Grants.change_grant(grant_params)
+              |> Map.put(:action, :validate)
+              |> add_error(:role, error)
+
+            {:noreply, assign(socket, :changeset, changeset)}
+        end
     end
   end
 
@@ -108,7 +121,7 @@ defmodule BasicWeb.GrantLive.FormComponent do
       error = cond do
         Enum.member?(user_role, params["role"]) -> "同一データは登録できません"
         params["role"] == Grants.content_editor().name -> ""
-        true -> "このユーザは" <> Grants.content_editor().display <> "で登録してください"
+        true -> "このユーザは#{Grants.content_editor().display}で登録してください"
       end
     else
       error = cond do
@@ -119,24 +132,22 @@ defmodule BasicWeb.GrantLive.FormComponent do
             Enum.member?(user_role, params["role"]) ->
               "同一データは登録できません"
             Enum.member?(user_role, Grants.system_admin().name) ->
-              Grants.system_admin().display <> "なので登録の必要はありません"
+              "#{Grants.system_admin().display}なので登録の必要はありません"
             Enum.member?(user_role, Grants.organization_admin().name) ->
               cond do
                 params["role"] == Grants.system_admin().name ->
                   "より上位のロールなので、#{Grants.organization_admin().display}の登録は削除されます。よろしければ続行してください"
                 params["role"] == Grants.content_editor().name ->
-                  Grants.organization_admin().display <> "で登録しています。" <>
-                  Grants.content_editor().display <> "として登録はできません"
+                  "#{Grants.organization_admin().display}で登録しています。#{Grants.content_editor().display}として登録はできません"
                 true ->
-                  Grants.organization_admin().display <> "なので登録の必要はありません"
+                  "#{Grants.organization_admin().display}なので登録の必要はありません"
               end
             Enum.member?(user_role, Grants.distributor_admin().name) ->
               cond do
                 params["role"] == Grants.agency_admin().name ->
                   ""
                 params["role"] == Grants.content_editor().name ->
-                  Grants.distributor_admin().display <> "で登録しています。" <>
-                  Grants.content_editor().display <> "として登録はできません"
+                  "#{Grants.distributor_admin().display}で登録しています。#{Grants.content_editor().display}として登録はできません"
                 true ->
                   "より上位のロールなので、#{Grants.distributor_admin().display}の登録は削除されます。よろしければ続行してください"
               end
@@ -145,8 +156,7 @@ defmodule BasicWeb.GrantLive.FormComponent do
                 params["role"] == Grants.distributor_admin().name ->
                   ""
                 params["role"] == Grants.content_editor().name ->
-                  Grants.agency_admin().display <> "で登録しています。" <> 
-                  Grants.content_editor().display <> "として登録はできません"
+                  "#{Grants.agency_admin().display}で登録しています。#{Grants.content_editor().display}として登録はできません"
                 true ->
                   "より上位のロールなので、#{Grants.agency_admin().display}の登録は削除されます。よろしければ続行してください"
               end
@@ -161,7 +171,7 @@ defmodule BasicWeb.GrantLive.FormComponent do
                     Enum.member?(user_roles, Grants.content_editor().name) ->
                       ""
                     true ->
-                      Grants.content_editor().display <> "として登録はできません"
+                      "#{Grants.content_editor().display}として登録はできません"
                   end
 
                 true ->

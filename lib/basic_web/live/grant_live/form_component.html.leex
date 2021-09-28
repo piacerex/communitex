@@ -1,14 +1,5 @@
 <h2><%= @title %></h2>
 
-<%= if @title == "New Grant" do %>
-  <form phx-change="search" class="table-form">
-  <div class="search">
-    <input type="search" class="input" name="search" phx-debounce="300" placeholder="名前、メールアドレスで絞り込み" value="<%= @search %>">
-    <i class="icon fas fa-search"></i>
-  </div>
-  </form>
-<% end %>
-
 <%= f = form_for @changeset, "#",
   id: "grant-form",
   phx_target: @myself,
@@ -16,8 +7,15 @@
   phx_submit: "save" %>
 
   <%= if @title == "New Grant" do %>
-    <%= label f, :user_id, "ユーザを選択してください" %>
-    <%= select f, :user_id, @candidate |> Enum.map( fn x -> {x.last_name <> x.first_name <> x.email, x.user_id} end ) %>
+    <div class="search">
+      <input type="search" class="input" name="grant[search]" phx-debounce="300" placeholder="名前、メールアドレスで絞り込み" value="<%= @search %>">
+      <i class="icon fas fa-search"></i>
+    </div>
+
+    <%= label f, :user_id, "ユーザ" %>
+    <%= if @candidate_users != "" do %>
+      <%= select f, :user_id, @candidate_users |> Enum.map( fn x -> {x.last_name <> x.first_name <> x.email, x.user_id} end ), prompt: "-- 選択してください --" %>
+    <% end %>
     <%= error_tag f, :user_id %>
   <% else %>
     <%= label f, :user_id, "ユーザID" %>
@@ -34,7 +32,7 @@
   <%= error_tag f, :organization_id %>
 
   <%= label f, :role, "ロール" %>
-  <%= select f, :role, @role_list |> Enum.map( fn x -> {x.display, x.name} end ) %>
+  <%= select f, :role, @role_list |> Enum.map( fn x -> {x.display, x.name} end ), prompt: "-- 選択してください --" %>
   <%= error_tag f, :role %>
 <!--
   <%= label f, :role, "ロール" %>

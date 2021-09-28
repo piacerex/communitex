@@ -35,7 +35,7 @@
 
   <li>
     <strong>ロール:</strong>
-    <%= Enum.find(@role_list, fn x -> x.name == List.first(@grant).role end).display %>
+    <%= Enum.find(@all_roles, fn x -> x.name == List.first(@grant).role end).display %>
   </li>
 <!--
   <li>
@@ -45,5 +45,7 @@
 -->
 </ul>
 
+<!--
 <span><%= live_patch "Edit", to: Routes.grant_show_path(@socket, :edit, List.first(@grant).id), class: "button" %></span>
+-->
 <span><%= live_redirect "Back", to: Routes.grant_index_path(@socket, :index) %></span>

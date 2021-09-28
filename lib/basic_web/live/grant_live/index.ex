@@ -3,7 +3,6 @@ defmodule BasicWeb.GrantLive.Index do
 
   alias Basic.Grants
   alias Basic.Grants.Grant
-  alias Basic.Organizations
   alias Basic.Organizations.Organization
   alias Basic.Accounts
   alias Basic.Accounts.User
@@ -11,13 +10,24 @@ defmodule BasicWeb.GrantLive.Index do
   @impl true
   def mount(_params, session, socket) do
     current_user = Accounts.get_user_by_session_token(session["user_token"])
+    organizations = Grants.get_registrable_organizations(current_user.id)
+
+    role_list = case organizations do
+      [] -> []
+      _  -> Grants.get_role_list(current_user.id, List.first(organizations).id)
+    end
+
     {:ok, 
       socket
-      |> assign(:grants, list_grants())
-      |> assign(:organizations, Organizations.list_organizations())
-      |> assign(:role_list, Grants.get_role_list(current_user.id))
+      |> assign(:current_user_id, current_user.id)
+      |> assign(:grants, Grants.list_grants(current_user.id))
+      |> assign(:organizations, organizations)
+      |> assign(:all_roles, Grants.roles())
+      |> assign(:role_list, role_list)
       |> assign(:search, "")
-      |> assign(:candidate, [])
+      |> assign(:candidate_users, [])
+      |> assign(:selected_organization, "")
+      |> assign(:delete_id, "")
     }
   end
 
@@ -26,11 +36,11 @@ defmodule BasicWeb.GrantLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Grant")
-    |> assign(:grant, Grants.get_grant!(id))
-  end
+#  defp apply_action(socket, :edit, %{"id" => id}) do
+#    socket
+#    |> assign(:page_title, "Edit Grant")
+#    |> assign(:grant, Grants.get_grant!(id))
+#  end
 
   defp apply_action(socket, :new, _params) do
     socket
@@ -45,16 +55,11 @@ defmodule BasicWeb.GrantLive.Index do
   end
 
   @impl true
-  def handle_event("search", %{"search" => search}, socket) do
-    {:noreply, assign(socket, :candidate, Grants.search_user(search))}
-  end
-
-  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     grant = Grants.get_grant!(id)
     {:ok, _} = Grants.delete_grant(List.first(grant))
 
-    {:noreply, assign(socket, :grants, list_grants())}
+    {:noreply, assign(socket, :grants, Grants.list_grants(socket.assigns.current_user_id))}
   end
 
   defp list_grants do

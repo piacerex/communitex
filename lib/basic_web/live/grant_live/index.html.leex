@@ -1,55 +1,65 @@
 <h1>Listing Grants</h1>
 
-<%= if @live_action in [:new, :edit] do %>
-  <%= live_modal @socket, BasicWeb.GrantLive.FormComponent,
-    id: List.first(@grant).id || :new,
-    title: @page_title,
-    action: @live_action,
-    grant: @grant,
-    organizations: @organizations,
-    role_list: @role_list,
-    search: @search,
-    candidate: @candidate,
-    return_to: Routes.grant_index_path(@socket, :index) %>
-<% end %>
+<%= if @organizations == [] do %>
+  所属組織が登録されていません。システム管理者にお問合せください
 
-<table>
-  <thead>
-    <tr>
-      <th>ユーザID</th>
-      <th>ユーザEmail</th>
+<% else %>
+
+  <%= if @live_action in [:new, :edit] do %>
+    <%= live_modal @socket, BasicWeb.GrantLive.FormComponent,
+      id: List.first(@grant).id || :new,
+      title: @page_title,
+      action: @live_action,
+      grant: @grant,
+      current_user_id: @current_user_id,
+      organizations: @organizations,
+      role_list: @role_list,
+      search: @search,
+      candidate_users: @candidate_users,
+      selected_organization: @selected_organization,
+      return_to: Routes.grant_index_path(@socket, :index) %>
+  <% end %>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ユーザID</th>
+        <th>ユーザEmail</th>
 <!--
-      <th>所属組織ID</th>
+        <th>所属組織ID</th>
 -->
-      <th>所属組織名</th>
-      <th>ロール</th>
+        <th>所属組織名</th>
+        <th>ロール</th>
 <!--
-      <th>Deleted at</th>
+        <th>Deleted at</th>
 -->
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="grants">
-    <%= for grant <- @grants do %>
-      <tr id="grant-<%= List.first(grant).id %>">
-        <td><%= List.first(grant).user_id %></td>
-        <td><%= Enum.at(grant, 1).email %></td>
-<!--
-        <td><%= List.first(grant).organization_id %></td>
--->
-        <td><%= List.last(grant).name %></td>
-        <td><%= Enum.find(@role_list, fn x -> x.name == List.first(grant).role end).display %></td>
-<!--
-        <td><%= List.first(grant).deleted_at %></td>
--->
-        <td>
-          <span><%= live_redirect "Show", to: Routes.grant_show_path(@socket, :show, List.first(grant).id) %></span>
-          <span><%= live_patch "Edit", to: Routes.grant_index_path(@socket, :edit, List.first(grant).id) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: List.first(grant).id, data: [confirm: "Are you sure?"] %></span>
-        </td>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody id="grants">
+      <%= for grant <- @grants do %>
+        <tr id="grant-<%= List.first(grant).id %>">
+          <td><%= List.first(grant).user_id %></td>
+          <td><%= Enum.at(grant, 1).email %></td>
+<!--
+          <td><%= List.first(grant).organization_id %></td>
+-->
+          <td><%= List.last(grant).name %></td>
+          <td><%= Enum.find(@all_roles, fn x -> x.name == List.first(grant).role end).display %></td>
+<!--
+          <td><%= List.first(grant).deleted_at %></td>
+-->
+          <td>
+<!--
+            <span><%= #live_redirect "Show", to: Routes.grant_show_path(@socket, :show, List.first(grant).id) %></span>
+            <span><%= #live_patch "Edit", to: Routes.grant_index_path(@socket, :edit, List.first(grant).id) %></span>
+-->
+            <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: List.first(grant).id, data: [confirm: "Are you sure?"] %></span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<span><%= live_patch "New Grant", to: Routes.grant_index_path(@socket, :new) %></span>
+  <span><%= live_patch "New Grant", to: Routes.grant_index_path(@socket, :new) %></span>
+<% end %>

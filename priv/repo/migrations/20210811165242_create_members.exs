@@ -11,8 +11,8 @@ defmodule Basic.Repo.Migrations.CreateMembers do
       add :detail, :text
       add :image, :text
       add :birthday, :naive_datetime
-      add :corporate_id, :integer
-      add :corporate_name, :string
+      add :organization_id, :integer
+      add :organization_name, :string
       add :industry, :string
       add :department, :string
       add :position, :string

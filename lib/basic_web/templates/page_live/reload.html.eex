@@ -1,0 +1,8 @@
+<h1>mkdir content</h1>
+<p><%= inspect File.mkdir_p( Path.join( Application.fetch_env!( :sphere, :local_root ), "content" ) ) %></p>
+
+<h1>rm</h1>
+<p><%= inspect File.rm_rf( Path.join( Application.fetch_env!( :sphere, :local_root ), Application.fetch_env!( :sphere, :content_folder ) ) ) %></p>
+
+<h1>git clone</h1>
+<p><%= GitOperator.clone( File.cwd!() ) %></p>

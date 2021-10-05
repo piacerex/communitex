@@ -16,27 +16,32 @@ member = %Member{} |> Map.merge(Map.take(@member, Map.keys(%Member{})))
 <ul>
 
   <li>
-    <strong>User:</strong>
+    <strong>メンバID:</strong>
+    <%= @member.id %>
+  </li>
+
+  <li>
+    <strong>ユーザID:</strong>
     <%= @member.user_id %>
   </li>
 
   <li>
-    <strong>Last name:</strong>
+    <strong>姓:</strong>
     <%= @member.last_name %>
   </li>
 
   <li>
-    <strong>First name:</strong>
+    <strong>名:</strong>
     <%= @member.first_name %>
   </li>
 
   <li>
-    <strong>Last name kana:</strong>
+    <strong>セイ:</strong>
     <%= @member.last_name_kana %>
   </li>
 
   <li>
-    <strong>First name kana:</strong>
+    <strong>メイ:</strong>
     <%= @member.first_name_kana %>
   </li>
 
@@ -46,12 +51,12 @@ member = %Member{} |> Map.merge(Map.take(@member, Map.keys(%Member{})))
   </li>
 
   <li>
-    <strong>Detail:</strong>
+    <strong>詳細:</strong>
     <%= @member.detail %>
   </li>
 
   <li>
-    <strong>Image:</strong>
+    <strong>写真:</strong>
     <%= if is_nil(@member.image) do %>
       <td><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="200"></td>
     <% else %>
@@ -63,34 +68,37 @@ member = %Member{} |> Map.merge(Map.take(@member, Map.keys(%Member{})))
   </li>
 
   <li>
-    <strong>Birthday:</strong>
+    <strong>生年月日:</strong>
     <%= @member.birthday %>
   </li>
 
+<!--
   <li>
-    <strong>Corporate:</strong>
-    <%= @member.corporate_id %>
+    <strong>所属組織ID:</strong>
+    <%= @member.organization_id %>
+  </li>
+-->
+
+  <li>
+    <strong>所属組織名:</strong>
+    <%= @member.organization_name %>
   </li>
 
   <li>
-    <strong>Corporate name:</strong>
-    <%= @member.corporate_name %>
-  </li>
-
-  <li>
-    <strong>Industry:</strong>
+    <strong>業種:</strong>
     <%= @member.industry %>
   </li>
 
   <li>
-    <strong>Department:</strong>
+    <strong>部署:</strong>
     <%= @member.department %>
   </li>
 
   <li>
-    <strong>Position:</strong>
+    <strong>役職:</strong>
     <%= @member.position %>
   </li>
+
 <!--
   <li>
     <strong>Deleted at:</strong>

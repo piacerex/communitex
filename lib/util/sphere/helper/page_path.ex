@@ -72,7 +72,7 @@ defmodule PagePath do
       true -> request_path <> "/"
       _    -> 
         split_path = String.split( request_path, "/" ) |> Enum.filter( & &1 != "" )
-        case split_path |> List.last |> String.contains?( default_filenames ) do
+        case split_path |> List.last |> String.contains?(default_filenames()) do
           true -> "/" <> ( Enum.drop( split_path, -1 ) |> Path.join ) <> "/"
           _    -> request_path
         end

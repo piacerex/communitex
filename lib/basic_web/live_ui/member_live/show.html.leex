@@ -1,10 +1,5 @@
 <h1>Show Member</h1>
 
-<%
-alias Basic.Members.Member
-member = %Member{} |> Map.merge(Map.take(@member, Map.keys(%Member{})))
-%>
-
 <div class="main">
 
 <p><%= @member.user_id %></p>

@@ -1,11 +1,13 @@
 defmodule BasicWeb.GrantLive.FormComponent do
   use BasicWeb, :live_component
 
+  import Ecto.Changeset
+
   alias Basic.Grants
 
   @impl true
   def update(%{grant: grant} = assigns, socket) do
-    changeset = Grants.change_grant(grant)
+    changeset = Grants.change_grant(List.first(grant))
 
     {:ok,
      socket
@@ -16,7 +18,7 @@ defmodule BasicWeb.GrantLive.FormComponent do
   @impl true
   def handle_event("validate", %{"grant" => grant_params}, socket) do
     changeset =
-      socket.assigns.grant
+      List.first(socket.assigns.grant)
       |> Grants.change_grant(grant_params)
       |> Map.put(:action, :validate)
 
@@ -24,11 +26,21 @@ defmodule BasicWeb.GrantLive.FormComponent do
   end
 
   def handle_event("save", %{"grant" => grant_params}, socket) do
-    save_grant(socket, socket.assigns.action, grant_params)
+    if Grants.check_grant(grant_params) == [] do
+      save_grant(socket, socket.assigns.action, grant_params)
+    else
+      changeset = 
+        List.first(socket.assigns.grant)
+        |> Grants.change_grant(grant_params)
+        |> Map.put(:action, :validate)
+        |> add_error(:user_id, "同一データは登録できません")
+  
+      {:noreply, assign(socket, :changeset, changeset)}
+    end
   end
 
   defp save_grant(socket, :edit, grant_params) do
-    case Grants.update_grant(socket.assigns.grant, grant_params) do
+    case Grants.update_grant(List.first(socket.assigns.grant), grant_params) do
       {:ok, _grant} ->
         {:noreply,
          socket

@@ -96,7 +96,7 @@ defmodule BasicWeb.SphereLive do
     {:noreply, assign(socket, params: params)}
   end
 
-  defp apply_action(socket, :index, params) do
+  defp apply_action(socket, :index, _params) do
     socket
   end
 

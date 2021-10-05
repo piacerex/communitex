@@ -5,9 +5,9 @@ defmodule BasicWeb.DistributorLiveTest do
 
   alias Basic.Distributors
 
-  @create_attrs %{brand: "some brand", corporate_id: 42, deleted_at: ~N[2010-04-17 14:00:00]}
-  @update_attrs %{brand: "some updated brand", corporate_id: 43, deleted_at: ~N[2011-05-18 15:01:01]}
-  @invalid_attrs %{brand: nil, corporate_id: nil, deleted_at: nil}
+  @create_attrs %{brand: "some brand", organization_id: 42, deleted_at: ~N[2010-04-17 14:00:00]}
+  @update_attrs %{brand: "some updated brand", organization_id: 43, deleted_at: ~N[2011-05-18 15:01:01]}
+  @invalid_attrs %{brand: nil, organization_id: nil, deleted_at: nil}
 
   defp fixture(:distributor) do
     {:ok, distributor} = Distributors.create_distributor(@create_attrs)

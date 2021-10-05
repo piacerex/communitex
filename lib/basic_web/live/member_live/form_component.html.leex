@@ -30,7 +30,7 @@
   <%= textarea f, :detail %>
   <%= error_tag f, :detail %>
 
-  <%= label f, :image %>
+  <%= label f, :image, "写真" %>
   <div class="container" phx-drop-target="<%= @uploads.avatar.ref %>">
     <%= live_file_input @uploads.avatar %>
   </div>
@@ -52,14 +52,14 @@
   %>
   <%= error_tag f, :birthday %>
 <!--
-  <%= label f, :corporate_id, "企業ID" %>
-  <%= number_input f, :corporate_id %>
-  <%= error_tag f, :corporate_id %>
+  <%= label f, :organization_id, "所属組織ID" %>
+  <%= number_input f, :organization_id %>
+  <%= error_tag f, :organization_id %>
 -->
 
-  <%= label f, :corporate_name, "企業名" %>
-  <%= text_input f, :corporate_name %>
-  <%= error_tag f, :corporate_name %>
+  <%= label f, :organization_name, "所属組織名" %>
+  <%= text_input f, :organization_name %>
+  <%= error_tag f, :organization_name %>
 
   <%= label f, :industry, "業種" %>
   <%= text_input f, :industry %>

@@ -5,9 +5,9 @@ defmodule BasicWeb.GrantLiveTest do
 
   alias Basic.Grants
 
-  @create_attrs %{corporate_id: 42, deleted_at: ~N[2010-04-17 14:00:00], role: "some role", user_id: 42}
-  @update_attrs %{corporate_id: 43, deleted_at: ~N[2011-05-18 15:01:01], role: "some updated role", user_id: 43}
-  @invalid_attrs %{corporate_id: nil, deleted_at: nil, role: nil, user_id: nil}
+  @create_attrs %{organization_id: 42, deleted_at: ~N[2010-04-17 14:00:00], role: "some role", user_id: 42}
+  @update_attrs %{organization_id: 43, deleted_at: ~N[2011-05-18 15:01:01], role: "some updated role", user_id: 43}
+  @invalid_attrs %{organization_id: nil, deleted_at: nil, role: nil, user_id: nil}
 
   defp fixture(:grant) do
     {:ok, grant} = Grants.create_grant(@create_attrs)

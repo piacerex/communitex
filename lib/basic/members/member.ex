@@ -4,8 +4,8 @@ defmodule Basic.Members.Member do
 
   schema "members" do
     field :birthday, :naive_datetime
-    field :corporate_id, :integer
-    field :corporate_name, :string
+    field :organization_id, :integer
+    field :organization_name, :string
     field :deleted_at, :naive_datetime
     field :department, :string
     field :detail, :string
@@ -24,7 +24,7 @@ defmodule Basic.Members.Member do
   @doc false
   def changeset(member, attrs) do
     member
-    |> cast(attrs, [:user_id, :last_name, :first_name, :last_name_kana, :first_name_kana, :detail, :image, :birthday, :corporate_id, :corporate_name, :industry, :department, :position, :deleted_at])
+    |> cast(attrs, [:user_id, :last_name, :first_name, :last_name_kana, :first_name_kana, :detail, :image, :birthday, :organization_id, :organization_name, :industry, :department, :position, :deleted_at])
     |> validate_required([:user_id])
   end
 end

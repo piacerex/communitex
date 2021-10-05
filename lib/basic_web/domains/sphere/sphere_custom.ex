@@ -4,7 +4,7 @@ defmodule SphereCustom do
     conn
   end
 
-  def post( conn, params ) do
+  def post( conn, _params ) do
     # customize here
     conn
   end

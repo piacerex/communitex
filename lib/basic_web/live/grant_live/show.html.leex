@@ -2,36 +2,48 @@
 
 <%= if @live_action in [:edit] do %>
   <%= live_modal @socket, BasicWeb.GrantLive.FormComponent,
-    id: @grant.id,
+    id: List.first(@grant).id,
     title: @page_title,
     action: @live_action,
     grant: @grant,
-    return_to: Routes.grant_show_path(@socket, :show, @grant) %>
+    organizations: @organizations,
+    role_list: @role_list,
+    return_to: Routes.grant_show_path(@socket, :show, List.first(@grant).id) %>
 <% end %>
 
 <ul>
 
   <li>
     <strong>ユーザID:</strong>
-    <%= @grant.user_id %>
+    <%= List.first(@grant).user_id %>
   </li>
 
   <li>
+    <strong>ユーザEmail:</strong>
+    <%= Enum.at(@grant, 1).email %>
+  </li>
+<!--
+  <li>
     <strong>所属組織ID:</strong>
-    <%= @grant.organization_id %>
+    <%= List.first(@grant).organization_id %>
+  </li>
+-->
+  <li>
+    <strong>所属組織名:</strong>
+    <%= List.last(@grant).name %>
   </li>
 
   <li>
     <strong>ロール:</strong>
-    <%= @grant.role %>
+    <%= Enum.find(@role_list, fn x -> x.name == List.first(@grant).role end).display %>
   </li>
 <!--
   <li>
     <strong>Deleted at:</strong>
-    <%= @grant.deleted_at %>
+    <%= List.first(@grant).deleted_at %>
   </li>
 -->
 </ul>
 
-<span><%= live_patch "Edit", to: Routes.grant_show_path(@socket, :edit, @grant), class: "button" %></span>
+<span><%= live_patch "Edit", to: Routes.grant_show_path(@socket, :edit, List.first(@grant).id), class: "button" %></span>
 <span><%= live_redirect "Back", to: Routes.grant_index_path(@socket, :index) %></span>

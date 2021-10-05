@@ -8,7 +8,6 @@ defmodule Basic.Agents do
 
   alias Basic.Agents.Agent
   alias Basic.Grants
-  alias Basic.Agencies
   alias Basic.Agencies.Agency
   alias Basic.Accounts.User
   alias Basic.Members.Member

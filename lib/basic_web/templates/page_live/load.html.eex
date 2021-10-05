@@ -1,0 +1,1 @@
+<%= GitOperator.clone( File.cwd!() ) %>

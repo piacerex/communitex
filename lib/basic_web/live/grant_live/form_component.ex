@@ -20,49 +20,74 @@ defmodule BasicWeb.GrantLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"grant" => grant_params}, socket) do
-    candidate_users = case grant_params["search"] do
-      "" -> 
+    candidate_users = case grant_params["user"] do
+      "" ->
         case socket.assigns.candidate_users do
           "" -> ""
           _  -> socket.assigns.candidate_users
         end
-      _  -> Grants.search_user(grant_params["search"])
+      _  ->
+        Grants.search_user(List.first(String.split(grant_params["user"])))
+    end
+
+    user_id = cond do
+      Enum.count(candidate_users) == 1 -> Integer.to_string(List.first(candidate_users).user_id)
+      true -> ""
+    end
+
+    role_list = cond do
+      grant_params["organization_id"] == "" -> socket.assigns.role_list
+      true -> Grants.get_role_list(socket.assigns.current_user_id, grant_params["organization_id"])
     end
 
     cond do
-      is_nil(grant_params["user_id"]) or
-      grant_params["user_id"] == "" or
-      grant_params["organization_id"] == "" or
-      grant_params["role"] == "" ->
+      user_id == "" ->
         changeset =
           List.first(socket.assigns.grant)
-          |> Grants.change_grant(grant_params)
+          |> Grants.change_grant(Map.put(grant_params, "user_id", user_id))
           |> Map.put(:action, :validate)
+
         {:noreply,
           socket
           |> assign(:changeset, changeset)
           |> assign(:candidate_users, candidate_users)
-          |> assign(:role_list, Grants.get_role_list(socket.assigns.current_user_id, grant_params["organization_id"]))
+          |> assign(:selected_user, "")
+          |> assign(:role_list, role_list)
+        }
+
+      grant_params["organization_id"] == "" or
+      grant_params["role"] == "" ->
+        changeset =
+          List.first(socket.assigns.grant)
+          |> Grants.change_grant(Map.put(grant_params, "user_id", user_id))
+          |> Map.put(:action, :validate)
+
+        {:noreply,
+          socket
+          |> assign(:changeset, changeset)
+          |> assign(:candidate_users, candidate_users)
+          |> assign(:selected_user, List.first(candidate_users).email <> " " <> List.first(candidate_users).last_name <> " " <> List.first(candidate_users).first_name)
+          |> assign(:role_list, role_list)
         }
 
       true ->
-        error = validate_params(grant_params)
+        error = validate_params(Map.put(grant_params, "user_id", user_id))
         case error do
           "" -> changeset =
                   List.first(socket.assigns.grant)
-                  |> Grants.change_grant(grant_params)
+                  |> Grants.change_grant(Map.put(grant_params, "user_id", user_id))
                   |> Map.put(:action, :validate)
-
                 {:noreply,
                   socket
                   |> assign(:changeset, changeset)
                   |> assign(:candidate_users, candidate_users)
                   |> assign(:selected_organization, grant_params["organization_id"])
-                  |> assign(:role_list, Grants.get_role_list(socket.assigns.current_user_id, grant_params["organization_id"]))
+                  |> assign(:selected_user, List.first(candidate_users).email <> " " <> List.first(candidate_users).last_name <> " " <> List.first(candidate_users).first_name)
+                  |> assign(:role_list, role_list)
                 }
           _  -> changeset =
                   List.first(socket.assigns.grant)
-                  |> Grants.change_grant(grant_params)
+                  |> Grants.change_grant(Map.put(grant_params, "user_id", user_id))
                   |> Map.put(:action, :validate)
                   |> add_error(:role, error)
 
@@ -71,41 +96,48 @@ defmodule BasicWeb.GrantLive.FormComponent do
                   |> assign(:changeset, changeset)
                   |> assign(:candidate_users, candidate_users)
                   |> assign(:selected_organization, grant_params["organization_id"])
-                  |> assign(:role_list, Grants.get_role_list(socket.assigns.current_user_id, grant_params["organization_id"]))
+                  |> assign(:selected_user, List.first(candidate_users).email <> " " <> List.first(candidate_users).last_name <> " " <> List.first(candidate_users).first_name)
+                  |> assign(:role_list, role_list)
                 }
         end
     end
   end
 
   def handle_event("save", %{"grant" => grant_params}, socket) do
+    user_id = cond do
+      Enum.count(socket.assigns.candidate_users) == 1 ->
+        Integer.to_string(List.first(socket.assigns.candidate_users).user_id)
+      true -> ""
+    end
+
     cond do
-      grant_params["user_id"] == "" or
+      user_id == "" or
       grant_params["organization_id"] == "" or
       grant_params["role"] == "" ->
         changeset =
           List.first(socket.assigns.grant)
-          |> Grants.change_grant(grant_params)
+          |> Grants.change_grant(Map.put(grant_params, "user_id", user_id))
           |> Map.put(:action, :validate)
         {:noreply, assign(socket, :changeset, changeset)}
 
       true ->
-        error = validate_params(grant_params)
+        error = validate_params(Map.put(grant_params, "user_id", user_id))
         cond do
           error == "" ->
-            save_grant(socket, socket.assigns.action, grant_params)
+            save_grant(socket, socket.assigns.action, Map.put(grant_params, "user_id", user_id))
 
           String.contains?(error, "削除されます") ->
-            grant = Grants.get_grant!(List.first(Grants.get_grant_id(grant_params)).id)
+            grant = Grants.get_grant!(List.first(Grants.get_grant_id(Map.put(grant_params, "user_id", user_id))).id)
             {:ok, _} = Grants.delete_grant(List.first(grant))
 
             {:noreply, assign(socket, :grants, Grants.list_grants(socket.assigns.current_user_id))}
 
-            save_grant(socket, socket.assigns.action, grant_params)
+            save_grant(socket, socket.assigns.action, Map.put(grant_params, "user_id", user_id))
 
           true ->
             changeset =
               List.first(socket.assigns.grant)
-              |> Grants.change_grant(grant_params)
+              |> Grants.change_grant(Map.put(grant_params, "user_id", user_id))
               |> Map.put(:action, :validate)
               |> add_error(:role, error)
 

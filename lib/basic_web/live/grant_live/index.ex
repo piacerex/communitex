@@ -24,10 +24,9 @@ defmodule BasicWeb.GrantLive.Index do
       |> assign(:organizations, organizations)
       |> assign(:all_roles, Grants.roles())
       |> assign(:role_list, role_list)
-      |> assign(:search, "")
       |> assign(:candidate_users, [])
       |> assign(:selected_organization, "")
-      |> assign(:delete_id, "")
+      |> assign(:selected_user, "")
     }
   end
 

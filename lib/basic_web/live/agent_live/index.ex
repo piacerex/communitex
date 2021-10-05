@@ -4,6 +4,7 @@ defmodule BasicWeb.AgentLive.Index do
   alias Basic.Agents
   alias Basic.Agents.Agent
   alias Basic.Accounts
+  alias Basic.Agencies
 
   @impl true
   def mount(params, session, socket) do
@@ -46,7 +47,7 @@ defmodule BasicWeb.AgentLive.Index do
   end
 
   @impl true
-  def handle_event("validate", %{"survey" => params}, socket) do
+  def handle_event("validate", %{"choice" => params}, socket) do
     case params["agency_id"] do
       "" ->
         {:noreply, socket}
@@ -54,9 +55,9 @@ defmodule BasicWeb.AgentLive.Index do
       _ ->
         {:noreply, 
           socket
-          |> assign(:selected_agency, params["agency_id"])
+          |> assign(:selected_agency, String.to_integer(params["agency_id"]))
           |> assign(:agents, Agents.get_selected_agents(socket.assigns.current_user_id, String.to_integer(params["agency_id"])))
-          |> push_patch(to: "/agents" <> "?agency_id=" <> params["agency_id"], replace: true)
+          |> push_patch(to: "/admin/agents" <> "?agency_id=" <> params["agency_id"], replace: true)
         }
     end
   end
@@ -74,23 +75,35 @@ defmodule BasicWeb.AgentLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
+    selected_agency_data = Agencies.get_agency!(socket.assigns.selected_agency)
+    display_data = %Agent{}
+                   |> Map.put(:agency_id, selected_agency_data.id)
+                   |> Map.put(:boost, selected_agency_data.boost)
+                   |> Map.put(:discount, selected_agency_data.discount)
+
     socket
     |> assign(:page_title, "New Agent")
-    |> assign(:agent, %Agent{})
+    |> assign(:agent, display_data)
     |> assign(:current_user_id, socket.assigns.current_user_id)
     |> assign(:agencies, Agents.get_granted_agencies(socket.assigns.current_user_id))
-    |> assign(:selected_agency, "")
+    |> assign(:selected_agency, socket.assigns.selected_agency)
     |> assign(:search, "")
     |> assign(:candidate_users, "")
   end
 
   defp apply_action(socket, :index, _params) do
-    socket
-    |> assign(:page_title, "Listing Agents")
-    |> assign(:agent, nil)
-    |> assign(:agencies, Agents.get_granted_agencies(socket.assigns.current_user_id))
-    |> assign(:search, "")
-    |> assign(:candidate_users, "")
+    case socket.assigns.selected_agency do
+      [] ->
+        socket
+        |> assign(:page_title, "Listing Agents")
+      _ ->
+        socket
+        |> assign(:page_title, "Listing Agents")
+        |> assign(:agent, nil)
+        |> assign(:agencies, Agents.get_granted_agencies(socket.assigns.current_user_id))
+        |> assign(:search, "")
+        |> assign(:candidate_users, "")
+    end
   end
 
 #  defp list_agents do

@@ -18,5 +18,5 @@ alias Basic.Grants.Grant
 
 Repo.insert!(%User{email: "admin@communitex.org", hashed_password: "$pbkdf2-sha512$160000$KV/lR7sJQx5BHK9aRCA8sA$EZs4nue1WlDhuA2kjZL80hRU4lLmFJXu8JNzl8PMiRlOmiJz9PizPUabBgnQSoKhVrQ7U58C1Ii3qi96LSIqdA", confirmed_at: NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)})
 Repo.insert!(%Organization{name: "システム管理者グループ"})
-Repo.insert!(%Member{user_id: 20, organization_id: 3})
-Repo.insert!(%Grant{user_id: 20, organization_id: 3, role: "SystemAdmin"})
+Repo.insert!(%Member{user_id: 20, organization_id: 1})
+Repo.insert!(%Grant{user_id: 20, organization_id: 1, role: "SystemAdmin"})

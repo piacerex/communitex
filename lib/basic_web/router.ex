@@ -175,9 +175,6 @@ defmodule BasicWeb.Router do
 
     live "/grants", GrantLive.Index, :index
     live "/grants/new", GrantLive.Index, :new
-    live "/grants/:id/edit", GrantLive.Index, :edit
-    live "/grants/:id", GrantLive.Show, :show
-    live "/grants/:id/show/edit", GrantLive.Show, :edit
 
     live "/contacts", ContactLive.Index, :index
     live "/contacts/new", ContactLive.Index, :new

@@ -5,9 +5,6 @@ defmodule BasicWeb.AgentLive.Show do
   alias Basic.Accounts
 
   @impl true
-#  def mount(_params, _session, socket) do
-#    {:ok, socket}
-#  end
   def mount(_params, session, socket) do
     current_user = Accounts.get_user_by_session_token(session["user_token"])
     {:ok, assign(socket, :agencies, Agents.get_granted_agencies(current_user.id))}

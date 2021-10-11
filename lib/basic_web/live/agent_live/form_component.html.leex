@@ -1,14 +1,5 @@
 <h2><%= @title %></h2>
 
-<%= if @title == "New Agent" do %>
-  <form phx-change="search">
-  <div class="search">
-    <input type="search" class="input" name="search" phx-debounce="300" placeholder="名前、メールアドレスで絞り込み" value="<%= @search %>">
-    <i class="icon fas fa-search"></i>
-  </div>
-  </form>
-<% end %>
-
 <%= f = form_for @changeset, "#",
   id: "agent-form",
   phx_target: @myself,
@@ -16,10 +7,18 @@
   phx_submit: "save" %>
 
   <%= if @title == "New Agent" do %>
+    <div class="search">
+      <input type="search" class="input" name="agent[search]" phx-debounce="300" placeholder="名前、メールアドレスで絞り込み" value="<%= @search %>">
+      <i class="icon fas fa-search"></i>
+    </div>
+
     <%= label f, :user_id, "ユーザ" %>
     <%= if @candidate_users != "" do %>
       <%= select f, :user_id, @candidate_users |> Enum.map( fn x -> {x.email <> " " <> x.last_name <> " " <> x.first_name, x.id} end ) %>
     <% end %>
+    <%= error_tag f, :user_id %>
+  <% else %>
+    <%= hidden_input f, :user_id %>
   <% end %>
 <!--
   <%= label f, :user_id, "ユーザID" %>
@@ -27,12 +26,17 @@
   <%= error_tag f, :user_id %>
 
   <%= label f, :agency_id, "代理店ID" %>
-  <%= number_input f, :agency_id %>
+-->
+  <%= hidden_input f, :agency_id %>
+<!--
   <%= error_tag f, :agency_id %>
 -->
-  <%= label f, :brand, "代理店名" %>
-  <%= select f, :agency_id, @agencies |> Enum.map( fn x -> {x.brand, x.id} end ) %>
+
+  <%= label f, :agency_id, "代理店名" %>
+  <%= text_input f, :agency_id, value: (@agencies |> Enum.find( fn x -> x.id == @selected_agency end )).brand, disabled: true %>
+<!--
   <%= error_tag f, :agency_id %>
+-->
 
   <%= label f, :discount, "割引" %>
   <%= number_input f, :discount, step: "any" %>

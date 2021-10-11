@@ -46,11 +46,11 @@ mix phx.gen.html Blog Post posts title:string body:text
 ## Setup Gigalixir
 
 ```
+gigalixir login
+gigalixir git:remote <app_name>
 gigalixir pg:create --free
-```
-
-```
-gigalixir run mix ecto.migrate
+git push gigalixir
+gigalixir run mix ecto.setup
 gigalixir ps:migrate
 ```
 

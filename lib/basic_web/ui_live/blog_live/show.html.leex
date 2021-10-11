@@ -1,0 +1,62 @@
+<h1>Show Blog</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.BlogUiLive.FormComponent,
+    id: @blog.id,
+    title: @page_title,
+    action: @live_action,
+    blog: @blog,
+    return_to: Routes.blog_ui_show_path(@socket, :show, @blog) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Post:</strong>
+    <%= @blog.post_id %>
+  </li>
+
+  <li>
+    <strong>User:</strong>
+    <%= @blog.user_id %>
+  </li>
+
+  <li>
+    <strong>Title:</strong>
+    <%= @blog.title %>
+  </li>
+
+  <li>
+    <strong>Image:</strong>
+    <%= @blog.image %>
+  </li>
+
+  <li>
+    <strong>Tags:</strong>
+    <%= @blog.tags %>
+  </li>
+
+  <li>
+    <strong>Body:</strong>
+    <%= @blog.body %>
+  </li>
+
+  <li>
+    <strong>Likes:</strong>
+    <%= @blog.likes %>
+  </li>
+
+  <li>
+    <strong>Views:</strong>
+    <%= @blog.views %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @blog.deleted_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.blog_ui_show_path(@socket, :edit, @blog), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.blog_ui_index_path(@socket, :index) %></span>

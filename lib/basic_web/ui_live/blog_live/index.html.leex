@@ -1,12 +1,12 @@
 <h1>Listing Blogs</h1>
 
 <%= if @live_action in [:new, :edit] do %>
-  <%= live_modal @socket, BasicWeb.BlogLive.FormComponent,
+  <%= live_modal @socket, BasicWeb.BlogUiLive.FormComponent,
     id: @blog.id || :new,
     title: @page_title,
     action: @live_action,
     blog: @blog,
-    return_to: Routes.blog_index_path(@socket, :index) %>
+    return_to: Routes.blog_ui_index_path(@socket, :index) %>
 <% end %>
 
 <%= if @params["carousel"] == nil do %>
@@ -41,8 +41,8 @@
         <td><%= blog.deleted_at %></td>
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.blog_show_path(@socket, :show, blog) %></span>
-          <span><%= live_patch "Edit", to: Routes.blog_index_path(@socket, :edit, blog) %></span>
+          <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
+          <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
@@ -50,7 +50,7 @@
   </tbody>
 </table>
 
-<span><%= live_patch "New Blog", to: Routes.blog_index_path(@socket, :new) %></span>
+<span><%= live_patch "New Blog", to: Routes.blog_ui_index_path(@socket, :new) %></span>
 
 <% else %>
 

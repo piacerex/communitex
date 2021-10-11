@@ -1,0 +1,85 @@
+<h1>Listing Blogs</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, BasicWeb.BlogLive.FormComponent,
+    id: @blog.id || :new,
+    title: @page_title,
+    action: @live_action,
+    blog: @blog,
+    return_to: Routes.blog_index_path(@socket, :index) %>
+<% end %>
+
+<%= if @params["carousel"] == nil do %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Post</th>
+      <th>User</th>
+      <th>Title</th>
+      <th>Image</th>
+      <th>Tags</th>
+      <th>Body</th>
+      <th>Likes</th>
+      <th>Views</th>
+      <th>Deleted at</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="blogs">
+    <%= for blog <- @blogs do %>
+      <tr id="blog-<%= blog.id %>">
+        <td><%= blog.post_id %></td>
+        <td><%= blog.user_id %></td>
+        <td><%= blog.title %></td>
+        <td><%= blog.image %></td>
+        <td><%= blog.tags %></td>
+        <td><%= blog.body %></td>
+        <td><%= blog.likes %></td>
+        <td><%= blog.views %></td>
+        <td><%= blog.deleted_at %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.blog_show_path(@socket, :show, blog) %></span>
+          <span><%= live_patch "Edit", to: Routes.blog_index_path(@socket, :edit, blog) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Blog", to: Routes.blog_index_path(@socket, :new) %></span>
+
+<% else %>
+
+<section class="carousel">
+  <ol>
+    <li id="carousel-1" tabindex="0">
+      <div class="carousel__snapper">
+        <a href="#carousel-3" class="carousel-prev">Go to last slide</a>
+        <a href="#carousel-2" class="carousel-next">Go to next slide</a>
+      </div>
+    </li>
+    <li id="carousel-2" tabindex="0">
+      <div class="carousel__snapper"></div>
+      <a href="#carousel-1" class="carousel-prev">Go to previous slide</a>
+      <a href="#carousel-3" class="carousel-next">Go to next slide</a>
+    </li>
+    <li id="carousel-3" tabindex="0">
+      <div class="carousel__snapper"></div>
+      <a href="#carousel-2" class="carousel-prev">Go to previous slide</a>
+      <a href="#carousel-1" class="carousel-next">Go to next slide</a>
+    </li>
+  </ol>
+  <nav>
+    <ol>
+      <li class="nav-item"><a href="#carousel-1" class="nav-button">1</a>
+      <li class="nav-item"><a href="#carousel-2" class="nav-button">2</a>
+      <li class="nav-item"><a href="#carousel-3" class="nav-button">3</a>
+    </ol>
+  </nav>
+</section>
+
+<% end %>

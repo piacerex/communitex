@@ -1,6 +1,6 @@
 <h1>Listing Agents</h1>
 
-<%= if @selected_agency == [] do %>
+<%= if @selected_agency == "" do %>
   所属代理店が登録されていません。下記リンクで代理店を新規登録してください。
   <%= live_patch "代理店を新規登録する", to: Routes.agency_index_path(@socket, :new) %>
 

@@ -40,24 +40,30 @@ defmodule Basic.Agents do
   def get_selected_agents(user_id, agency_id) do
     related_agencies = get_granted_agencies(user_id)
     selected_agency = case agency_id do
-      "" -> List.first(related_agencies).id
+      "" -> case related_agencies do
+              [] -> ""
+              _  -> List.first(related_agencies).id
+      end
       _  -> agency_id
     end
 
-    users = from user in User
-    agencies = from agency in Agency
-    from( agent in Agent,
-          where: agent.agency_id == ^selected_agency,
-          join: user in ^users,
-          on: [id: agent.user_id],
-          join: agency in ^agencies,
-          on: [id: agent.agency_id],
-          select: [
-            map(agent, ^Agent.__schema__(:fields)),
-            map(user, ^User.__schema__(:fields)),
-            map(agency, ^Agency.__schema__(:fields))
-          ] )
-    |> Repo.all
+    case selected_agency do
+      "" -> []
+      _  -> users = from user in User
+            agencies = from agency in Agency
+            from( agent in Agent,
+                  where: agent.agency_id == ^selected_agency,
+                  join: user in ^users,
+                  on: [id: agent.user_id],
+                  join: agency in ^agencies,
+                  on: [id: agent.agency_id],
+                  select: [
+                    map(agent, ^Agent.__schema__(:fields)),
+                    map(user, ^User.__schema__(:fields)),
+                    map(agency, ^Agency.__schema__(:fields))
+                  ] )
+            |> Repo.all
+    end
   end
 
   def get_granted_agencies(user_id) do

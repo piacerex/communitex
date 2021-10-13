@@ -13,6 +13,7 @@
 
 <table>
   <thead>
+<!--
     <tr>
       <th>Post</th>
       <th>User</th>
@@ -26,10 +27,36 @@
 
       <th></th>
     </tr>
+-->
+
   </thead>
   <tbody id="blogs">
     <%= for blog <- @blogs do %>
       <tr id="blog-<%= blog.id %>">
+        <tr style="background-color:#00aaff">
+          <th style="width:150px">タイトル</th>
+          <td style="text-align: left;"><%= blog.title %></td>
+        </tr>
+        <tr>
+          <th>イメージ</th>
+          <td style="text-align: left;"><%= blog.image %></td>
+        </tr>
+        <tr>
+          <th style="vertical-align:top">本文</th>
+            <td style="text-align: left; vertical-align:top; white-space:pre-wrap; word-wrap:break-word; border:solid; border-color:gray">
+              <table>
+                <%= blog.body %>
+              </table>
+            </td>
+        </tr>
+        <tr>
+          <td colspan=2 style="text-align: right;">
+            <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
+            <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
+            <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
+          </td>
+        </tr>
+<!--
         <td><%= blog.post_id %></td>
         <td><%= blog.user_id %></td>
         <td><%= blog.title %></td>
@@ -45,6 +72,7 @@
           <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
         </td>
+-->
       </tr>
     <% end %>
   </tbody>

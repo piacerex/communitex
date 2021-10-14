@@ -22,8 +22,16 @@
   </li>
 
   <li>
+<!--
     <strong>イメージ:</strong>
     <%= @item.image %>
+-->
+    <strong>写真:</strong>
+    <%= if is_nil(@item.image) do %>
+      <td><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="200"></td>
+    <% else %>
+      <td><img src="data:images/jpeg;base64,<%= @item.image %>" width="200"></td>
+    <% end %>
   </li>
 
   <li>

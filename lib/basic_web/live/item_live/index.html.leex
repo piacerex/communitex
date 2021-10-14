@@ -38,7 +38,14 @@
       <tr id="item-<%= item.id %>">
         <td><%= item.name %></td>
         <td><%= item.detail %></td>
+<!--
         <td><%= item.image %></td>
+-->
+        <%= if is_nil(item.image) do %>
+          <td><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="80"></td>
+        <% else %>
+          <td><img src="data:images/jpeg;base64,<%= item.image %>" width="80"></td>
+        <% end %>
         <td><%= item.distributor_id %></td>
         <td><%= item.price %></td>
         <td><%= item.start_date %></td>

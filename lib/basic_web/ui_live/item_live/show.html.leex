@@ -20,7 +20,14 @@
   </tr>
   <tr>
     <th>イメージ</th>
-    <td style="text-align:left"><%= @item.image %></td>
+<!--
+    <td style="text-align:left"><%= #@item.image %></td>
+-->
+    <%= if is_nil(@item.image) do %>
+      <td style="text-align:left"><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="200"></td>
+    <% else %>
+      <td style="text-align:left"><img src="data:images/jpeg;base64,<%= @item.image %>" width="200"></td>
+    <% end %>
   </tr>
   <tr>
     <th>卸者ID</th>

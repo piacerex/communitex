@@ -36,7 +36,13 @@
   <tbody id="items">
     <%= for item <- @items do %>
       <tr id="item-<%= item.id %>">
-        <td style="width:200px; height:200px"><%= item.image %></td>
+        <td style="width:200px; height:200px">
+          <%= if is_nil(item.image) do %>
+            <td><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="200"></td>
+          <% else %>
+            <td><img src="data:images/jpeg;base64,<%= item.image %>" width="200"></td>
+          <% end %>
+        </td>
         <td style="vertical-align:top; text-align:left; white-space:pre-wrap; word-wrap:break-word">
           <%= live_redirect item.name, to: Routes.item_ui_show_path(@socket, :show, item) %>
           <%= item.detail %>

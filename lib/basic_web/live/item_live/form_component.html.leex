@@ -14,10 +14,24 @@
   <%= textarea f, :detail %>
   <%= error_tag f, :detail %>
 
+  <%= label f, :image, "写真" %>
+  <div class="container" phx-drop-target="<%= @uploads.avatar.ref %>">
+    <%= live_file_input @uploads.avatar %>
+  </div>
+
+<%= for {_ref, err} <- @uploads.avatar.errors do %>
+  <p class="alert"><%= Phoenix.Naming.humanize(err) %></p>
+<% end %>
+
+<%= for entry <- @uploads.avatar.entries do %>
+  <%= entry.client_name %> - <%= entry.progress %>%
+  <%= live_img_preview entry, width: 75 %>
+<% end %>
+<!--
   <%= label f, :image, "イメージ" %>
   <%= textarea f, :image %>
   <%= error_tag f, :image %>
-
+-->
   <%= label f, :distributor_id, "卸者ID" %>
   <%= number_input f, :distributor_id %>
   <%= error_tag f, :distributor_id %>

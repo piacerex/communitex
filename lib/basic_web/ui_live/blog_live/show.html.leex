@@ -1,4 +1,4 @@
-<h1></h1>
+<h1><%= @blog.title %></h1>
 
 <%= if @live_action in [:edit] do %>
   <%= live_modal @socket, BasicWeb.BlogUiLive.FormComponent,
@@ -9,56 +9,36 @@
     return_to: Routes.blog_ui_show_path(@socket, :show, @blog) %>
 <% end %>
 
-<ul>
-<!--
-  <li>
-    <strong>Post:</strong>
-    <%= @blog.post_id %>
-  </li>
+<style>
+h2
+{
+  padding-top: 50px;
+  font-weight: 800;
+  border-bottom: 1px solid silver;
+}
 
-  <li>
-    <strong>User:</strong>
-    <%= @blog.user_id %>
-  </li>
--->
-  <li>
-    <!--<strong>Title:</strong>-->
-    <p style="text-align: left; font-size: 140%; font-weight: 800;"><%= @blog.title %></p>
-  </li>
-<!--
-  <li>
-    <strong>Image:</strong>
-    <%= @blog.image %>
-  </li>
+h3
+{
+  padding-top: 20px !important;
+  margin-left: 0px !important;
+  font-weight: 600;
+}
 
-  <li>
-    <strong>Tags:</strong>
-    <%= @blog.tags %>
-  </li>
--->
-  <li>
-    <!--<strong>Body:</strong>-->
-    <%= raw(@blog.body |> Earmark.as_html |> elem(1)) %>
-  </li>
-<!--
-  <li>
-    <strong>Likes:</strong>
-    <%= @blog.likes %>
-  </li>
+img
+{
+  display: block;
+}
 
-  <li>
-    <strong>Views:</strong>
-    <%= @blog.views %>
-  </li>
+table
+{
+  padding-bottom: 70px;
+}
+</style>
 
-  <li>
-    <strong>Deleted at:</strong>
-    <%= @blog.deleted_at %>
-  </li>
--->
-</ul>
-
-<!--
-<span><%= live_patch "Edit", to: Routes.blog_ui_show_path(@socket, :edit, @blog), class: "button" %></span>
--->
-<span><%= live_redirect "Back", to: Routes.blog_ui_index_path(@socket, :index) %></span>
+<div style="width: 50%; margin:0 auto; margin-bottom: 200px;">
+<p><%= raw(@blog.body |> Earmark.as_html |> elem(1)) %></p>
+<br>
+<br>
+<br>
+<%= live_redirect "Back", to: Routes.blog_ui_index_path(@socket, :index) %>
+</div>

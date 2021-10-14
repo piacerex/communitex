@@ -1,4 +1,4 @@
-<h1>Show Blog</h1>
+<h1></h1>
 
 <%= if @live_action in [:edit] do %>
   <%= live_modal @socket, BasicWeb.BlogUiLive.FormComponent,
@@ -10,7 +10,7 @@
 <% end %>
 
 <ul>
-
+<!--
   <li>
     <strong>Post:</strong>
     <%= @blog.post_id %>
@@ -20,12 +20,12 @@
     <strong>User:</strong>
     <%= @blog.user_id %>
   </li>
-
+-->
   <li>
-    <strong>Title:</strong>
-    <%= @blog.title %>
+    <!--<strong>Title:</strong>-->
+    <p style="text-align: left; font-size: 140%; font-weight: 800;"><%= @blog.title %></p>
   </li>
-
+<!--
   <li>
     <strong>Image:</strong>
     <%= @blog.image %>
@@ -35,12 +35,12 @@
     <strong>Tags:</strong>
     <%= @blog.tags %>
   </li>
-
+-->
   <li>
-    <strong>Body:</strong>
-    <%= @blog.body %>
+    <!--<strong>Body:</strong>-->
+    <%= raw(@blog.body |> Earmark.as_html |> elem(1)) %>
   </li>
-
+<!--
   <li>
     <strong>Likes:</strong>
     <%= @blog.likes %>
@@ -55,8 +55,10 @@
     <strong>Deleted at:</strong>
     <%= @blog.deleted_at %>
   </li>
-
+-->
 </ul>
 
+<!--
 <span><%= live_patch "Edit", to: Routes.blog_ui_show_path(@socket, :edit, @blog), class: "button" %></span>
+-->
 <span><%= live_redirect "Back", to: Routes.blog_ui_index_path(@socket, :index) %></span>

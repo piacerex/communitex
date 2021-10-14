@@ -51,8 +51,12 @@
         </tr>
         <tr>
           <td colspan=2 style="text-align: right;">
-            <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
+<!--
+            <span><%= #live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
             <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
+-->
+            <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog.post_id) %></span>
+            <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog.post_id) %></span>
             <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
           </td>
         </tr>

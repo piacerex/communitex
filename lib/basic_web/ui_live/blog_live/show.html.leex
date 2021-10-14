@@ -6,7 +6,8 @@
     title: @page_title,
     action: @live_action,
     blog: @blog,
-    return_to: Routes.blog_ui_show_path(@socket, :show, @blog) %>
+    return_to: Routes.blog_ui_show_path(@socket, :show, @blog.post_id) %>
+#    return_to: Routes.blog_ui_show_path(@socket, :show, @blog) %>
 <% end %>
 
 <ul>
@@ -58,5 +59,8 @@
 
 </ul>
 
-<span><%= live_patch "Edit", to: Routes.blog_ui_show_path(@socket, :edit, @blog), class: "button" %></span>
+<!--
+<span><%= #live_patch "Edit", to: Routes.blog_ui_show_path(@socket, :edit, @blog), class: "button" %></span>
+-->
+<span><%= live_patch "Edit", to: Routes.blog_ui_show_path(@socket, :edit, @blog.post_id), class: "button" %></span>
 <span><%= live_redirect "Back", to: Routes.blog_ui_index_path(@socket, :index) %></span>

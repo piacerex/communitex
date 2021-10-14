@@ -43,6 +43,7 @@ table
   <%= for blog <- @blogs do %>
 <h2 style="text-align: left; font-weight: 800;"><a href="/blogs/<%= blog.post_id %>"><%= blog.title %></a></h2>
 <p><%= raw(blog.body |> String.split("\n") |> Enum.take(30) |> Enum.join("\n") |> Earmark.as_html |> elem(1)) %></p>
+<p><b><a href="/blogs/<%= blog.post_id %>">Click here to continue</a></b></p>
 <hr>
   <% end %>
 <% end %>

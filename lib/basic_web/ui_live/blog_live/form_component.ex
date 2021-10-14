@@ -24,8 +24,7 @@ defmodule BasicWeb.BlogUiLive.FormComponent do
   end
 
   def handle_event("save", %{"blog" => blog_params}, socket) do
-    str = blog_params["title"] <> Date.to_string(NaiveDateTime.utc_now)
-    save_blog(socket, socket.assigns.action, Map.put(blog_params, "post_id", Crypt.md5(str)))
+    save_blog(socket, socket.assigns.action, blog_params)
   end
 
   defp save_blog(socket, :edit, blog_params) do
@@ -42,6 +41,7 @@ defmodule BasicWeb.BlogUiLive.FormComponent do
   end
 
   defp save_blog(socket, :new, blog_params) do
+    blog_params = blog_params |> Map.put("post_id", Crypt.md5(blog_params["title"] <> Date.to_string(NaiveDateTime.utc_now)))
     case Blogs.create_blog(blog_params) do
       {:ok, _blog} ->
         {:noreply,

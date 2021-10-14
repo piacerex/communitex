@@ -6,10 +6,11 @@
     title: @page_title,
     action: @live_action,
     item: @item,
-    return_to: Routes.item_index_path(@socket, :index) %>
+    return_to: Routes.item_ui_index_path(@socket, :index) %>
 <% end %>
 
 <table>
+<!--
   <thead>
     <tr>
       <th>募集名</th>
@@ -26,26 +27,31 @@
       <th>業種</th>
       <th>募集数</th>
       <th>残</th>
-<!--
       <th>Deleted at</th>
--->
 
       <th></th>
     </tr>
   </thead>
+-->
   <tbody id="items">
     <%= for item <- @items do %>
       <tr id="item-<%= item.id %>">
+        <td style="width:200px; height:200px">
+          <%= if is_nil(item.image) do %>
+            <td><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="200"></td>
+          <% else %>
+            <td><img src="data:images/jpeg;base64,<%= item.image %>" width="200"></td>
+          <% end %>
+        </td>
+        <td style="vertical-align:top; text-align:left; white-space:pre-wrap; word-wrap:break-word">
+          <%= live_redirect item.name, to: Routes.item_ui_show_path(@socket, :show, item) %>
+          <%= item.detail %>
+          <%= item.price %>円
+        </td>
+<!--
         <td><%= item.name %></td>
         <td><%= item.detail %></td>
-<!--
         <td><%= item.image %></td>
--->
-        <%= if is_nil(item.image) do %>
-          <td><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="80"></td>
-        <% else %>
-          <td><img src="data:images/jpeg;base64,<%= item.image %>" width="80"></td>
-        <% end %>
         <td><%= item.distributor_id %></td>
         <td><%= item.price %></td>
         <td><%= item.start_date %></td>
@@ -57,18 +63,17 @@
         <td><%= item.occupation %></td>
         <td><%= item.alls %></td>
         <td><%= item.stocks %></td>
-<!--
         <td><%= item.deleted_at %></td>
--->
 
         <td>
-          <span><%= live_redirect "Show", to: Routes.item_show_path(@socket, :show, item) %></span>
-          <span><%= live_patch "Edit", to: Routes.item_index_path(@socket, :edit, item) %></span>
+          <span><%= live_redirect "Show", to: Routes.item_ui_show_path(@socket, :show, item) %></span>
+          <span><%= #live_patch "Edit", to: Routes.item_ui_index_path(@socket, :edit, item) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: item.id, data: [confirm: "Are you sure?"] %></span>
         </td>
+-->
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<span><%= live_patch "New Item", to: Routes.item_index_path(@socket, :new) %></span>
+<span><%= #live_patch "New Item", to: Routes.item_ui_index_path(@socket, :new) %></span>

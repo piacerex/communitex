@@ -213,6 +213,9 @@ defmodule BasicWeb.Router do
     live "/blogs/:id", BlogUiLive.Show, :show
     live "/blogs/:id/show/edit", BlogUiLive.Show, :edit
 
+    live "/items", ItemUiLive.Index, :index
+    live "/items/:id", ItemUiLive.Show, :show
+
     live "/*path_", SphereLive, :index
 
 #    live "/", PageLive, :index

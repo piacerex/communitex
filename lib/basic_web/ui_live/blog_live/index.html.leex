@@ -1,4 +1,4 @@
-<h1>Listing Blogs</h1>
+<h1></h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <%= live_modal @socket, BasicWeb.BlogUiLive.FormComponent,
@@ -11,114 +11,59 @@
 <% end %>
 
 <%= if @blogs == [] do %>
-  投稿されたブログはありません。
-  <span><%= live_patch "New Blog", to: Routes.blog_ui_index_path(@socket, :new) %></span>
+投稿されたブログはありません。
+<!--
+<span><%= live_patch "New Blog", to: Routes.blog_ui_index_path(@socket, :new) %></span>
+-->
 <% else %>
 
-  <%= if @params["carousel"] == nil do %>
-
-  <table>
+<table>
 <!--
-    <thead>
-      <tr>
-        <th>Post</th>
-        <th>User</th>
-        <th>Title</th>
-        <th>Image</th>
-        <th>Tags</th>
-        <th>Body</th>
-        <th>Likes</th>
-        <th>Views</th>
-        <th>Deleted at</th>
+  <thead>
+    <tr>
+      <th>Post</th>
+      <th>User</th>
+      <th>Title</th>
+      <th>Image</th>
+      <th>Tags</th>
+      <th>Body</th>
+      <th>Likes</th>
+      <th>Views</th>
+      <th>Deleted at</th>
 
-        <th></th>
+      <th></th>
+    </tr>
+  </thead>
+-->
+  <tbody id="blogs">
+    <%= for blog <- @blogs do %>
+      <tr id="blog-<%= blog.id %>">
+        <!--<th style="width:150px">タイトル</th>-->
+        <td style="text-align: left; font-size: 140%; font-weight: 800;"><a href="/blogs/<%= blog.id %>"><%= blog.title %></a></td>
       </tr>
-    </thead>
--->
-    <tbody id="blogs">
-      <%= for blog <- @blogs do %>
-        <tr id="blog-<%= blog.id %>">
-          <tr style="background-color:#00aaff">
-            <th style="width:150px">タイトル</th>
-            <td style="text-align: left;"><%= blog.title %></td>
-          </tr>
-          <tr>
-            <th>イメージ</th>
-            <td style="text-align: left;"><%= blog.image %></td>
-          </tr>
-          <tr>
-            <th style="vertical-align:top">本文</th>
-              <td style="text-align: left; vertical-align:top; white-space:pre-wrap; word-wrap:break-word; border:solid; border-color:gray">
-                <table>
-                  <%= blog.body %>
-                </table>
-              </td>
-          </tr>
-          <tr>
-            <td colspan=2 style="text-align: right;">
 <!--
-              <span><%= #live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
-              <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
+      <tr>
+        <th>イメージ</th>
+        <td style="text-align: left;"><%= blog.image %></td>
+      </tr>
 -->
-              <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog.post_id) %></span>
-              <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog.post_id) %></span>
-              <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
-            </td>
-          </tr>
+      <tr>
+        <!--<th style="vertical-align:top">本文</th>-->
+        <td id="<%= blog.id %>" style="text-align: left;"><%= raw(blog.body |> Earmark.as_html |> elem(1)) %></td>
+      </tr>
 <!--
-          <td><%= blog.post_id %></td>
-          <td><%= blog.user_id %></td>
-          <td><%= blog.title %></td>
-          <td><%= blog.image %></td>
-          <td><%= blog.tags %></td>
-          <td><%= blog.body %></td>
-          <td><%= blog.likes %></td>
-          <td><%= blog.views %></td>
-          <td><%= blog.deleted_at %></td>
-
-          <td>
-            <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
-            <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
-            <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
-          </td>
+      <tr>
+        <td colspan=2 style="text-align: right;">
+          <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
+          <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
 -->
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  </tbody>
+</table>
 
-  <span><%= live_patch "New Blog", to: Routes.blog_ui_index_path(@socket, :new) %></span>
-
-  <% else %>
-
-  <section class="carousel">
-    <ol>
-      <li id="carousel-1" tabindex="0">
-        <div class="carousel__snapper">
-          <a href="#carousel-3" class="carousel-prev">Go to last slide</a>
-          <a href="#carousel-2" class="carousel-next">Go to next slide</a>
-        </div>
-      </li>
-      <li id="carousel-2" tabindex="0">
-        <div class="carousel__snapper"></div>
-        <a href="#carousel-1" class="carousel-prev">Go to previous slide</a>
-        <a href="#carousel-3" class="carousel-next">Go to next slide</a>
-      </li>
-      <li id="carousel-3" tabindex="0">
-        <div class="carousel__snapper"></div>
-        <a href="#carousel-2" class="carousel-prev">Go to previous slide</a>
-        <a href="#carousel-1" class="carousel-next">Go to next slide</a>
-      </li>
-    </ol>
-    <nav>
-      <ol>
-        <li class="nav-item"><a href="#carousel-1" class="nav-button">1</a>
-        <li class="nav-item"><a href="#carousel-2" class="nav-button">2</a>
-        <li class="nav-item"><a href="#carousel-3" class="nav-button">3</a>
-      </ol>
-    </nav>
-  </section>
-
-  <% end %>
-
-<% end %>
+<!--
+<span><%= live_patch "New Blog", to: Routes.blog_ui_index_path(@socket, :new) %></span>
+-->

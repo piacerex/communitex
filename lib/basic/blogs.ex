@@ -25,7 +25,7 @@ defmodule Basic.Blogs do
   end
 
   def list_blogs do
-    Repo.all(Blog)
+    Repo.all(from n in Blog, order_by: [desc: n.id])
   end
 
   @doc """

@@ -1,4 +1,4 @@
-<h1>Show Blog</h1>
+<h1></h1>
 
 <%= if @live_action in [:edit] do %>
   <%= live_modal @socket, BasicWeb.BlogUiLive.FormComponent,
@@ -24,10 +24,12 @@
   </li>
 -->
   <li>
-    <strong>タイトル:</strong>
+    
     <%= @blog.title %>
+    <!--<strong>タイトル:</strong>-->
+    <p style="text-align: left; font-size: 140%; font-weight: 800;"><%= @blog.title %></p>
   </li>
-
+<!--
   <li>
     <strong>イメージ:</strong>
     <%= @blog.image %>
@@ -37,10 +39,10 @@
     <strong>タグ:</strong>
     <%= @blog.tags %>
   </li>
-
+-->
   <li>
-    <strong>本文:</strong>
-    <%= @blog.body %>
+    <!--<strong>本文:</strong>-->
+    <%= raw(@blog.body |> Earmark.as_html |> elem(1)) %>
   </li>
 <!--
   <li>
@@ -61,7 +63,6 @@
 </ul>
 
 <!--
-<span><%= #live_patch "Edit", to: Routes.blog_ui_show_path(@socket, :edit, @blog), class: "button" %></span>
+<span><%= live_patch "Edit", to: Routes.blog_ui_show_path(@socket, :edit, @blog), class: "button" %></span>
 -->
-<span><%= live_patch "Edit", to: Routes.blog_ui_show_path(@socket, :edit, @blog.post_id), class: "button" %></span>
 <span><%= live_redirect "Back", to: Routes.blog_ui_index_path(@socket, :index) %></span>

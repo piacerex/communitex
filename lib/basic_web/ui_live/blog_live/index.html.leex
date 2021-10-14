@@ -1,4 +1,4 @@
-<h1></h1>
+<h1>blogs</h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <%= live_modal @socket, BasicWeb.BlogUiLive.FormComponent,
@@ -10,60 +10,40 @@
     return_to: Routes.blog_ui_index_path(@socket, :index) %>
 <% end %>
 
+<style>
+h2
+{
+  padding-top: 50px;
+  font-weight: 800;
+  border-bottom: 1px solid silver;
+}
+
+h3
+{
+  padding-top: 20px !important;
+  margin-left: 0px !important;
+  font-weight: 600;
+}
+
+img
+{
+  display: block;
+}
+
+table
+{
+  padding-bottom: 70px;
+}
+</style>
+
+<div style="width: 50%; margin:0 auto;">
 <%= if @blogs == [] do %>
 投稿されたブログはありません。
-<!--
-<span><%= live_patch "New Blog", to: Routes.blog_ui_index_path(@socket, :new) %></span>
--->
 <% else %>
-
-<table>
-<!--
-  <thead>
-    <tr>
-      <th>Post</th>
-      <th>User</th>
-      <th>Title</th>
-      <th>Image</th>
-      <th>Tags</th>
-      <th>Body</th>
-      <th>Likes</th>
-      <th>Views</th>
-      <th>Deleted at</th>
-
-      <th></th>
-    </tr>
-  </thead>
--->
-  <tbody id="blogs">
-    <%= for blog <- @blogs do %>
-      <tr id="blog-<%= blog.id %>">
-        <!--<th style="width:150px">タイトル</th>-->
-        <td style="text-align: left; font-size: 140%; font-weight: 800;"><a href="/blogs/<%= blog.id %>"><%= blog.title %></a></td>
-      </tr>
-<!--
-      <tr>
-        <th>イメージ</th>
-        <td style="text-align: left;"><%= blog.image %></td>
-      </tr>
--->
-      <tr>
-        <!--<th style="vertical-align:top">本文</th>-->
-        <td id="<%= blog.id %>" style="text-align: left;"><%= raw(blog.body |> Earmark.as_html |> elem(1)) %></td>
-      </tr>
-<!--
-      <tr>
-        <td colspan=2 style="text-align: right;">
-          <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
-          <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
--->
-    <% end %>
-  </tbody>
-</table>
-
-<!--
-<span><%= live_patch "New Blog", to: Routes.blog_ui_index_path(@socket, :new) %></span>
--->
+  <%= for blog <- @blogs do %>
+<h2 style="text-align: left; font-weight: 800;"><a href="/blogs/<%= blog.post_id %>"><%= blog.title %></a></h2>
+<p><%= raw(blog.body |> String.split("\n") |> Enum.take(30) |> Enum.join("\n") |> Earmark.as_html |> elem(1)) %></p>
+<hr>
+  <% end %>
+<% end %>
+</div>

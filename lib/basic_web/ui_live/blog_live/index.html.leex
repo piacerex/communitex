@@ -6,8 +6,16 @@
     title: @page_title,
     action: @live_action,
     blog: @blog,
+    current_user_id: @current_user_id,
     return_to: Routes.blog_ui_index_path(@socket, :index) %>
 <% end %>
+
+<%= if @blogs == [] do %>
+投稿されたブログはありません。
+<!--
+<span><%= live_patch "New Blog", to: Routes.blog_ui_index_path(@socket, :new) %></span>
+-->
+<% else %>
 
 <table>
 <!--
@@ -30,47 +38,28 @@
   <tbody id="blogs">
     <%= for blog <- @blogs do %>
       <tr id="blog-<%= blog.id %>">
-        <tr>
-          <!--<th style="width:150px">タイトル</th>-->
-          <td style="text-align: left; font-size: 140%; font-weight: 800;"><a href="/blogs/<%= blog.id %>"><%= blog.title %></a></td>
-        </tr>
+        <!--<th style="width:150px">タイトル</th>-->
+        <td style="text-align: left; font-size: 140%; font-weight: 800;"><a href="/blogs/<%= blog.id %>"><%= blog.title %></a></td>
+      </tr>
 <!--
-        <tr>
-          <th>イメージ</th>
-          <td style="text-align: left;"><%= blog.image %></td>
-        </tr>
+      <tr>
+        <th>イメージ</th>
+        <td style="text-align: left;"><%= blog.image %></td>
+      </tr>
 -->
-        <tr>
-          <!--<th style="vertical-align:top">本文</th>-->
-          <td id="<%= blog.id %>" style="text-align: left;"><%= raw(blog.body |> Earmark.as_html |> elem(1)) %></td>
-        </tr>
+      <tr>
+        <!--<th style="vertical-align:top">本文</th>-->
+        <td id="<%= blog.id %>" style="text-align: left;"><%= raw(blog.body |> Earmark.as_html |> elem(1)) %></td>
+      </tr>
 <!--
-        <tr>
-          <td colspan=2 style="text-align: right;">
-            <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
-            <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
-            <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
-          </td>
-        </tr>
--->
-<!--
-        <td><%= blog.post_id %></td>
-        <td><%= blog.user_id %></td>
-        <td><%= blog.title %></td>
-        <td><%= blog.image %></td>
-        <td><%= blog.tags %></td>
-        <td><%= blog.body %></td>
-        <td><%= blog.likes %></td>
-        <td><%= blog.views %></td>
-        <td><%= blog.deleted_at %></td>
-
-        <td>
+      <tr>
+        <td colspan=2 style="text-align: right;">
           <span><%= live_redirect "Show", to: Routes.blog_ui_show_path(@socket, :show, blog) %></span>
           <span><%= live_patch "Edit", to: Routes.blog_ui_index_path(@socket, :edit, blog) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: blog.id, data: [confirm: "Are you sure?"] %></span>
         </td>
--->
       </tr>
+-->
     <% end %>
   </tbody>
 </table>

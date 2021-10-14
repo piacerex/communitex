@@ -6,54 +6,58 @@
     title: @page_title,
     action: @live_action,
     blog: @blog,
-    return_to: Routes.blog_ui_show_path(@socket, :show, @blog) %>
+    current_user_id: @current_user_id,
+    return_to: Routes.blog_ui_show_path(@socket, :show, @blog.post_id) %>
+#    return_to: Routes.blog_ui_show_path(@socket, :show, @blog) %>
 <% end %>
 
 <ul>
 <!--
   <li>
     <strong>Post:</strong>
-    <%= @blog.post_id %>
+    <%= #@blog.post_id %>
   </li>
 
   <li>
     <strong>User:</strong>
-    <%= @blog.user_id %>
+    <%= #@blog.user_id %>
   </li>
 -->
   <li>
-    <!--<strong>Title:</strong>-->
+    
+    <%= @blog.title %>
+    <!--<strong>タイトル:</strong>-->
     <p style="text-align: left; font-size: 140%; font-weight: 800;"><%= @blog.title %></p>
   </li>
 <!--
   <li>
-    <strong>Image:</strong>
+    <strong>イメージ:</strong>
     <%= @blog.image %>
   </li>
 
   <li>
-    <strong>Tags:</strong>
+    <strong>タグ:</strong>
     <%= @blog.tags %>
   </li>
 -->
   <li>
-    <!--<strong>Body:</strong>-->
+    <!--<strong>本文:</strong>-->
     <%= raw(@blog.body |> Earmark.as_html |> elem(1)) %>
   </li>
 <!--
   <li>
     <strong>Likes:</strong>
-    <%= @blog.likes %>
+    <%= #@blog.likes %>
   </li>
 
   <li>
     <strong>Views:</strong>
-    <%= @blog.views %>
+    <%= #@blog.views %>
   </li>
 
   <li>
     <strong>Deleted at:</strong>
-    <%= @blog.deleted_at %>
+    <%= #@blog.deleted_at %>
   </li>
 -->
 </ul>

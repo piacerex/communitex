@@ -1,0 +1,151 @@
+<h1>Show Item</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, BasicWeb.ItemLive.FormComponent,
+    id: @item.id,
+    title: @page_title,
+    action: @live_action,
+    item: @item,
+    return_to: Routes.item_ui_show_path(@socket, :show, @item) %>
+<% end %>
+
+<table>
+  <tr>
+    <th>募集名</th>
+    <td style="text-align:left"><%= @item.name %></td>
+  </tr>
+  <tr>
+    <th>詳細</th>
+    <td style="text-align:left; white-space:pre-wrap; word-wrap:break-word"><%= @item.detail %></td>
+  </tr>
+  <tr>
+    <th>イメージ</th>
+    <td style="text-align:left"><%= @item.image %></td>
+  </tr>
+  <tr>
+    <th>卸者ID</th>
+    <td style="text-align:left"><%= @item.distributor_id %></td>
+  </tr>
+  <tr>
+    <th>価格</th>
+    <td style="text-align:left"><%= @item.price %></td>
+  </tr>
+  <tr>
+    <th>開始日</th>
+    <td style="text-align:left"><%= @item.start_date %></td>
+  </tr>
+  <tr>
+    <th>終了日</th>
+    <td style="text-align:left"><%= @item.end_date %></td>
+  </tr>
+  <tr>
+    <th>募集開始日</th>
+    <td style="text-align:left"><%= @item.open_date %></td>
+  </tr>
+  <tr>
+    <th>募集終了日</th>
+    <td style="text-align:left"><%= @item.close_date %></td>
+  </tr>
+  <tr>
+    <th>募集中か？</th>
+    <td style="text-align:left"><%= @item.is_open %></td>
+  </tr>
+  <tr>
+    <th>エリア</th>
+    <td style="text-align:left"><%= @item.area %></td>
+  </tr>
+  <tr>
+    <th>業種</th>
+    <td style="text-align:left"><%= @item.occupation %></td>
+  </tr>
+  <tr>
+    <th>募集数</th>
+    <td style="text-align:left"><%= @item.alls %></td>
+  </tr>
+  <tr>
+    <th>残</th>
+    <td style="text-align:left"><%= @item.stocks %></td>
+  </tr>
+</table>
+
+<!--
+<ul>
+  <li>
+    <strong>募集名:</strong>
+    <%= @item.name %>
+  </li>
+
+  <li>
+    <strong>詳細:</strong>
+    <%= @item.detail %>
+  </li>
+
+  <li>
+    <strong>イメージ:</strong>
+    <%= @item.image %>
+  </li>
+
+  <li>
+    <strong>卸者ID:</strong>
+    <%= @item.distributor_id %>
+  </li>
+
+  <li>
+    <strong>価格:</strong>
+    <%= @item.price %>
+  </li>
+
+  <li>
+    <strong>開始日:</strong>
+    <%= @item.start_date %>
+  </li>
+
+  <li>
+    <strong>終了日:</strong>
+    <%= @item.end_date %>
+  </li>
+
+  <li>
+    <strong>募集開始日:</strong>
+    <%= @item.open_date %>
+  </li>
+
+  <li>
+    <strong>募集終了日:</strong>
+    <%= @item.close_date %>
+  </li>
+
+  <li>
+    <strong>募集中か？:</strong>
+    <%= @item.is_open %>
+  </li>
+
+  <li>
+    <strong>エリア:</strong>
+    <%= @item.area %>
+  </li>
+
+  <li>
+    <strong>業種:</strong>
+    <%= @item.occupation %>
+  </li>
+
+  <li>
+    <strong>募集数:</strong>
+    <%= @item.alls %>
+  </li>
+
+  <li>
+    <strong>残:</strong>
+    <%= @item.stocks %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @item.deleted_at %>
+  </li>
+</ul>
+-->
+
+<span><%= #live_patch "Edit", to: Routes.item_ui_show_path(@socket, :edit, @item), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.item_ui_index_path(@socket, :index) %></span>

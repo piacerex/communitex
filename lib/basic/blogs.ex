@@ -17,6 +17,13 @@ defmodule Basic.Blogs do
       [%Blog{}, ...]
 
   """
+  def list_blogs(user_id) do
+    from( blog in Blog,
+          where: blog.user_id == ^user_id
+        )
+    |> Repo.all
+  end
+
   def list_blogs do
     Repo.all(from n in Blog, order_by: [desc: n.id])
   end
@@ -36,6 +43,14 @@ defmodule Basic.Blogs do
 
   """
   def get_blog!(id), do: Repo.get!(Blog, id)
+
+  def get_blog_by_post_id!(post_id) do
+    from( blog in Blog,
+          where: blog.post_id == ^post_id
+        )
+    |> Repo.all
+    |> List.first
+  end
 
   @doc """
   Creates a blog.

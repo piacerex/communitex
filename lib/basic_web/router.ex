@@ -202,16 +202,21 @@ defmodule BasicWeb.Router do
   end
 
   scope "/", BasicWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/blogs/new", BlogUiLive.Index, :new
+    live "/blogs/:post_id/edit", BlogUiLive.Index, :edit
+    live "/blogs/:post_id/show/edit", BlogUiLive.Show, :edit
+  end
+
+  scope "/", BasicWeb do
     pipe_through :browser
 
     live "/members", MemberUiLive.Index, :index
     live "/members/:id", MemberUiLive.Show, :show
 
     live "/blogs", BlogUiLive.Index, :index
-    live "/blogs/new", BlogUiLive.Index, :new
-    live "/blogs/:id/edit", BlogUiLive.Index, :edit
-    live "/blogs/:id", BlogUiLive.Show, :show
-    live "/blogs/:id/show/edit", BlogUiLive.Show, :edit
+    live "/blogs/:post_id", BlogUiLive.Show, :show
 
     live "/items", ItemUiLive.Index, :index
     live "/items/:id", ItemUiLive.Show, :show

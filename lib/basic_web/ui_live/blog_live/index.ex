@@ -3,10 +3,20 @@ defmodule BasicWeb.BlogUiLive.Index do
 
   alias Basic.Blogs
   alias Basic.Blogs.Blog
+  alias Basic.Accounts
 
   @impl true
-  def mount(params, _session, socket) do
-    {:ok, assign(socket, blogs: list_blogs(), params: params)}
+  def mount(params, session, socket) do
+    current_user_id = case session["user_token"] do
+      nil -> ""
+      token -> Accounts.get_user_by_session_token(token).id
+    end
+    {:ok,
+      socket
+      |> assign(:blogs, list_blogs)
+      |> assign(:params, params)
+      |> assign(:current_user_id, current_user_id)
+    }
   end
 
   @impl true

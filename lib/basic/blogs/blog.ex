@@ -20,6 +20,6 @@ defmodule Basic.Blogs.Blog do
   def changeset(blog, attrs) do
     blog
     |> cast(attrs, [:post_id, :user_id, :title, :image, :tags, :body, :likes, :views, :deleted_at])
-    |> validate_required([:post_id, :user_id, :title, :image, :tags, :body, :likes, :views, :deleted_at])
+    |> validate_required([:post_id, :user_id, :title, :image, :tags, :body])
   end
 end

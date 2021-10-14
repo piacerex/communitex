@@ -6,41 +6,46 @@
   phx_change: "validate",
   phx_submit: "save" %>
 
-  <%= label f, :post_id %>
-  <%= text_input f, :post_id %>
-  <%= error_tag f, :post_id %>
+<!--
+  <%= #label f, :post_id %>
+  <%= #text_input f, :post_id %>
+  <%= #error_tag f, :post_id %>
 
-  <%= label f, :user_id %>
-  <%= number_input f, :user_id %>
-  <%= error_tag f, :user_id %>
+  <%= #label f, :user_id, "ユーザID" %>
+  <%= #number_input f, :user_id %>
+  <%= #error_tag f, :user_id %>
+-->
+  <%= hidden_input f, :user_id,  value: @current_user_id %>
 
-  <%= label f, :title %>
+  <%= label f, :title, "タイトル" %>
   <%= text_input f, :title %>
   <%= error_tag f, :title %>
 
-  <%= label f, :image %>
+  <%= label f, :image, "イメージ" %>
   <%= text_input f, :image %>
   <%= error_tag f, :image %>
 
-  <%= label f, :tags %>
+  <%= label f, :tags, "タグ" %>
   <%= text_input f, :tags %>
   <%= error_tag f, :tags %>
 
-  <%= label f, :body %>
+  <%= label f, :body, "本文" %>
   <%= textarea f, :body %>
   <%= error_tag f, :body %>
 
-  <%= label f, :likes %>
-  <%= number_input f, :likes %>
-  <%= error_tag f, :likes %>
+<!--
+  <%= #label f, :likes %>
+  <%= #number_input f, :likes %>
+  <%= #error_tag f, :likes %>
 
-  <%= label f, :views %>
-  <%= number_input f, :views %>
-  <%= error_tag f, :views %>
+  <%= #label f, :views %>
+  <%= #number_input f, :views %>
+  <%= #error_tag f, :views %>
 
-  <%= label f, :deleted_at %>
-  <%= datetime_select f, :deleted_at %>
-  <%= error_tag f, :deleted_at %>
+  <%= #label f, :deleted_at %>
+  <%= #datetime_select f, :deleted_at %>
+  <%= #error_tag f, :deleted_at %>
+-->
 
   <%= submit "Save", phx_disable_with: "Saving..." %>
 </form>

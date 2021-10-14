@@ -10,34 +10,34 @@
 <% end %>
 
 <ul>
-
+<!--
   <li>
     <strong>Post:</strong>
-    <%= @blog.post_id %>
+    <%= #@blog.post_id %>
   </li>
-
+-->
   <li>
-    <strong>User:</strong>
+    <strong>ユーザID:</strong>
     <%= @blog.user_id %>
   </li>
 
   <li>
-    <strong>Title:</strong>
+    <strong>タイトル:</strong>
     <%= @blog.title %>
   </li>
 
   <li>
-    <strong>Image:</strong>
+    <strong>イメージ:</strong>
     <%= @blog.image %>
   </li>
 
   <li>
-    <strong>Tags:</strong>
+    <strong>タグ:</strong>
     <%= @blog.tags %>
   </li>
 
   <li>
-    <strong>Body:</strong>
+    <strong>本文:</strong>
     <%= @blog.body %>
   </li>
 
@@ -50,12 +50,12 @@
     <strong>Views:</strong>
     <%= @blog.views %>
   </li>
-
+<!--
   <li>
     <strong>Deleted at:</strong>
-    <%= @blog.deleted_at %>
+    <%= #@blog.deleted_at %>
   </li>
-
+-->
 </ul>
 
 <span><%= live_patch "Edit", to: Routes.blog_show_path(@socket, :edit, @blog), class: "button" %></span>

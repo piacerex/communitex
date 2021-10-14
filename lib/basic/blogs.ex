@@ -17,6 +17,13 @@ defmodule Basic.Blogs do
       [%Blog{}, ...]
 
   """
+  def list_blogs(user_id) do
+    from( blog in Blog,
+          where: blog.user_id == ^user_id
+        )
+    |> Repo.all
+  end
+
   def list_blogs do
     Repo.all(Blog)
   end

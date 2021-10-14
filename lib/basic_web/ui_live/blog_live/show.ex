@@ -2,10 +2,18 @@ defmodule BasicWeb.BlogUiLive.Show do
   use BasicWeb, :live_view
 
   alias Basic.Blogs
+  alias Basic.Accounts
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(_params, session, socket) do
+    current_user_id = case session["user_token"] do
+      nil -> ""
+      token -> Accounts.get_user_by_session_token(token).id
+    end
+    {:ok,
+      socket
+      |> assign(:current_user_id, current_user_id)
+    }
   end
 
   @impl true

@@ -1,5 +1,11 @@
 <h1>Listing Items</h1>
 
+<%= if @current_user_id == "" do %>
+  <p class="alert alert-danger">
+    注文はログイン後に行ってください
+  </p>
+<% end %>
+
 <%= if @live_action in [:new, :edit] do %>
   <%= live_modal @socket, BasicWeb.ItemLive.FormComponent,
     id: @item.id || :new,
@@ -46,7 +52,7 @@
         <td style="vertical-align:top; text-align:left; white-space:pre-wrap; word-wrap:break-word">
           <%= live_redirect item.name, to: Routes.item_ui_show_path(@socket, :show, item) %>
           <%= item.detail %>
-          <%= item.price %>円
+          <%= trunc(item.price) %>円
         </td>
 <!--
         <td><%= item.name %></td>

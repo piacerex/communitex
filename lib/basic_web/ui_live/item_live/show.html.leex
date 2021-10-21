@@ -1,5 +1,11 @@
 <h1>Show Item</h1>
 
+<%= if @current_user_id == "" do %>
+  <p class="alert alert-danger">
+    注文はログイン後に行ってください
+  </p>
+<% end %>
+
 <%= if @live_action in [:edit] do %>
   <%= live_modal @socket, BasicWeb.ItemLive.FormComponent,
     id: @item.id,
@@ -35,7 +41,7 @@
   </tr>
   <tr>
     <th>価格</th>
-    <td style="text-align:left"><%= @item.price %></td>
+    <td style="text-align:left"><%= trunc(@item.price) %>円</td>
   </tr>
   <tr>
     <th>開始日</th>
@@ -154,5 +160,10 @@
 </ul>
 -->
 
+<!--
 <span><%= #live_patch "Edit", to: Routes.item_ui_show_path(@socket, :edit, @item), class: "button" %></span>
+-->
+<%= if @current_user_id != "" do %>
+  <span><%= link "買う", to: "#top", phx_click: "buy", data: [confirm: "購入しますか？"] %></span>
+<% end %>
 <span><%= live_redirect "Back", to: Routes.item_ui_index_path(@socket, :index) %></span>

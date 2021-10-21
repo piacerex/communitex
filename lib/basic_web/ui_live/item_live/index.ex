@@ -3,10 +3,19 @@ defmodule BasicWeb.ItemUiLive.Index do
 
   alias Basic.Items
   alias Basic.Items.Item
+  alias Basic.Accounts
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :items, list_items())}
+  def mount(_params, session, socket) do
+    current_user_id = case session["user_token"] do
+      nil -> ""
+      token -> Accounts.get_user_by_session_token(token).id
+    end
+    {:ok,
+      socket
+      |> assign(:items, list_items())
+      |> assign(:current_user_id, current_user_id)
+    }
   end
 
   @impl true

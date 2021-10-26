@@ -41,7 +41,11 @@ defmodule BasicWeb.ItemUiLive.Show do
                                   |> Map.put_new(:is_cancel, false)
                                   |> Map.put_new(:deleted_at, ~N[2016-01-01 00:00:00.000000])) do
           {:ok, _order} ->
-            case Items.update_item(socket.assigns.item, Map.from_struct(Map.put(socket.assigns.item, :stocks, socket.assigns.item.stocks-1))) do
+            stocks = case socket.assigns.item.stocks do
+              nil -> nil
+              _   -> socket.assigns.item.stocks - 1
+            end
+            case Items.update_item(socket.assigns.item, Map.from_struct(Map.put(socket.assigns.item, :stocks, stocks))) do
               {:ok, _item} ->
                 {:noreply, put_flash(socket, :info, "注文を受け付けました")}
 

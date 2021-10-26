@@ -13,7 +13,7 @@ defmodule BasicWeb.ItemUiLive.Index do
     end
     {:ok,
       socket
-      |> assign(:items, list_items())
+      |> assign(:items, Items.list_items_for_users())
       |> assign(:current_user_id, current_user_id)
     }
   end

@@ -21,6 +21,14 @@ defmodule Basic.Items do
     Repo.all(Item)
   end
 
+  def list_items_for_users do
+    from( item in Item,
+      where: item.is_open == true and (item.stocks > 0 or is_nil(item.stocks)),
+      order_by: item.id
+    )
+    |> Repo.all
+  end
+
   @doc """
   Gets a single item.
 

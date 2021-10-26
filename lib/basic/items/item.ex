@@ -26,6 +26,6 @@ defmodule Basic.Items.Item do
   def changeset(item, attrs) do
     item
     |> cast(attrs, [:name, :detail, :image, :distributor_id, :price, :start_date, :end_date, :open_date, :close_date, :is_open, :area, :occupation, :alls, :stocks, :deleted_at])
-    |> validate_required([:name])
+    |> validate_required([:name, :price])
   end
 end

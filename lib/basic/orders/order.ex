@@ -7,7 +7,7 @@ defmodule Basic.Orders.Order do
     field :discount, :float
     field :is_cancel, :boolean, default: false
     field :item_id, :integer
-    field :order_date, :date
+    field :order_date, :naive_datetime
     field :price, :float
     field :user_id, :integer
 

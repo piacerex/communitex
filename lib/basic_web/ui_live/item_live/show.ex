@@ -36,7 +36,7 @@ defmodule BasicWeb.ItemUiLive.Show do
                                   |> Map.put_new(:user_id, socket.assigns.current_user_id)
                                   |> Map.put_new(:item_id, socket.assigns.item.id)
                                   |> Map.put_new(:price, socket.assigns.item.price)
-                                  |> Map.put_new(:order_date, Date.utc_today)
+                                  |> Map.put_new(:order_date, NaiveDateTime.utc_now)
                                   |> Map.put_new(:discount, 0)
                                   |> Map.put_new(:is_cancel, false)
                                   |> Map.put_new(:deleted_at, ~N[2016-01-01 00:00:00.000000])) do

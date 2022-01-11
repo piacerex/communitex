@@ -15,22 +15,27 @@
   <%= error_tag f, :detail %>
 
   <%= label f, :image, "写真" %>
+  <%= if is_nil(f.data.image) do %>
+    <td><img src="<%= Routes.static_path(@socket, "/images/no_img.png") %>" width="80"></td>
+  <% else %>
+    <td><img src="data:images/jpeg;base64,<%= f.data.image %>" width="80"></td>
+  <% end %>
   <div class="container" phx-drop-target="<%= @uploads.avatar.ref %>">
     <%= live_file_input @uploads.avatar %>
   </div>
 
-<%= for {_ref, err} <- @uploads.avatar.errors do %>
-  <p class="alert"><%= Phoenix.Naming.humanize(err) %></p>
-<% end %>
+  <%= for {_ref, err} <- @uploads.avatar.errors do %>
+    <p class="alert"><%= Phoenix.Naming.humanize(err) %></p>
+  <% end %>
 
-<%= for entry <- @uploads.avatar.entries do %>
-  <%= entry.client_name %> - <%= entry.progress %>%
-  <%= live_img_preview entry, width: 75 %>
-<% end %>
+  <%= for entry <- @uploads.avatar.entries do %>
+    <%= entry.client_name %> - <%= entry.progress %>%
+    <%= live_img_preview entry, width: 75 %>
+  <% end %>
 <!--
-  <%= label f, :image, "イメージ" %>
-  <%= textarea f, :image %>
-  <%= error_tag f, :image %>
+  <%= #label f, :image, "イメージ" %>
+  <%= #textarea f, :image %>
+  <%= #error_tag f, :image %>
 -->
   <%= label f, :distributor_id, "卸者ID" %>
   <%= number_input f, :distributor_id %>
@@ -84,9 +89,9 @@
   <%= number_input f, :stocks %>
   <%= error_tag f, :stocks %>
 <!--
-  <%= label f, :deleted_at %>
-  <%= datetime_select f, :deleted_at %>
-  <%= error_tag f, :deleted_at %>
+  <%= #label f, :deleted_at %>
+  <%= #datetime_select f, :deleted_at %>
+  <%= #error_tag f, :deleted_at %>
 -->
   <%= submit "Save", phx_disable_with: "Saving..." %>
 </form>

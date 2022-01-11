@@ -1,10 +1,9 @@
-defmodule BasicWeb.ItemUiLive.Index do
+defmodule BasicWeb.AddressUiLive.Index do
   use BasicWeb, :live_view
 
-  alias Basic.Items
-  alias Basic.Items.Item
+  alias Basic.Addresses
+  alias Basic.Addresses.Address
   alias Basic.Accounts
-  alias Basic.Carts
 
   @impl true
   def mount(_params, session, socket) do
@@ -13,10 +12,8 @@ defmodule BasicWeb.ItemUiLive.Index do
       token -> Accounts.get_user_by_session_token(token).id
     end
     {:ok,
-      socket
-      |> assign(:items, Items.list_items_for_users())
-      |> assign(:current_user_id, current_user_id)
-      |> assign(:carts, Carts.list_carts_for_user(current_user_id))
+     socket
+     |> assign(:addresses, Addresses.list_addresses_for_user(current_user_id))
     }
   end
 
@@ -27,31 +24,31 @@ defmodule BasicWeb.ItemUiLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Item")
-    |> assign(:item, Items.get_item!(id))
+    |> assign(:page_title, "Edit Address")
+    |> assign(:address, Addresses.get_address!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Item")
-    |> assign(:item, %Item{})
+    |> assign(:page_title, "New Address")
+    |> assign(:address, %Address{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Items")
-    |> assign(:item, nil)
+    |> assign(:page_title, "Listing Addresses")
+    |> assign(:address, nil)
   end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    item = Items.get_item!(id)
-    {:ok, _} = Items.delete_item(item)
+    address = Addresses.get_address!(id)
+    {:ok, _} = Addresses.delete_address(address)
 
-    {:noreply, assign(socket, :items, list_items())}
+    {:noreply, assign(socket, :addresses, list_addresses())}
   end
 
-  defp list_items do
-    Items.list_items()
+  defp list_addresses do
+    Addresses.list_addresses()
   end
 end

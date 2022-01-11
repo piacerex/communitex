@@ -1,4 +1,7 @@
+<!--
 <h1>Listing Items</h1>
+-->
+<h1>商品一覧</h1>
 
 <%= if @items == [] do %>
   現在、取扱商品はありません
@@ -7,6 +10,8 @@
     <p class="alert alert-danger">
       注文はログイン後に行ってください
     </p>
+  <% else %>
+    <span><%= live_redirect "カート：" <> Integer.to_string(Enum.count(@carts)), to: Routes.cart_ui_index_path(@socket, :index) %></span>
   <% end %>
 
   <%= if @live_action in [:new, :edit] do %>
@@ -55,7 +60,11 @@
           <td style="vertical-align:top; text-align:left; white-space:pre-wrap; word-wrap:break-word">
             <%= live_redirect item.name, to: Routes.item_ui_show_path(@socket, :show, item) %>
             <%= item.detail %>
-            <%= trunc(item.price) %>円
+            <%= if item.payment_cycle == nil do %>
+              <%= trunc(item.price) %>円
+            <% else %>
+              <%= trunc(item.price) %><%= item.payment_cycle %>
+            <% end %>
           </td>
   <!--
           <td><%= item.name %></td>

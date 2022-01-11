@@ -39,15 +39,22 @@ defmodule Basic.Members do
   def get_member_with_user(id) do
     fields = Member.__schema__(:fields)
     Repo.all(
-      from(member in Member, 
+      from(member in Member,
         where: member.id == ^id,
         join: user in User,
           on: [id: member.user_id],
         select: {map(member, ^fields), map(user, [:email])}
-      ) 
+      )
     )
     |> Enum.map(& Map.merge(elem(&1, 0), elem(&1, 1)))
     |> List.first
+  end
+
+  def get_member_from_user_id(user_id) do
+    from( member in Member,
+          where: member.user_id == ^user_id,
+    )
+    |> Repo.all
   end
 
   @doc """
@@ -86,7 +93,7 @@ defmodule Basic.Members do
       nil -> Map.delete(attrs, "image")
       _ -> attrs
     end
-  
+
     member
     |> Member.changeset(attrs)
     |> Repo.update()
@@ -126,22 +133,22 @@ defmodule Basic.Members do
 
   def paginate_members(page \\ 1, search \\ "") do
     fields = Member.__schema__(:fields)
-    query = 
+    query =
       from(member in Member,
-        join: user in User, 
+        join: user in User,
           on: [id: member.user_id],
-        order_by: [desc: member.id], 
+        order_by: [desc: member.id],
         select: {map(member, ^fields), map(user, [:email])}
       )
 
     result = case search do
       ""     -> query
-      search -> 
-        from(member in query, 
+      search ->
+        from(member in query,
           join: user in User,
             on: [id: member.user_id],
-        where: like(member.last_name,  ^"%#{search}%") 
-            or like(member.first_name, ^"%#{search}%") 
+        where: like(member.last_name,  ^"%#{search}%")
+            or like(member.first_name, ^"%#{search}%")
             or like(user.email,        ^"%#{search}%")
         )
     end

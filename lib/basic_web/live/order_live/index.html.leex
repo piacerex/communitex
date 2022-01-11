@@ -12,8 +12,9 @@
 <table>
   <thead>
     <tr>
-      <th>User</th>
-      <th>Item</th>
+      <th>Order ID</th>
+      <th>User ID</th>
+      <th>Item ID</th>
       <th>Order date</th>
       <th>Price</th>
       <th>Discount</th>
@@ -26,6 +27,7 @@
   <tbody id="orders">
     <%= for order <- @orders do %>
       <tr id="order-<%= order.id %>">
+        <td><%= order.id %></td>
         <td><%= order.user_id %></td>
         <td><%= order.item_id %></td>
         <td><%= order.order_date %></td>

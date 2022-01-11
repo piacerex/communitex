@@ -40,6 +40,14 @@
   <%= number_input f, :price, step: "any" %>
   <%= error_tag f, :price %>
 
+  <%= label f, :payment_cycle, "支払サイクル（ 円、円／月 などを入力 ）" %>
+  <%= text_input f, :payment_cycle %>
+  <%= error_tag f, :payment_cycle %>
+
+  <%= label f, :delivery_require, "配送が必要か？" %>
+  <%= checkbox f, :delivery_require %>
+  <%= error_tag f, :delivery_require %>
+
   <%= label f, :start_date, "開始日" %>
   <%= datetime_select f, :start_date %>
   <%= error_tag f, :start_date %>

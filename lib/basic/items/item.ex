@@ -18,6 +18,8 @@ defmodule Basic.Items.Item do
     field :price, :float
     field :start_date, :naive_datetime
     field :stocks, :integer
+    field :payment_cycle, :string
+    field :delivery_require, :boolean
 
     timestamps()
   end
@@ -25,7 +27,7 @@ defmodule Basic.Items.Item do
   @doc false
   def changeset(item, attrs) do
     item
-    |> cast(attrs, [:name, :detail, :image, :distributor_id, :price, :start_date, :end_date, :open_date, :close_date, :is_open, :area, :occupation, :alls, :stocks, :deleted_at])
+    |> cast(attrs, [:name, :detail, :image, :distributor_id, :price, :start_date, :end_date, :open_date, :close_date, :is_open, :area, :occupation, :alls, :stocks, :payment_cycle, :delivery_require, :deleted_at])
     |> validate_required([:name, :price])
   end
 end

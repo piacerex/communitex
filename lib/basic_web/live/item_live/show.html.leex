@@ -41,7 +41,12 @@
 
   <li>
     <strong>価格:</strong>
-    <%= @item.price %>
+    <%= trunc(@item.price) %><%= @item.payment_cycle %>
+  </li>
+
+  <li>
+    <strong>要配送か？:</strong>
+    <%= @item.delivery_require %>
   </li>
 
   <li>

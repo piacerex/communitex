@@ -17,6 +17,7 @@
       <th>イメージ</th>
       <th>卸者ID</th>
       <th>価格</th>
+      <th>要配送</th>
       <th>開始日</th>
       <th>終了日</th>
       <th>募集開始日</th>
@@ -47,7 +48,8 @@
           <td><img src="data:images/jpeg;base64,<%= item.image %>" width="80"></td>
         <% end %>
         <td><%= item.distributor_id %></td>
-        <td><%= item.price %></td>
+        <td><%= round(item.price) %><%= item.payment_cycle %></td>
+        <td><%= item.delivery_require %></td>
         <td><%= item.start_date %></td>
         <td><%= item.end_date %></td>
         <td><%= item.open_date %></td>

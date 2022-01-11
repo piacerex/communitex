@@ -146,6 +146,24 @@ defmodule BasicWeb.Router do
     live "/agencies/:id/edit", AgencyLive.Index, :edit
     live "/agencies/:id", AgencyLive.Show, :show
     live "/agencies/:id/show/edit", AgencyLive.Show, :edit
+
+    live "/carts", CartLive.Index, :index
+    live "/carts/new", CartLive.Index, :new
+    live "/carts/:id/edit", CartLive.Index, :edit
+    live "/carts/:id", CartLive.Show, :show
+    live "/carts/:id/show/edit", CartLive.Show, :edit
+
+    live "/addresses", AddressLive.Index, :index
+    live "/addresses/new", AddressLive.Index, :new
+    live "/addresses/:id/edit", AddressLive.Index, :edit
+    live "/addresses/:id", AddressLive.Show, :show
+    live "/addresses/:id/show/edit", AddressLive.Show, :edit
+
+    live "/deliveries", DeliveryLive.Index, :index
+    live "/deliveries/new", DeliveryLive.Index, :new
+    live "/deliveries/:id/edit", DeliveryLive.Index, :edit
+    live "/deliveries/:id", DeliveryLive.Show, :show
+    live "/deliveries/:id/show/edit", DeliveryLive.Show, :edit
   end
 
   scope "/admin", BasicWeb do
@@ -220,6 +238,14 @@ defmodule BasicWeb.Router do
 
     live "/items", ItemUiLive.Index, :index
     live "/items/:id", ItemUiLive.Show, :show
+
+    live "/carts", CartUiLive.Index, :index
+    live "/carts/register", CartUiLive.Register, :register
+    live "/carts/:id/edit", CartUiLive.Index, :edit
+    live "/carts/:id", CartUiLive.Show, :show
+    live "/carts/:id/show/edit", CartUiLive.Show, :edit
+
+    live "/addresses", AddressUiLive.Index, :index
 
     live "/*path_", SphereLive, :index
 

@@ -10,6 +10,8 @@ defmodule Basic.Orders.Order do
     field :order_date, :naive_datetime
     field :price, :float
     field :user_id, :integer
+    field :order_number, :string
+    field :canceled_at, :naive_datetime
 
     timestamps()
   end
@@ -17,7 +19,7 @@ defmodule Basic.Orders.Order do
   @doc false
   def changeset(order, attrs) do
     order
-    |> cast(attrs, [:user_id, :item_id, :order_date, :price, :discount, :is_cancel, :deleted_at])
+    |> cast(attrs, [:user_id, :item_id, :order_date, :order_number, :price, :discount, :is_cancel, :canceled_at, :deleted_at])
     |> validate_required([:user_id, :item_id, :order_date, :price, :discount, :is_cancel, :deleted_at])
   end
 end

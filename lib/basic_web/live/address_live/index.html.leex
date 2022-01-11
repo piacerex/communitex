@@ -1,0 +1,51 @@
+<h1>Listing Addresses</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, BasicWeb.AddressLive.FormComponent,
+    id: @address.id || :new,
+    title: @page_title,
+    action: @live_action,
+    address: @address,
+    return_to: Routes.address_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Last name</th>
+      <th>First name</th>
+      <th>Postal</th>
+      <th>Prefecture</th>
+      <th>City</th>
+      <th>Address1</th>
+      <th>Address2</th>
+      <th>Tel</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="addresses">
+    <%= for address <- @addresses do %>
+      <tr id="address-<%= address.id %>">
+        <td><%= address.user_id %></td>
+        <td><%= address.last_name %></td>
+        <td><%= address.first_name %></td>
+        <td><%= address.postal %></td>
+        <td><%= address.prefecture %></td>
+        <td><%= address.city %></td>
+        <td><%= address.address1 %></td>
+        <td><%= address.address2 %></td>
+        <td><%= address.tel %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.address_show_path(@socket, :show, address) %></span>
+          <span><%= live_patch "Edit", to: Routes.address_index_path(@socket, :edit, address) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: address.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Address", to: Routes.address_index_path(@socket, :new) %></span>

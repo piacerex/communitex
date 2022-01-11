@@ -5,6 +5,8 @@ defmodule BasicWeb.ItemUiLive.Show do
   alias Basic.Accounts
   alias Basic.Orders.Order
   alias Basic.Orders
+  alias Basic.Carts.Cart
+  alias Basic.Carts
 
   @impl true
   def mount(_params, session, socket) do
@@ -26,37 +28,69 @@ defmodule BasicWeb.ItemUiLive.Show do
      |> assign(:item, Items.get_item!(id))}
   end
 
-  def handle_event("buy", value, socket) do
-    case socket.assigns.current_user_id do
-      "" ->
-        {:noreply, put_flash(socket, :error, "ログインしてから注文してください")}
-      _ ->
-        order_params = %{}
-        case Orders.create_order(order_params
-                                  |> Map.put_new(:user_id, socket.assigns.current_user_id)
-                                  |> Map.put_new(:item_id, socket.assigns.item.id)
-                                  |> Map.put_new(:price, socket.assigns.item.price)
-                                  |> Map.put_new(:order_date, NaiveDateTime.utc_now)
-                                  |> Map.put_new(:discount, 0)
-                                  |> Map.put_new(:is_cancel, false)
-                                  |> Map.put_new(:deleted_at, ~N[2016-01-01 00:00:00.000000])) do
-          {:ok, _order} ->
-            stocks = case socket.assigns.item.stocks do
-              nil -> nil
-              _   -> socket.assigns.item.stocks - 1
-            end
-            case Items.update_item(socket.assigns.item, Map.from_struct(Map.put(socket.assigns.item, :stocks, stocks))) do
-              {:ok, _item} ->
-                {:noreply, put_flash(socket, :info, "注文を受け付けました")}
+  def handle_event( "submit", params, socket ) do
+    item_stocks = Items.get_item!(socket.assigns.item.id).stocks
 
-                {:error, %Ecto.Changeset{} = changeset} ->
-                  {:noreply, assign(socket, changeset: changeset)}
-            end
+    cart = Carts.get_cart_by_user_and_item(socket.assigns.current_user_id, socket.assigns.item.id)
+    quantity = case cart do
+      nil  -> String.to_integer(params["quantity"])
+      cart -> String.to_integer(params["quantity"]) + cart.quantity
+    end
 
-          {:error, %Ecto.Changeset{} = changeset} ->
-            {:noreply, assign(socket, changeset: changeset)}
+    cart_params = %{}
+
+    case cart do
+      nil ->
+        case quantity > item_stocks do
+          false ->
+            case Carts.create_cart(cart_params
+                                    |> Map.put_new(:user_id, socket.assigns.current_user_id)
+                                    |> Map.put_new(:item_id, socket.assigns.item.id)
+                                    |> Map.put_new(:quantity, quantity)
+                                    |> Map.put_new(:is_order, false)) do
+              {:ok, _cart} ->
+                {:noreply,
+                  socket
+                  |> put_flash(:info, "カートに追加しました")
+                  |> push_redirect(to: Routes.item_ui_index_path(socket, :index))
+                }
+
+              {:error, %Ecto.Changeset{} = changeset} ->
+                {:noreply, assign(socket, changeset: changeset)}
+            end
+          true ->
+            {:noreply,
+              socket
+              |> put_flash(:error, "注文数が在庫数を超えています")
+            }
+        end
+
+      cart ->
+        case quantity > item_stocks do
+          false ->
+            case Carts.update_cart(cart, cart_params
+                                          |> Map.put_new(:user_id, socket.assigns.current_user_id)
+                                          |> Map.put_new(:item_id, socket.assigns.item.id)
+                                          |> Map.put_new(:quantity, quantity)
+                                          |> Map.put_new(:is_order, false)) do
+              {:ok, _cart} ->
+                {:noreply,
+                  socket
+                  |> put_flash(:info, "カートを更新しました")
+                  |> push_redirect(to: Routes.item_ui_index_path(socket, :index))
+                }
+
+              {:error, %Ecto.Changeset{} = changeset} ->
+                {:noreply, assign(socket, :changeset, changeset)}
+            end
+          true ->
+            {:noreply,
+              socket
+              |> put_flash(:error, "注文数が在庫数を超えています")
+            }
         end
       end
+
   end
 
   defp page_title(:show), do: "Show Item"

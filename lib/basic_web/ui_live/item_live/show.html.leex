@@ -35,14 +35,21 @@
       <td style="text-align:left"><img src="data:images/jpeg;base64,<%= @item.image %>" width="200"></td>
     <% end %>
   </tr>
+<!--
   <tr>
     <th>卸者ID</th>
     <td style="text-align:left"><%= @item.distributor_id %></td>
   </tr>
+-->
   <tr>
     <th>価格</th>
-    <td style="text-align:left"><%= trunc(@item.price) %>円</td>
+    <%= if @item.payment_cycle == nil do %>
+      <td style="text-align:left"><%= trunc(@item.price) %>円</td>
+    <% else %>
+      <td style="text-align:left"><%= trunc(@item.price) %><%= @item.payment_cycle %></td>
+    <% end %>
   </tr>
+<!--
   <tr>
     <th>開始日</th>
     <td style="text-align:left"><%= @item.start_date %></td>
@@ -63,6 +70,7 @@
     <th>募集中か？</th>
     <td style="text-align:left"><%= @item.is_open %></td>
   </tr>
+-->
   <tr>
     <th>エリア</th>
     <td style="text-align:left"><%= @item.area %></td>
@@ -164,6 +172,28 @@
 <span><%= #live_patch "Edit", to: Routes.item_ui_show_path(@socket, :edit, @item), class: "button" %></span>
 -->
 <%= if @current_user_id != "" do %>
+<!--
   <span><%= link "買う", to: "#top", phx_click: "buy", data: [confirm: "購入しますか？"] %></span>
+-->
+  <form phx-submit="submit">
+    <p>
+    数量：<select name="quantity">
+            <option value="1">1
+            <option value="2">2
+            <option value="3">3
+            <option value="4">4
+            <option value="5">5
+            <option value="6">6
+            <option value="7">7
+            <option value="8">8
+            <option value="9">9
+            <option value="10">10
+          </select>
+    </p>
+    <input type="submit" value="カートに入れる">
+  </form>
 <% end %>
-<span><%= live_redirect "Back", to: Routes.item_ui_index_path(@socket, :index) %></span>
+<!--
+<span><%= #live_redirect "Back", to: Routes.item_ui_index_path(@socket, :index) %></span>
+-->
+<span><%= live_redirect "戻る", to: Routes.item_ui_index_path(@socket, :index) %></span>

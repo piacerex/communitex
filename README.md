@@ -140,16 +140,22 @@ mix phx.gen.live Organizations Organization organizations name:string postal:str
 
 mix phx.gen.live Grants        Grant        grants        user_id:integer organization_id:integer role:string                                                         deleted_at:datetime
 
-mix phx.gen.live Items         Item         items         name:string detail:text image:text      distributor_id:integer price:float start_date:datetime end_date:datetime open_date:datetime close_date:datetime is_open:boolean area:string occupation:string alls:integer stocks:integer                                                                         deleted_at:datetime
+mix phx.gen.live Items         Item         items         name:string detail:text image:text      distributor_id:integer price:float start_date:datetime end_date:datetime open_date:datetime close_date:datetime is_open:boolean area:string occupation:string alls:integer stocks:integer                                                                         deleted_at:datetime payment_cycle:string delivery_require:boolean
 
 mix phx.gen.live Distributors  Distributor  distributors  brand:string    organization_id:integer                                                                     deleted_at:datetime
 
 mix phx.gen.live Agencies      Agency       agencies      brand:string    organization_id:integer distributor_id:integer             discount:float boost:float       deleted_at:datetime
 
 mix phx.gen.live Agents        Agent        agents        user_id:integer agency_id:integer                                          discount:float boost:float       deleted_at:datetime
-mix phx.gen.live Orders        Order        orders        user_id:integer item_id:integer         order_date:date        price:float discount:float is_cancel:boolean deleted_at:datetime
+mix phx.gen.live Orders        Order        orders        user_id:integer item_id:integer         order_date:datetime        price:float discount:float is_cancel:boolean deleted_at:datetime order_number:string canceled_at:datetime
 ```
 
 ```
 mix phx.gen.live Contacts Contact contacts logined_user_id:integer email:string last_name:string first_name:string last_name_kana:string first_name_kana:string type:string body:text deleted_at:datetime
+```
+
+```
+mix phx.gen.live Carts      Cart     carts      user_id:integer item_id:integer quantity:integer is_order:boolean
+mix phx.gen.live Addresses  Address  addresses  user_id:integer last_name:string first_name:string postal:string prefecture:string city:string address1:string address2:string tel:string
+mix phx.gen.live Deliveries Delivery deliveries order_id:integer address_id:integer phase:string order_number:string
 ```

@@ -93,7 +93,7 @@ git -c http.extraheader="GIGALIXIR-CLEAN: true" push gigalixir
 ## Build processes (for communitex comitter only)
 
 ```
-mix phx.new basic --live
+mix phx.new basic
 mv basic communitex
 ```
 

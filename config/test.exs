@@ -1,7 +1,7 @@
-use Mix.Config
+import Config
 
 # Only in tests, remove the complexity from the password hashing algorithm
-config :pbkdf2_elixir, :rounds, 1
+config :bcrypt_elixir, :log_rounds, 1
 
 # Configure your database
 #
@@ -11,15 +11,23 @@ config :pbkdf2_elixir, :rounds, 1
 config :basic, Basic.Repo,
   username: "postgres",
   password: "postgres",
-  database: "basic_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  database: "basic_test#{System.get_env("MIX_TEST_PARTITION")}",
+  pool: Ecto.Adapters.SQL.Sandbox,
+  pool_size: 10
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :basic, BasicWeb.Endpoint,
-  http: [port: 4002],
+  http: [ip: {127, 0, 0, 1}, port: 4002],
+  secret_key_base: "XVCLEnJ+QjDZWrJb1EPkXIgJ21xYfbewf+57Wh1q1ow6InS+aZ44kUl7W94j56ud",
   server: false
+
+# In test we don't send emails.
+config :basic, Basic.Mailer, adapter: Swoosh.Adapters.Test
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Initialize plugs at runtime for faster test compilation
+config :phoenix, :plug_init_mode, :runtime

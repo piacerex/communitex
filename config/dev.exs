@@ -1,11 +1,11 @@
-use Mix.Config
+import Config
 
 # Configure your database
 config :basic, Basic.Repo,
   username: "postgres",
   password: "postgres",
-  database: "basic_dev",
   hostname: "localhost",
+  database: "basic_dev",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
@@ -14,20 +14,18 @@ config :basic, Basic.Repo,
 #
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
-# with webpack to recompile .js and .css sources.
+# with esbuild to bundle .js and .css sources.
 config :basic, BasicWeb.Endpoint,
-  http: [port: 4000],
-  debug_errors: true,
-  code_reloader: true,
+  # Binding to loopback ipv4 address prevents access from other machines.
+  # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
+  http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
+  code_reloader: true,
+  debug_errors: true,
+  secret_key_base: "p3Q+79AYsBUlq2hvi6HobptFQksQvbuLThWYKscdCiWtiJgvG2WHqzoXsbcmFqn7",
   watchers: [
-    node: [
-      "node_modules/webpack/bin/webpack.js",
-      "--mode",
-      "development",
-      "--watch-stdin",
-      cd: Path.expand("../assets", __DIR__)
-    ]
+    # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
   ]
 
 # ## SSL Support

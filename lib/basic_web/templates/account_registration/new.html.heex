@@ -2,7 +2,7 @@
 <p>Register</p>
 </h1>
 
-<%= form_for @changeset, Routes.user_registration_path(@conn, :create), fn f -> %>
+<.form let={f} for={@changeset} action={Routes.account_registration_path(@conn, :create)}>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>ご入力いただいた内容にエラーがあります</p>
@@ -25,7 +25,7 @@
 
   <br>
   <p>
-    <%= link "パスワードを忘れた場合はこちら", to: Routes.user_reset_password_path(@conn, :new) %> |
-    <%= link "ユーザ登録確認メールの再送", to: Routes.user_confirmation_path(@conn, :new) %>
+    <%= link "パスワードを忘れた場合はこちら", to: Routes.account_reset_password_path(@conn, :new) %> |
+    <%= link "ユーザ登録確認メールの再送", to: Routes.account_confirmation_path(@conn, :new) %>
   </p>
-<% end %>
+</.form>

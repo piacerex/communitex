@@ -2,7 +2,7 @@
 <p>Log in</p>
 </h1>
 
-<%= form_for @conn, Routes.user_session_path(@conn, :create), [as: :user], fn f -> %>
+<.form let={f} for={@conn} action={Routes.account_session_path(@conn, :create)} as={:account}>
   <%= if @error_message do %>
     <div class="alert alert-danger">
       <p><%= @error_message %></p>
@@ -28,8 +28,8 @@
 
   <br>
   <p>
-    <%= link "パスワードを忘れた場合はこちら", to: Routes.user_reset_password_path(@conn, :new) %> |
-    <%= link "ユーザ登録", to: Routes.user_registration_path(@conn, :new) %> |
-    <%= link "ユーザ登録確認メールの再送", to: Routes.user_confirmation_path(@conn, :new) %>
+    <%= link "パスワードを忘れた場合はこちら", to: Routes.account_reset_password_path(@conn, :new) %> |
+    <%= link "ユーザ登録", to: Routes.account_registration_path(@conn, :new) %> |
+    <%= link "ユーザ登録確認メールの再送", to: Routes.account_confirmation_path(@conn, :new) %>
   </p>
-<% end %>
+</.form>

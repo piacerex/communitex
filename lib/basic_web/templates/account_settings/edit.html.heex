@@ -4,7 +4,7 @@
 
 <h3>メールアドレス変更</h3>
 
-<%= form_for @email_changeset, Routes.user_settings_path(@conn, :update), fn f -> %>
+<.form let={f} for={@email_changeset} action={Routes.account_settings_path(@conn, :update)} id="update_email">
   <%= if @email_changeset.action do %>
     <div class="alert alert-danger">
       <p>ご入力いただいた内容にエラーがあります</p>
@@ -26,11 +26,11 @@
   <div>
     <%= submit "メールアドレスを変更する" %>
   </div>
-<% end %>
+</.form>
 
 <h3>パスワード変更</h3>
 
-<%= form_for @password_changeset, Routes.user_settings_path(@conn, :update), fn f -> %>
+<.form let={f} for={@password_changeset} action={Routes.account_settings_path(@conn, :update)} id="update_password">
   <%= if @password_changeset.action do %>
     <div class="alert alert-danger">
       <p>ご入力いただいた内容にエラーがあります</p>
@@ -56,4 +56,4 @@
   <div>
     <%= submit "パスワードを変更する" %>
   </div>
-<% end %>
+</.form>

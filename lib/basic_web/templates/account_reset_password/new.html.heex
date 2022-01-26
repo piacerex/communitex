@@ -2,7 +2,7 @@
 <p>If you forget your password...</p>
 </h1>
 
-<%= form_for :user, Routes.user_reset_password_path(@conn, :create), fn f -> %>
+<.form let={f} for={:account} action={Routes.account_reset_password_path(@conn, :create)}>
   <p>パスワードリセット用のURLをメールにてご案内します</p>
   <p>下記にメールアドレスをご記入いただき、パスワードリセットを開始してください</p>
 
@@ -10,6 +10,6 @@
   <%= email_input f, :email, required: true %>
 
   <div>
-    <%= submit "パスワードリセットを開始する" %>
+    <%= submit "Send instructions to reset password" %>
   </div>
-<% end %>
+</.form>

@@ -1,4 +1,4 @@
-defmodule BasicWeb.UserConfirmationController do
+defmodule BasicWeb.AccountConfirmationController do
   use BasicWeb, :controller
 
   alias Basic.Accounts
@@ -7,15 +7,14 @@ defmodule BasicWeb.UserConfirmationController do
     render(conn, "new.html")
   end
 
-  def create(conn, %{"user" => %{"email" => email}}) do
-    if user = Accounts.get_user_by_email(email) do
-      Accounts.deliver_user_confirmation_instructions(
-        user,
-        &Routes.user_confirmation_url(conn, :confirm, &1)
+  def create(conn, %{"account" => %{"email" => email}}) do
+    if account = Accounts.get_account_by_email(email) do
+      Accounts.deliver_account_confirmation_instructions(
+        account,
+        &Routes.account_confirmation_url(conn, :edit, &1)
       )
     end
 
-    # Regardless of the outcome, show an impartial success/error message.
     conn
     |> put_flash(
       :info,
@@ -26,10 +25,14 @@ defmodule BasicWeb.UserConfirmationController do
     |> redirect(to: "/")
   end
 
-  # Do not log in the user after confirmation to avoid a
-  # leaked token giving the user access to the account.
-  def confirm(conn, %{"token" => token}) do
-    case Accounts.confirm_user(token) do
+  def edit(conn, %{"token" => token}) do
+    render(conn, "edit.html", token: token)
+  end
+
+  # Do not log in the account after confirmation to avoid a
+  # leaked token giving the account access to the account.
+  def update(conn, %{"token" => token}) do
+    case Accounts.confirm_account(token) do
       {:ok, _} ->
         conn
 #        |> put_flash(:info, "Account confirmed successfully.")
@@ -37,12 +40,12 @@ defmodule BasicWeb.UserConfirmationController do
         |> redirect(to: "/")
 
       :error ->
-        # If there is a current user and the account was already confirmed,
+        # If there is a current account and the account was already confirmed,
         # then odds are that the confirmation link was already visited, either
-        # by some automation or by the user themselves, so we redirect without
+        # by some automation or by the account themselves, so we redirect without
         # a warning message.
         case conn.assigns do
-          %{current_user: %{confirmed_at: confirmed_at}} when not is_nil(confirmed_at) ->
+          %{current_account: %{confirmed_at: confirmed_at}} when not is_nil(confirmed_at) ->
             redirect(conn, to: "/")
 
           %{} ->

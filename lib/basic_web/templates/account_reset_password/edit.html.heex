@@ -2,7 +2,7 @@
 <p>Reset password</p>
 </h1>
 
-<%= form_for @changeset, Routes.user_reset_password_path(@conn, :update, @token), fn f -> %>
+<.form let={f} for={@changeset} action={Routes.account_reset_password_path(@conn, :update, @token)}>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>ご入力いただいた内容にエラーがあります</p>
@@ -22,4 +22,4 @@
   <div>
     <%= submit "パスワードリセットする" %>
   </div>
-<% end %>
+</.form>

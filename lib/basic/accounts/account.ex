@@ -1,12 +1,11 @@
-defmodule Basic.Accounts.User do
+defmodule Basic.Accounts.Account do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Inspect, except: [:password]}
-  schema "users" do
+  schema "accounts" do
     field :email, :string
-    field :password, :string, virtual: true
-    field :hashed_password, :string
+    field :password, :string, virtual: true, redact: true
+    field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
     field :deleted_at, :naive_datetime
 
@@ -21,7 +20,7 @@ defmodule Basic.Accounts.User do
   end
 
   @doc """
-  A user changeset for registration.
+  A account changeset for registration.
 
   It is important to validate the length of both email and password.
   Otherwise databases may truncate the email without warnings, which
@@ -37,8 +36,8 @@ defmodule Basic.Accounts.User do
       validations on a LiveView form), this option can be set to `false`.
       Defaults to `true`.
   """
-  def registration_changeset(user, attrs, opts \\ []) do
-    user
+  def registration_changeset(account, attrs, opts \\ []) do
+    account
     |> cast(attrs, [:email, :password])
     |> validate_email()
     |> validate_password(opts)
@@ -70,7 +69,9 @@ defmodule Basic.Accounts.User do
 
     if hash_password? && password && changeset.valid? do
       changeset
-      |> put_change(:hashed_password, Pbkdf2.hash_pwd_salt(password))
+      # If using Bcrypt, then further validate it is at most 72 bytes long
+      |> validate_length(:password, max: 72, count: :bytes)
+      |> put_change(:hashed_password, Bcrypt.hash_pwd_salt(password))
       |> delete_change(:password)
     else
       changeset
@@ -78,12 +79,12 @@ defmodule Basic.Accounts.User do
   end
 
   @doc """
-  A user changeset for changing the email.
+  A account changeset for changing the email.
 
   It requires the email to change otherwise an error is added.
   """
-  def email_changeset(user, attrs) do
-    user
+  def email_changeset(account, attrs) do
+    account
     |> cast(attrs, [:email])
     |> validate_email()
     |> case do
@@ -93,7 +94,7 @@ defmodule Basic.Accounts.User do
   end
 
   @doc """
-  A user changeset for changing the password.
+  A account changeset for changing the password.
 
   ## Options
 
@@ -104,8 +105,8 @@ defmodule Basic.Accounts.User do
       validations on a LiveView form), this option can be set to `false`.
       Defaults to `true`.
   """
-  def password_changeset(user, attrs, opts \\ []) do
-    user
+  def password_changeset(account, attrs, opts \\ []) do
+    account
     |> cast(attrs, [:password])
     |> validate_confirmation(:password, message: "パスワードが一致しません" )  # PW変更でPW確認不一致
     |> validate_password(opts)
@@ -114,26 +115,26 @@ defmodule Basic.Accounts.User do
   @doc """
   Confirms the account by setting `confirmed_at`.
   """
-  def confirm_changeset(user) do
+  def confirm_changeset(account) do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
-    change(user, confirmed_at: now)
+    change(account, confirmed_at: now)
   end
 
   @doc """
   Verifies the password.
 
-  If there is no user or the user doesn't have a password, we call
-  `Pbkdf2.no_user_verify/0` to avoid timing attacks.
+  If there is no account or the account doesn't have a password, we call
+  `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
-#  def valid_password?(%Basic.Accounts.User{hashed_password: hashed_password}, password)
+#  def valid_password?(%Basic.Accounts.Account{hashed_password: hashed_password}, password)
 #      when is_binary(hashed_password) and byte_size(password) > 0 do
-  def valid_password?(%Basic.Accounts.User{hashed_password: hashed_password, confirmed_at: confirmed_at}, password)
+  def valid_password?(%Basic.Accounts.Account{hashed_password: hashed_password, confirmed_at: confirmed_at}, password)
       when is_binary(hashed_password) and byte_size(password) > 0 and is_nil(confirmed_at) == false do
-    Pbkdf2.verify_pass(password, hashed_password)
+    Bcrypt.verify_pass(password, hashed_password)
   end
 
   def valid_password?(_, _) do
-    Pbkdf2.no_user_verify()
+    Bcrypt.no_user_verify()
     false
   end
 

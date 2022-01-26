@@ -1,8 +1,8 @@
-defmodule BasicWeb.UserSettingsController do
+defmodule BasicWeb.AccountSettingsController do
   use BasicWeb, :controller
 
   alias Basic.Accounts
-  alias BasicWeb.UserAuth
+  alias BasicWeb.AccountAuth
 
   plug :assign_email_and_password_changesets
 
@@ -11,15 +11,15 @@ defmodule BasicWeb.UserSettingsController do
   end
 
   def update(conn, %{"action" => "update_email"} = params) do
-    %{"current_password" => password, "user" => user_params} = params
-    user = conn.assigns.current_user
+    %{"current_password" => password, "account" => account_params} = params
+    account = conn.assigns.current_account
 
-    case Accounts.apply_user_email(user, password, user_params) do
-      {:ok, applied_user} ->
+    case Accounts.apply_account_email(account, password, account_params) do
+      {:ok, applied_account} ->
         Accounts.deliver_update_email_instructions(
-          applied_user,
-          user.email,
-          &Routes.user_settings_url(conn, :confirm_email, &1)
+          applied_account,
+          account.email,
+          &Routes.account_settings_url(conn, :confirm_email, &1)
         )
 
         conn
@@ -28,7 +28,7 @@ defmodule BasicWeb.UserSettingsController do
 #          "A link to confirm your email change has been sent to the new address."
           "メールアドレス変更を確認するためのリンクを新しいメールアドレスに送信しました"
         )
-        |> redirect(to: Routes.user_settings_path(conn, :edit))
+        |> redirect(to: Routes.account_settings_path(conn, :edit))
 
       {:error, changeset} ->
         render(conn, "edit.html", email_changeset: changeset)
@@ -36,16 +36,16 @@ defmodule BasicWeb.UserSettingsController do
   end
 
   def update(conn, %{"action" => "update_password"} = params) do
-    %{"current_password" => password, "user" => user_params} = params
-    user = conn.assigns.current_user
+    %{"current_password" => password, "account" => account_params} = params
+    account = conn.assigns.current_account
 
-    case Accounts.update_user_password(user, password, user_params) do
-      {:ok, user} ->
+    case Accounts.update_account_password(account, password, account_params) do
+      {:ok, account} ->
         conn
 #        |> put_flash(:info, "Password updated successfully.")
         |> put_flash(:info, "パスワードの更新に成功しました")
-        |> put_session(:user_return_to, Routes.user_settings_path(conn, :edit))
-        |> UserAuth.log_in_user(user)
+        |> put_session(:account_return_to, Routes.account_settings_path(conn, :edit))
+        |> AccountAuth.log_in_account(account)
 
       {:error, changeset} ->
         render(conn, "edit.html", password_changeset: changeset)
@@ -53,26 +53,26 @@ defmodule BasicWeb.UserSettingsController do
   end
 
   def confirm_email(conn, %{"token" => token}) do
-    case Accounts.update_user_email(conn.assigns.current_user, token) do
+    case Accounts.update_account_email(conn.assigns.current_account, token) do
       :ok ->
         conn
 #        |> put_flash(:info, "Email changed successfully.")
         |> put_flash(:info, "メールアドレス変更に成功しました")
-        |> redirect(to: Routes.user_settings_path(conn, :edit))
+        |> redirect(to: Routes.account_settings_path(conn, :edit))
 
       :error ->
         conn
 #        |> put_flash(:error, "Email change link is invalid or it has expired.")
         |> put_flash(:error, "このメールアドレス変更URLは正しくないか、期限切れとなっております")
-        |> redirect(to: Routes.user_settings_path(conn, :edit))
+        |> redirect(to: Routes.account_settings_path(conn, :edit))
     end
   end
 
   defp assign_email_and_password_changesets(conn, _opts) do
-    user = conn.assigns.current_user
+    account = conn.assigns.current_account
 
     conn
-    |> assign(:email_changeset, Accounts.change_user_email(user))
-    |> assign(:password_changeset, Accounts.change_user_password(user))
+    |> assign(:email_changeset, Accounts.change_account_email(account))
+    |> assign(:password_changeset, Accounts.change_account_password(account))
   end
 end

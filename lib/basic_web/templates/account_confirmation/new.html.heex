@@ -2,7 +2,7 @@
 <p>Resend confirmation instructions</p>
 </h1>
 
-<%= form_for :user, Routes.user_confirmation_path(@conn, :create), fn f -> %>
+<.form let={f} for={:account} action={Routes.account_confirmation_path(@conn, :create)}>
   <p>ユーザ登録確認用のURLをメールにて再送します</p>
   <p>下記にメールアドレスをご記入いただき、メール再送を行ってください</p>
 
@@ -12,4 +12,4 @@
   <div>
     <%= submit "ユーザ登録確認メールを再送する" %>
   </div>
-<% end %>
+</.form>

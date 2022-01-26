@@ -1,4 +1,4 @@
-defmodule BasicWeb.UserAuth do
+defmodule BasicWeb.AccountAuth do
   import Plug.Conn
   import Phoenix.Controller
 
@@ -7,13 +7,13 @@ defmodule BasicWeb.UserAuth do
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
-  # the token expiry itself in UserToken.
+  # the token expiry itself in AccountToken.
   @max_age 60 * 60 * 24 * 60
-  @remember_me_cookie "_basic_web_user_remember_me"
+  @remember_me_cookie "_basic_web_account_remember_me"
   @remember_me_options [sign: true, max_age: @max_age, same_site: "Lax"]
 
   @doc """
-  Logs the user in.
+  Logs the account in.
 
   It renews the session ID and clears the whole session
   to avoid fixation attacks. See the renew_session
@@ -24,16 +24,16 @@ defmodule BasicWeb.UserAuth do
   disconnected on log out. The line can be safely removed
   if you are not using LiveView.
   """
-  def log_in_user(conn, user, params \\ %{}) do
-    token = Accounts.generate_user_session_token(user)
-    user_return_to = get_session(conn, :user_return_to)
+  def log_in_account(conn, account, params \\ %{}) do
+    token = Accounts.generate_account_session_token(account)
+    account_return_to = get_session(conn, :account_return_to)
 
     conn
     |> renew_session()
-    |> put_session(:user_token, token)
-    |> put_session(:live_socket_id, "users_sessions:#{Base.url_encode64(token)}")
+    |> put_session(:account_token, token)
+    |> put_session(:live_socket_id, "accounts_sessions:#{Base.url_encode64(token)}")
     |> maybe_write_remember_me_cookie(token, params)
-    |> redirect(to: user_return_to || signed_in_path(conn))
+    |> redirect(to: account_return_to || signed_in_path(conn))
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do
@@ -66,13 +66,13 @@ defmodule BasicWeb.UserAuth do
   end
 
   @doc """
-  Logs the user out.
+  Logs the account out.
 
   It clears all session data for safety. See renew_session.
   """
-  def log_out_user(conn) do
-    user_token = get_session(conn, :user_token)
-    user_token && Accounts.delete_session_token(user_token)
+  def log_out_account(conn) do
+    account_token = get_session(conn, :account_token)
+    account_token && Accounts.delete_session_token(account_token)
 
     if live_socket_id = get_session(conn, :live_socket_id) do
       BasicWeb.Endpoint.broadcast(live_socket_id, "disconnect", %{})
@@ -85,23 +85,23 @@ defmodule BasicWeb.UserAuth do
   end
 
   @doc """
-  Authenticates the user by looking into the session
+  Authenticates the account by looking into the session
   and remember me token.
   """
-  def fetch_current_user(conn, _opts) do
-    {user_token, conn} = ensure_user_token(conn)
-    user = user_token && Accounts.get_user_by_session_token(user_token)
-    assign(conn, :current_user, user)
+  def fetch_current_account(conn, _opts) do
+    {account_token, conn} = ensure_account_token(conn)
+    account = account_token && Accounts.get_account_by_session_token(account_token)
+    assign(conn, :current_account, account)
   end
 
-  defp ensure_user_token(conn) do
-    if user_token = get_session(conn, :user_token) do
-      {user_token, conn}
+  defp ensure_account_token(conn) do
+    if account_token = get_session(conn, :account_token) do
+      {account_token, conn}
     else
       conn = fetch_cookies(conn, signed: [@remember_me_cookie])
 
-      if user_token = conn.cookies[@remember_me_cookie] do
-        {user_token, put_session(conn, :user_token, user_token)}
+      if account_token = conn.cookies[@remember_me_cookie] do
+        {account_token, put_session(conn, :account_token, account_token)}
       else
         {nil, conn}
       end
@@ -109,10 +109,10 @@ defmodule BasicWeb.UserAuth do
   end
 
   @doc """
-  Used for routes that require the user to not be authenticated.
+  Used for routes that require the account to not be authenticated.
   """
-  def redirect_if_user_is_authenticated(conn, _opts) do
-    if conn.assigns[:current_user] do
+  def redirect_if_account_is_authenticated(conn, _opts) do
+    if conn.assigns[:current_account] do
       conn
       |> redirect(to: signed_in_path(conn))
       |> halt()
@@ -122,26 +122,26 @@ defmodule BasicWeb.UserAuth do
   end
 
   @doc """
-  Used for routes that require the user to be authenticated.
+  Used for routes that require the account to be authenticated.
 
-  If you want to enforce the user email is confirmed before
+  If you want to enforce the account email is confirmed before
   they use the application at all, here would be a good place.
   """
-  def require_authenticated_user(conn, _opts) do
-    if conn.assigns[:current_user] do
+  def require_authenticated_account(conn, _opts) do
+    if conn.assigns[:current_account] do
       conn
     else
       conn
 #      |> put_flash(:error, "You must log in to access this page.")
       |> put_flash(:error, "本ページにアクセスする際は、ログインを行ってください")
       |> maybe_store_return_to()
-      |> redirect(to: Routes.user_session_path(conn, :new))
+      |> redirect(to: Routes.account_session_path(conn, :new))
       |> halt()
     end
   end
 
   defp maybe_store_return_to(%{method: "GET"} = conn) do
-    put_session(conn, :user_return_to, current_path(conn))
+    put_session(conn, :account_return_to, current_path(conn))
   end
 
   defp maybe_store_return_to(conn), do: conn

@@ -7,6 +7,7 @@ defmodule Basic.Items.Item do
     field :area, :string
     field :close_date, :naive_datetime
     field :deleted_at, :naive_datetime
+    field :delivery_require, :boolean, default: false
     field :detail, :string
     field :distributor_id, :integer
     field :end_date, :naive_datetime
@@ -15,11 +16,10 @@ defmodule Basic.Items.Item do
     field :name, :string
     field :occupation, :string
     field :open_date, :naive_datetime
+    field :payment_cycle, :string
     field :price, :float
     field :start_date, :naive_datetime
     field :stocks, :integer
-    field :payment_cycle, :string
-    field :delivery_require, :boolean
 
     timestamps()
   end

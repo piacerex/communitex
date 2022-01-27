@@ -7,7 +7,7 @@ defmodule Basic.Members do
   alias Basic.Repo
 
   alias Basic.Members.Member
-  alias Basic.Accounts.User
+  alias Basic.Accounts.Account
 
   @doc """
   Returns the list of members.
@@ -35,27 +35,6 @@ defmodule Basic.Members do
 
   """
   def get_member!(id), do: Repo.get!(Member, id)
-
-  def get_member_with_user(id) do
-    fields = Member.__schema__(:fields)
-    Repo.all(
-      from(member in Member,
-        where: member.id == ^id,
-        join: user in User,
-          on: [id: member.user_id],
-        select: {map(member, ^fields), map(user, [:email])}
-      )
-    )
-    |> Enum.map(& Map.merge(elem(&1, 0), elem(&1, 1)))
-    |> List.first
-  end
-
-  def get_member_from_user_id(user_id) do
-    from( member in Member,
-          where: member.user_id == ^user_id,
-    )
-    |> Repo.all
-  end
 
   @doc """
   Creates a member.
@@ -131,25 +110,46 @@ defmodule Basic.Members do
     |> Member.changeset(attrs)
   end
 
+  def get_member_with_user(id) do
+    fields = Member.__schema__(:fields)
+    Repo.all(
+      from(member in Member,
+        where: member.id == ^id,
+        join: account in Account,
+          on: [id: member.user_id],
+        select: {map(member, ^fields), map(account, [:email])}
+      )
+    )
+    |> Enum.map(& Map.merge(elem(&1, 0), elem(&1, 1)))
+    |> List.first
+  end
+
+  def get_member_from_user_id(user_id) do
+    from( member in Member,
+          where: member.user_id == ^user_id
+    )
+    |> Repo.all
+  end
+
   def paginate_members(page \\ 1, search \\ "") do
     fields = Member.__schema__(:fields)
     query =
       from(member in Member,
-        join: user in User,
+        join: account in Account,
           on: [id: member.user_id],
         order_by: [desc: member.id],
-        select: {map(member, ^fields), map(user, [:email])}
+        select: {map(member, ^fields), map(account, [:email])}
       )
 
     result = case search do
       ""     -> query
       search ->
         from(member in query,
-          join: user in User,
+          join: account in Account,
             on: [id: member.user_id],
         where: like(member.last_name,  ^"%#{search}%")
             or like(member.first_name, ^"%#{search}%")
-            or like(user.email,        ^"%#{search}%")
+            or like(account.email,        ^"%#{search}%")
         )
     end
     |> Repo.paginate([page: page])

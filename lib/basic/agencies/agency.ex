@@ -5,10 +5,10 @@ defmodule Basic.Agencies.Agency do
   schema "agencies" do
     field :boost, :float
     field :brand, :string
-    field :organization_id, :integer
     field :deleted_at, :naive_datetime
     field :discount, :float
     field :distributor_id, :integer
+    field :organization_id, :integer
 
     timestamps()
   end

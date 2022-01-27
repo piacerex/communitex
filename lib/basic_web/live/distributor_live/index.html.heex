@@ -1,0 +1,49 @@
+<h1>Listing Distributors</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.distributor_index_path(@socket, :index)}>
+    <.live_component
+      module={BasicWeb.DistributorLive.FormComponent}
+      id={@distributor.id || :new}
+      title={@page_title}
+      action={@live_action}
+      distributor={@distributor}
+      return_to={Routes.distributor_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+<!--
+      <th>Brand</th>
+      <th>Organization</th>
+      <th>Deleted at</th>
+-->
+      <th>卸者名称</th>
+      <th>所属組織ID</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="distributors">
+    <%= for distributor <- @distributors do %>
+      <tr id={"distributor-#{distributor.id}"}>
+        <td><%= distributor.brand %></td>
+        <td><%= distributor.organization_id %></td>
+<!--
+        <td><%= distributor.deleted_at %></td>
+-->
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.distributor_show_path(@socket, :show, distributor.id) %></span>
+          <span><%= live_patch "Edit", to: Routes.distributor_index_path(@socket, :edit, distributor.id) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: distributor.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Distributor", to: Routes.distributor_index_path(@socket, :new) %></span>

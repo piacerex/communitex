@@ -4,8 +4,8 @@ defmodule Basic.Distributors.Distributor do
 
   schema "distributors" do
     field :brand, :string
-    field :organization_id, :integer
     field :deleted_at, :naive_datetime
+    field :organization_id, :integer
 
     timestamps()
   end

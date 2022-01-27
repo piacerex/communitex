@@ -21,20 +21,6 @@ defmodule Basic.Addresses do
     Repo.all(Address)
   end
 
-  def list_addresses_for_user(user_id, id) do
-    lists = from( address in Address,
-                  where: address.user_id == ^user_id
-                ) |> Repo.all
-
-    Enum.concat(Enum.reject(lists, fn x -> x.id != String.to_integer(id) end), Enum.reject(lists, fn x -> x.id == String.to_integer(id) end))
-  end
-
-  def list_addresses_for_user(user_id) do
-    from( address in Address,
-          where: address.user_id == ^user_id
-    ) |> Repo.all
-  end
-
   @doc """
   Gets a single address.
 
@@ -50,21 +36,6 @@ defmodule Basic.Addresses do
 
   """
   def get_address!(id), do: Repo.get!(Address, id)
-
-  def registered_address_id(params) do
-    data = from( address in Address,
-                 where: address.user_id == ^params["user_id"] and
-                        address.postal == ^params["postal"] and
-                        address.prefecture == ^params["prefecture"] and
-                        address.city == ^params["city"] and
-                        address.address1 == ^params["address1"] and
-                        address.tel == ^params["tel"]
-    ) |> Repo.all
-    case data do
-      [] -> -1
-      _ -> List.first(data).id
-    end
-  end
 
   @doc """
   Creates a address.
@@ -129,5 +100,34 @@ defmodule Basic.Addresses do
   """
   def change_address(%Address{} = address, attrs \\ %{}) do
     Address.changeset(address, attrs)
+  end
+
+  def list_addresses_selected(user_id, id) do
+    lists = from( address in Address,
+                  where: address.user_id == ^user_id
+                ) |> Repo.all
+
+    Enum.concat(Enum.reject(lists, fn x -> x.id != String.to_integer(id) end), Enum.reject(lists, fn x -> x.id == String.to_integer(id) end))
+  end
+
+  def list_addresses_for_user(user_id) do
+    from( address in Address,
+          where: address.user_id == ^user_id
+    ) |> Repo.all
+  end
+
+  def registered_address_id(params) do
+    data = from( address in Address,
+                 where: address.user_id == ^params["user_id"] and
+                        address.postal == ^params["postal"] and
+                        address.prefecture == ^params["prefecture"] and
+                        address.city == ^params["city"] and
+                        address.address1 == ^params["address1"] and
+                        address.tel == ^params["tel"]
+    ) |> Repo.all
+    case data do
+      [] -> -1
+      _ -> List.first(data).id
+    end
   end
 end

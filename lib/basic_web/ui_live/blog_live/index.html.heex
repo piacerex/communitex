@@ -1,0 +1,54 @@
+<h1>blogs</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.blog_ui_index_path(@socket, :index)}>
+    <.live_component
+      module={BasicWeb.BlogUiLive.FormComponent}
+      id={@blog.id || :new}
+      title={@page_title}
+      action={@live_action}
+      blog={@blog}
+      current_user_id={@current_user_id}
+      return_to={Routes.blog_ui_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<style>
+h2
+{
+  padding-top: 50px;
+  font-weight: 800;
+  border-bottom: 1px solid silver;
+}
+
+h3
+{
+  padding-top: 20px !important;
+  margin-left: 0px !important;
+  font-weight: 600;
+}
+
+img
+{
+  display: block;
+}
+
+table
+{
+  padding-bottom: 70px;
+}
+</style>
+
+<div style="width: 50%; margin:0 auto;">
+<%= if @blogs == [] do %>
+投稿されたブログはありません。
+<% else %>
+  <%= for blog <- @blogs do %>
+<h2 style="text-align: left; font-weight: 800;"><a href="/blogs/{blog.post_id}">{blog.title}</a></h2>
+<p><%= raw(blog.body |> String.split("\n") |> Enum.take(30) |> Enum.join("\n") |> Earmark.as_html |> elem(1)) %></p>
+<p><b><a href="/blogs/{blog.post_id}">Click here to continue</a></b></p>
+<hr>
+  <% end %>
+<% end %>
+</div>

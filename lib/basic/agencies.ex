@@ -37,16 +37,6 @@ defmodule Basic.Agencies do
   """
   def get_agency!(id), do: Repo.get!(Agency, id)
 
-  def get_agency_name(id) do
-    from( agency in Agency,
-            where: agency.id == ^id,
-            select: %{
-              id: agency.id,
-              brand: agency.brand
-            } )
-    |> Repo.all
-  end
-
   @doc """
   Creates a agency.
 
@@ -110,5 +100,15 @@ defmodule Basic.Agencies do
   """
   def change_agency(%Agency{} = agency, attrs \\ %{}) do
     Agency.changeset(agency, attrs)
+  end
+
+  def get_agency_name(id) do
+    from( agency in Agency,
+            where: agency.id == ^id,
+            select: %{
+              id: agency.id,
+              brand: agency.brand
+            } )
+    |> Repo.all
   end
 end

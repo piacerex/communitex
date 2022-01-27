@@ -5,11 +5,11 @@ defmodule BasicWeb.GrantLive.Index do
   alias Basic.Grants.Grant
   alias Basic.Organizations.Organization
   alias Basic.Accounts
-  alias Basic.Accounts.User
+  alias Basic.Accounts.Account
 
   @impl true
   def mount(_params, session, socket) do
-    current_user = Accounts.get_user_by_session_token(session["user_token"])
+    current_user = Accounts.get_account_by_session_token(session["account_token"])
     organizations = Grants.get_registrable_organizations(current_user.id)
 
     role_list = case organizations do
@@ -17,10 +17,10 @@ defmodule BasicWeb.GrantLive.Index do
       _  -> Grants.get_role_list(current_user.id, List.first(organizations).id)
     end
 
-    {:ok, 
+    {:ok,
       socket
       |> assign(:current_user_id, current_user.id)
-      |> assign(:grants, Grants.list_grants(current_user.id))
+      |> assign(:grants, Grants.list_grants_by_user_id(current_user.id))
       |> assign(:organizations, organizations)
       |> assign(:all_roles, Grants.roles())
       |> assign(:role_list, role_list)
@@ -44,7 +44,7 @@ defmodule BasicWeb.GrantLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Grant")
-    |> assign(:grant, [%Grant{}, %User{}, %Organization{}])
+    |> assign(:grant, [%Grant{}, %Account{}, %Organization{}])
   end
 
   defp apply_action(socket, :index, _params) do
@@ -58,7 +58,7 @@ defmodule BasicWeb.GrantLive.Index do
     grant = Grants.get_grant!(id)
     {:ok, _} = Grants.delete_grant(List.first(grant))
 
-    {:noreply, assign(socket, :grants, Grants.list_grants(socket.assigns.current_user_id))}
+    {:noreply, assign(socket, :grants, Grants.list_grants_by_user_id(socket.assigns.current_user_id))}
   end
 
   defp list_grants do

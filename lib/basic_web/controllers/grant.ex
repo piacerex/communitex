@@ -10,20 +10,20 @@ defmodule BasicWeb.Grant do
       nil -> %{display: "管理者"}
       needs -> needs
     end
-    case conn.assigns[:current_user] do
-      nil -> 
+    case conn.assigns[:current_account] do
+      nil ->
         conn
         |> put_flash(:error, "本ページにアクセスする際は、ログインを行ってください")
-        |> redirect(to: Routes.user_session_path(conn, :new))
+        |> redirect(to: Routes.account_session_path(conn, :new))
         |> halt()
-      current_user -> 
+      current_user ->
         case Grants.find_user_grants!(current_user.id, roles |> Enum.map(& &1.name)) do
-          [] -> 
+          [] ->
             conn
             |> put_flash(:error, "#{needs.display}権限のあるユーザでログインし直してください")
-            |> redirect(to: Routes.user_session_path(conn, :new))
+            |> redirect(to: Routes.account_session_path(conn, :new))
             |> halt()
-          _ -> 
+          _ ->
             conn
         end
     end

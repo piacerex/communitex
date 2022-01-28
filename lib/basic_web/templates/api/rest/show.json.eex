@@ -1,0 +1,1 @@
+%{ "show" => :ok, "params" => @params }

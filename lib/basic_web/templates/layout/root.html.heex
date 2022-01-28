@@ -1,7 +1,7 @@
 <%
 current_css  = if CssSwitcher.is_alive(), do: CssSwitcher.current(), else: ""
-current_cdns = if CssSwitcher.is_alive(), do: CssSwitcher.cdns(),    else: ""
-current_js   = if  JsSwitcher.is_alive(), do:  JsSwitcher.current(),  else: ""
+current_cdns = if CssSwitcher.is_alive(), do: CssSwitcher.cdns(), else: ""
+current_js   = if  JsSwitcher.is_alive(), do: JsSwitcher.current(), else: ""
 %>
 <!DOCTYPE html>
 <html lang="ja">
@@ -39,8 +39,8 @@ current_js   = if  JsSwitcher.is_alive(), do:  JsSwitcher.current(),  else: ""
 <meta property="og:url" content="https://communitex.org/">
 <meta property="og:image" content="https://communitex.org/images/ogp-image.png">
 
-<link phx-track-static rel="stylesheet" href="/css/<%= current_css %>app.css"/>
-<script defer phx-track-static type="text/javascript" src="/js/<%= current_js %>app.js"></script>
+<link phx-track-static rel="stylesheet" href={"/css/#{current_css}/app.css"}/>
+<script defer phx-track-static type="text/javascript" src={"/js/#{current_js}/app.js"}></script>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
 <script src="https://unpkg.com/axios@0.x/dist/axios.min.js"></script>
@@ -56,8 +56,8 @@ current_js   = if  JsSwitcher.is_alive(), do:  JsSwitcher.current(),  else: ""
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
-<link rel="stylesheet" href="/css/<%= current_css %>markdown.css">
-<link rel="stylesheet" href="/css/<%= current_css %>frontend.css">
+<link rel="stylesheet" href={"/css/#{current_css}markdown.css"}>
+<link rel="stylesheet" href={"/css/#{current_css}frontend.css"}>
 <%= raw(current_cdns) %>
 
 </head>
@@ -72,19 +72,19 @@ current_js   = if  JsSwitcher.is_alive(), do:  JsSwitcher.current(),  else: ""
     <a href="/"><img src="/images/logo-header.png"></a>
 
     <div class="righted">
-<%= if @current_user do %>
+<%= if @current_account do %>
       <v-menu offset-y open-on-hover>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" v-on="on"><v-icon dark left>mdi-account</v-icon>{{ current_user.email }}</v-btn>
+          <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" v-on="on"><v-icon dark left>mdi-account</v-icon>{{ current_account.email }}</v-btn>
         </template>
         <v-list>
-          <v-list-item v-for="( item, i ) in [ { title: 'メールアドレス／パスワード変更', href: '/users/settings/' }, { title: 'ログアウト', href: '/users/log_out/' } ]" :key="i" :href="item.href">
+          <v-list-item v-for="( item, i ) in [ { title: 'メールアドレス／パスワード変更', href: '/accounts/settings/' }, { title: 'ログアウト', href: '/accounts/log_out/' } ]" :key="i" :href="item.href">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
 <% else %>
-      <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" v-on:click="location = '/users/log_in'">ログイン</v-btn>
+      <v-btn rounded large color="indigo darken-4" dark elevation="2" class="mb0" v-on:click="location = '/accounts/log_in'">ログイン</v-btn>
 <% end %>
     </div>
   </div>
@@ -112,9 +112,9 @@ var app = new Vue
   vuetify: new Vuetify(),
   data: 
   {
-    current_user:
+    current_account:
     {
-      email: '<%= if @current_user != nil, do: @current_user.email, else: "" %>', 
+      email: '<%= if @current_account != nil, do: @current_account.email, else: "" %>', 
     },
   }, 
 } )

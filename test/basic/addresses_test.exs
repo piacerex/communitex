@@ -6,18 +6,9 @@ defmodule Basic.AddressesTest do
   describe "addresses" do
     alias Basic.Addresses.Address
 
-    @valid_attrs %{address1: "some address1", address2: "some address2", city: "some city", first_name: "some first_name", last_name: "some last_name", postal: "some postal", prefecture: "some prefecture", tel: "some tel", user_id: 42}
-    @update_attrs %{address1: "some updated address1", address2: "some updated address2", city: "some updated city", first_name: "some updated first_name", last_name: "some updated last_name", postal: "some updated postal", prefecture: "some updated prefecture", tel: "some updated tel", user_id: 43}
+    import Basic.AddressesFixtures
+
     @invalid_attrs %{address1: nil, address2: nil, city: nil, first_name: nil, last_name: nil, postal: nil, prefecture: nil, tel: nil, user_id: nil}
-
-    def address_fixture(attrs \\ %{}) do
-      {:ok, address} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Addresses.create_address()
-
-      address
-    end
 
     test "list_addresses/0 returns all addresses" do
       address = address_fixture()
@@ -30,7 +21,9 @@ defmodule Basic.AddressesTest do
     end
 
     test "create_address/1 with valid data creates a address" do
-      assert {:ok, %Address{} = address} = Addresses.create_address(@valid_attrs)
+      valid_attrs = %{address1: "some address1", address2: "some address2", city: "some city", first_name: "some first_name", last_name: "some last_name", postal: "some postal", prefecture: "some prefecture", tel: "some tel", user_id: 42}
+
+      assert {:ok, %Address{} = address} = Addresses.create_address(valid_attrs)
       assert address.address1 == "some address1"
       assert address.address2 == "some address2"
       assert address.city == "some city"
@@ -48,7 +41,9 @@ defmodule Basic.AddressesTest do
 
     test "update_address/2 with valid data updates the address" do
       address = address_fixture()
-      assert {:ok, %Address{} = address} = Addresses.update_address(address, @update_attrs)
+      update_attrs = %{address1: "some updated address1", address2: "some updated address2", city: "some updated city", first_name: "some updated first_name", last_name: "some updated last_name", postal: "some updated postal", prefecture: "some updated prefecture", tel: "some updated tel", user_id: 43}
+
+      assert {:ok, %Address{} = address} = Addresses.update_address(address, update_attrs)
       assert address.address1 == "some updated address1"
       assert address.address2 == "some updated address2"
       assert address.city == "some updated city"

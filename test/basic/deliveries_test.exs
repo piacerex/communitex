@@ -6,18 +6,9 @@ defmodule Basic.DeliveriesTest do
   describe "deliveries" do
     alias Basic.Deliveries.Delivery
 
-    @valid_attrs %{address_id: 42, order_id: 42, phase: "some phase"}
-    @update_attrs %{address_id: 43, order_id: 43, phase: "some updated phase"}
-    @invalid_attrs %{address_id: nil, order_id: nil, phase: nil}
+    import Basic.DeliveriesFixtures
 
-    def delivery_fixture(attrs \\ %{}) do
-      {:ok, delivery} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Deliveries.create_delivery()
-
-      delivery
-    end
+    @invalid_attrs %{address_id: nil, order_id: nil, order_number: nil, phase: nil}
 
     test "list_deliveries/0 returns all deliveries" do
       delivery = delivery_fixture()
@@ -30,9 +21,12 @@ defmodule Basic.DeliveriesTest do
     end
 
     test "create_delivery/1 with valid data creates a delivery" do
-      assert {:ok, %Delivery{} = delivery} = Deliveries.create_delivery(@valid_attrs)
+      valid_attrs = %{address_id: 42, order_id: 42, order_number: "some order_number", phase: "some phase"}
+
+      assert {:ok, %Delivery{} = delivery} = Deliveries.create_delivery(valid_attrs)
       assert delivery.address_id == 42
       assert delivery.order_id == 42
+      assert delivery.order_number == "some order_number"
       assert delivery.phase == "some phase"
     end
 
@@ -42,9 +36,12 @@ defmodule Basic.DeliveriesTest do
 
     test "update_delivery/2 with valid data updates the delivery" do
       delivery = delivery_fixture()
-      assert {:ok, %Delivery{} = delivery} = Deliveries.update_delivery(delivery, @update_attrs)
+      update_attrs = %{address_id: 43, order_id: 43, order_number: "some updated order_number", phase: "some updated phase"}
+
+      assert {:ok, %Delivery{} = delivery} = Deliveries.update_delivery(delivery, update_attrs)
       assert delivery.address_id == 43
       assert delivery.order_id == 43
+      assert delivery.order_number == "some updated order_number"
       assert delivery.phase == "some updated phase"
     end
 

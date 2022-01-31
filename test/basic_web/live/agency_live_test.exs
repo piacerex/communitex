@@ -2,20 +2,14 @@ defmodule BasicWeb.AgencyLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.AgenciesFixtures
 
-  alias Basic.Agencies
-
-  @create_attrs %{boost: 120.5, brand: "some brand", organization_id: 42, deleted_at: ~N[2010-04-17 14:00:00], discount: 120.5, distributor_id: 42}
-  @update_attrs %{boost: 456.7, brand: "some updated brand", organization_id: 43, deleted_at: ~N[2011-05-18 15:01:01], discount: 456.7, distributor_id: 43}
-  @invalid_attrs %{boost: nil, brand: nil, organization_id: nil, deleted_at: nil, discount: nil, distributor_id: nil}
-
-  defp fixture(:agency) do
-    {:ok, agency} = Agencies.create_agency(@create_attrs)
-    agency
-  end
+  @create_attrs %{boost: 120.5, brand: "some brand", deleted_at: %{day: 12, hour: 1, minute: 50, month: 1, year: 2022}, discount: 120.5, distributor_id: 42, organization_id: 42}
+  @update_attrs %{boost: 456.7, brand: "some updated brand", deleted_at: %{day: 13, hour: 1, minute: 50, month: 1, year: 2022}, discount: 456.7, distributor_id: 43, organization_id: 43}
+  @invalid_attrs %{boost: nil, brand: nil, deleted_at: %{day: 30, hour: 1, minute: 50, month: 2, year: 2022}, discount: nil, distributor_id: nil, organization_id: nil}
 
   defp create_agency(_) do
-    agency = fixture(:agency)
+    agency = agency_fixture()
     %{agency: agency}
   end
 
@@ -39,7 +33,7 @@ defmodule BasicWeb.AgencyLiveTest do
 
       assert index_live
              |> form("#agency-form", agency: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -61,7 +55,7 @@ defmodule BasicWeb.AgencyLiveTest do
 
       assert index_live
              |> form("#agency-form", agency: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -101,7 +95,7 @@ defmodule BasicWeb.AgencyLiveTest do
 
       assert show_live
              |> form("#agency-form", agency: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         show_live

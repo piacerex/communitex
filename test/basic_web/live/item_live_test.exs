@@ -2,20 +2,14 @@ defmodule BasicWeb.ItemLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.ItemsFixtures
 
-  alias Basic.Items
-
-  @create_attrs %{alls: 42, area: "some area", close_date: ~N[2010-04-17 14:00:00], deleted_at: ~N[2010-04-17 14:00:00], detail: "some detail", distributor_id: 42, end_date: ~N[2010-04-17 14:00:00], image: "some image", is_open: true, name: "some name", occupation: "some occupation", open_date: ~N[2010-04-17 14:00:00], price: 120.5, start_date: ~N[2010-04-17 14:00:00], stocks: 42}
-  @update_attrs %{alls: 43, area: "some updated area", close_date: ~N[2011-05-18 15:01:01], deleted_at: ~N[2011-05-18 15:01:01], detail: "some updated detail", distributor_id: 43, end_date: ~N[2011-05-18 15:01:01], image: "some updated image", is_open: false, name: "some updated name", occupation: "some updated occupation", open_date: ~N[2011-05-18 15:01:01], price: 456.7, start_date: ~N[2011-05-18 15:01:01], stocks: 43}
-  @invalid_attrs %{alls: nil, area: nil, close_date: nil, deleted_at: nil, detail: nil, distributor_id: nil, end_date: nil, image: nil, is_open: nil, name: nil, occupation: nil, open_date: nil, price: nil, start_date: nil, stocks: nil}
-
-  defp fixture(:item) do
-    {:ok, item} = Items.create_item(@create_attrs)
-    item
-  end
+  @create_attrs %{alls: 42, area: "some area", close_date: %{day: 12, hour: 1, minute: 46, month: 1, year: 2022}, deleted_at: %{day: 12, hour: 1, minute: 46, month: 1, year: 2022}, delivery_require: true, detail: "some detail", distributor_id: 42, end_date: %{day: 12, hour: 1, minute: 46, month: 1, year: 2022}, image: "some image", is_open: true, name: "some name", occupation: "some occupation", open_date: %{day: 12, hour: 1, minute: 46, month: 1, year: 2022}, payment_cycle: "some payment_cycle", price: 120.5, start_date: %{day: 12, hour: 1, minute: 46, month: 1, year: 2022}, stocks: 42}
+  @update_attrs %{alls: 43, area: "some updated area", close_date: %{day: 13, hour: 1, minute: 46, month: 1, year: 2022}, deleted_at: %{day: 13, hour: 1, minute: 46, month: 1, year: 2022}, delivery_require: false, detail: "some updated detail", distributor_id: 43, end_date: %{day: 13, hour: 1, minute: 46, month: 1, year: 2022}, image: "some updated image", is_open: false, name: "some updated name", occupation: "some updated occupation", open_date: %{day: 13, hour: 1, minute: 46, month: 1, year: 2022}, payment_cycle: "some updated payment_cycle", price: 456.7, start_date: %{day: 13, hour: 1, minute: 46, month: 1, year: 2022}, stocks: 43}
+  @invalid_attrs %{alls: nil, area: nil, close_date: %{day: 30, hour: 1, minute: 46, month: 2, year: 2022}, deleted_at: %{day: 30, hour: 1, minute: 46, month: 2, year: 2022}, delivery_require: false, detail: nil, distributor_id: nil, end_date: %{day: 30, hour: 1, minute: 46, month: 2, year: 2022}, image: nil, is_open: false, name: nil, occupation: nil, open_date: %{day: 30, hour: 1, minute: 46, month: 2, year: 2022}, payment_cycle: nil, price: nil, start_date: %{day: 30, hour: 1, minute: 46, month: 2, year: 2022}, stocks: nil}
 
   defp create_item(_) do
-    item = fixture(:item)
+    item = item_fixture()
     %{item: item}
   end
 
@@ -39,7 +33,7 @@ defmodule BasicWeb.ItemLiveTest do
 
       assert index_live
              |> form("#item-form", item: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -61,7 +55,7 @@ defmodule BasicWeb.ItemLiveTest do
 
       assert index_live
              |> form("#item-form", item: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -101,7 +95,7 @@ defmodule BasicWeb.ItemLiveTest do
 
       assert show_live
              |> form("#item-form", item: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         show_live

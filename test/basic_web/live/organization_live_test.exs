@@ -2,20 +2,14 @@ defmodule BasicWeb.OrganizationLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.OrganizationsFixtures
 
-  alias Basic.Organizations
-
-  @create_attrs %{address1: "some address1", address2: "some address2", city: "some city", deleted_at: ~N[2010-04-17 14:00:00], name: "some name", postal: "some postal", prefecture: "some prefecture", tel: "some tel"}
-  @update_attrs %{address1: "some updated address1", address2: "some updated address2", city: "some updated city", deleted_at: ~N[2011-05-18 15:01:01], name: "some updated name", postal: "some updated postal", prefecture: "some updated prefecture", tel: "some updated tel"}
-  @invalid_attrs %{address1: nil, address2: nil, city: nil, deleted_at: nil, name: nil, postal: nil, prefecture: nil, tel: nil}
-
-  defp fixture(:organization) do
-    {:ok, organization} = Organizations.create_organization(@create_attrs)
-    organization
-  end
+  @create_attrs %{address1: "some address1", address2: "some address2", city: "some city", deleted_at: %{day: 12, hour: 1, minute: 45, month: 1, year: 2022}, name: "some name", postal: "some postal", prefecture: "some prefecture", tel: "some tel"}
+  @update_attrs %{address1: "some updated address1", address2: "some updated address2", city: "some updated city", deleted_at: %{day: 13, hour: 1, minute: 45, month: 1, year: 2022}, name: "some updated name", postal: "some updated postal", prefecture: "some updated prefecture", tel: "some updated tel"}
+  @invalid_attrs %{address1: nil, address2: nil, city: nil, deleted_at: %{day: 30, hour: 1, minute: 45, month: 2, year: 2022}, name: nil, postal: nil, prefecture: nil, tel: nil}
 
   defp create_organization(_) do
-    organization = fixture(:organization)
+    organization = organization_fixture()
     %{organization: organization}
   end
 
@@ -39,7 +33,7 @@ defmodule BasicWeb.OrganizationLiveTest do
 
       assert index_live
              |> form("#organization-form", organization: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -61,7 +55,7 @@ defmodule BasicWeb.OrganizationLiveTest do
 
       assert index_live
              |> form("#organization-form", organization: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -101,7 +95,7 @@ defmodule BasicWeb.OrganizationLiveTest do
 
       assert show_live
              |> form("#organization-form", organization: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         show_live

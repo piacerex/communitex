@@ -2,20 +2,14 @@ defmodule BasicWeb.ContactLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.ContactsFixtures
 
-  alias Basic.Contacts
-
-  @create_attrs %{body: "some body", deleted_at: ~N[2010-04-17 14:00:00], email: "some email", first_name: "some first_name", first_name_kana: "some first_name_kana", last_name: "some last_name", last_name_kana: "some last_name_kana", logined_user_id: 42, type: "some type"}
-  @update_attrs %{body: "some updated body", deleted_at: ~N[2011-05-18 15:01:01], email: "some updated email", first_name: "some updated first_name", first_name_kana: "some updated first_name_kana", last_name: "some updated last_name", last_name_kana: "some updated last_name_kana", logined_user_id: 43, type: "some updated type"}
-  @invalid_attrs %{body: nil, deleted_at: nil, email: nil, first_name: nil, first_name_kana: nil, last_name: nil, last_name_kana: nil, logined_user_id: nil, type: nil}
-
-  defp fixture(:contact) do
-    {:ok, contact} = Contacts.create_contact(@create_attrs)
-    contact
-  end
+  @create_attrs %{body: "some body", deleted_at: %{day: 12, hour: 1, minute: 52, month: 1, year: 2022}, email: "some email", first_name: "some first_name", first_name_kana: "some first_name_kana", last_name: "some last_name", last_name_kana: "some last_name_kana", logined_user_id: 42, type: "some type"}
+  @update_attrs %{body: "some updated body", deleted_at: %{day: 13, hour: 1, minute: 52, month: 1, year: 2022}, email: "some updated email", first_name: "some updated first_name", first_name_kana: "some updated first_name_kana", last_name: "some updated last_name", last_name_kana: "some updated last_name_kana", logined_user_id: 43, type: "some updated type"}
+  @invalid_attrs %{body: nil, deleted_at: %{day: 30, hour: 1, minute: 52, month: 2, year: 2022}, email: nil, first_name: nil, first_name_kana: nil, last_name: nil, last_name_kana: nil, logined_user_id: nil, type: nil}
 
   defp create_contact(_) do
-    contact = fixture(:contact)
+    contact = contact_fixture()
     %{contact: contact}
   end
 
@@ -39,7 +33,7 @@ defmodule BasicWeb.ContactLiveTest do
 
       assert index_live
              |> form("#contact-form", contact: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -61,7 +55,7 @@ defmodule BasicWeb.ContactLiveTest do
 
       assert index_live
              |> form("#contact-form", contact: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -101,7 +95,7 @@ defmodule BasicWeb.ContactLiveTest do
 
       assert show_live
              |> form("#contact-form", contact: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         show_live

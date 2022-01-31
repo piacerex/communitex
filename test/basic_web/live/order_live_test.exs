@@ -2,20 +2,14 @@ defmodule BasicWeb.OrderLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.OrdersFixtures
 
-  alias Basic.Orders
-
-  @create_attrs %{deleted_at: ~N[2010-04-17 14:00:00], discount: 120.5, is_cancel: true, item_id: 42, order_date: ~D[2010-04-17], price: 120.5, user_id: 42}
-  @update_attrs %{deleted_at: ~N[2011-05-18 15:01:01], discount: 456.7, is_cancel: false, item_id: 43, order_date: ~D[2011-05-18], price: 456.7, user_id: 43}
-  @invalid_attrs %{deleted_at: nil, discount: nil, is_cancel: nil, item_id: nil, order_date: nil, price: nil, user_id: nil}
-
-  defp fixture(:order) do
-    {:ok, order} = Orders.create_order(@create_attrs)
-    order
-  end
+  @create_attrs %{canceled_at: %{day: 12, hour: 1, minute: 52, month: 1, year: 2022}, deleted_at: %{day: 12, hour: 1, minute: 52, month: 1, year: 2022}, discount: 120.5, is_cancel: true, item_id: 42, order_date: %{day: 12, hour: 1, minute: 52, month: 1, year: 2022}, order_number: "some order_number", price: 120.5, user_id: 42}
+  @update_attrs %{canceled_at: %{day: 13, hour: 1, minute: 52, month: 1, year: 2022}, deleted_at: %{day: 13, hour: 1, minute: 52, month: 1, year: 2022}, discount: 456.7, is_cancel: false, item_id: 43, order_date: %{day: 13, hour: 1, minute: 52, month: 1, year: 2022}, order_number: "some updated order_number", price: 456.7, user_id: 43}
+  @invalid_attrs %{canceled_at: %{day: 30, hour: 1, minute: 52, month: 2, year: 2022}, deleted_at: %{day: 30, hour: 1, minute: 52, month: 2, year: 2022}, discount: nil, is_cancel: false, item_id: nil, order_date: %{day: 30, hour: 1, minute: 52, month: 2, year: 2022}, order_number: nil, price: nil, user_id: nil}
 
   defp create_order(_) do
-    order = fixture(:order)
+    order = order_fixture()
     %{order: order}
   end
 
@@ -26,6 +20,7 @@ defmodule BasicWeb.OrderLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.order_index_path(conn, :index))
 
       assert html =~ "Listing Orders"
+      assert html =~ order.order_number
     end
 
     test "saves new order", %{conn: conn} do
@@ -38,7 +33,7 @@ defmodule BasicWeb.OrderLiveTest do
 
       assert index_live
              |> form("#order-form", order: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -47,6 +42,7 @@ defmodule BasicWeb.OrderLiveTest do
         |> follow_redirect(conn, Routes.order_index_path(conn, :index))
 
       assert html =~ "Order created successfully"
+      assert html =~ "some order_number"
     end
 
     test "updates order in listing", %{conn: conn, order: order} do
@@ -59,7 +55,7 @@ defmodule BasicWeb.OrderLiveTest do
 
       assert index_live
              |> form("#order-form", order: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -68,6 +64,7 @@ defmodule BasicWeb.OrderLiveTest do
         |> follow_redirect(conn, Routes.order_index_path(conn, :index))
 
       assert html =~ "Order updated successfully"
+      assert html =~ "some updated order_number"
     end
 
     test "deletes order in listing", %{conn: conn, order: order} do
@@ -85,6 +82,7 @@ defmodule BasicWeb.OrderLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.order_show_path(conn, :show, order))
 
       assert html =~ "Show Order"
+      assert html =~ order.order_number
     end
 
     test "updates order within modal", %{conn: conn, order: order} do
@@ -97,7 +95,7 @@ defmodule BasicWeb.OrderLiveTest do
 
       assert show_live
              |> form("#order-form", order: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         show_live
@@ -106,6 +104,7 @@ defmodule BasicWeb.OrderLiveTest do
         |> follow_redirect(conn, Routes.order_show_path(conn, :show, order))
 
       assert html =~ "Order updated successfully"
+      assert html =~ "some updated order_number"
     end
   end
 end

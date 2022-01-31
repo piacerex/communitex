@@ -2,20 +2,14 @@ defmodule BasicWeb.AddressLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
-
-  alias Basic.Addresses
+  import Basic.AddressesFixtures
 
   @create_attrs %{address1: "some address1", address2: "some address2", city: "some city", first_name: "some first_name", last_name: "some last_name", postal: "some postal", prefecture: "some prefecture", tel: "some tel", user_id: 42}
   @update_attrs %{address1: "some updated address1", address2: "some updated address2", city: "some updated city", first_name: "some updated first_name", last_name: "some updated last_name", postal: "some updated postal", prefecture: "some updated prefecture", tel: "some updated tel", user_id: 43}
   @invalid_attrs %{address1: nil, address2: nil, city: nil, first_name: nil, last_name: nil, postal: nil, prefecture: nil, tel: nil, user_id: nil}
 
-  defp fixture(:address) do
-    {:ok, address} = Addresses.create_address(@create_attrs)
-    address
-  end
-
   defp create_address(_) do
-    address = fixture(:address)
+    address = address_fixture()
     %{address: address}
   end
 

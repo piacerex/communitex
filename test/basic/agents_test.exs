@@ -6,18 +6,9 @@ defmodule Basic.AgentsTest do
   describe "agents" do
     alias Basic.Agents.Agent
 
-    @valid_attrs %{agency_id: 42, boost: 120.5, deleted_at: ~N[2010-04-17 14:00:00], discount: 120.5, user_id: 42}
-    @update_attrs %{agency_id: 43, boost: 456.7, deleted_at: ~N[2011-05-18 15:01:01], discount: 456.7, user_id: 43}
+    import Basic.AgentsFixtures
+
     @invalid_attrs %{agency_id: nil, boost: nil, deleted_at: nil, discount: nil, user_id: nil}
-
-    def agent_fixture(attrs \\ %{}) do
-      {:ok, agent} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Agents.create_agent()
-
-      agent
-    end
 
     test "list_agents/0 returns all agents" do
       agent = agent_fixture()
@@ -30,10 +21,12 @@ defmodule Basic.AgentsTest do
     end
 
     test "create_agent/1 with valid data creates a agent" do
-      assert {:ok, %Agent{} = agent} = Agents.create_agent(@valid_attrs)
+      valid_attrs = %{agency_id: 42, boost: 120.5, deleted_at: ~N[2022-01-12 01:51:00], discount: 120.5, user_id: 42}
+
+      assert {:ok, %Agent{} = agent} = Agents.create_agent(valid_attrs)
       assert agent.agency_id == 42
       assert agent.boost == 120.5
-      assert agent.deleted_at == ~N[2010-04-17 14:00:00]
+      assert agent.deleted_at == ~N[2022-01-12 01:51:00]
       assert agent.discount == 120.5
       assert agent.user_id == 42
     end
@@ -44,10 +37,12 @@ defmodule Basic.AgentsTest do
 
     test "update_agent/2 with valid data updates the agent" do
       agent = agent_fixture()
-      assert {:ok, %Agent{} = agent} = Agents.update_agent(agent, @update_attrs)
+      update_attrs = %{agency_id: 43, boost: 456.7, deleted_at: ~N[2022-01-13 01:51:00], discount: 456.7, user_id: 43}
+
+      assert {:ok, %Agent{} = agent} = Agents.update_agent(agent, update_attrs)
       assert agent.agency_id == 43
       assert agent.boost == 456.7
-      assert agent.deleted_at == ~N[2011-05-18 15:01:01]
+      assert agent.deleted_at == ~N[2022-01-13 01:51:00]
       assert agent.discount == 456.7
       assert agent.user_id == 43
     end

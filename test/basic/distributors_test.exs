@@ -6,18 +6,9 @@ defmodule Basic.DistributorsTest do
   describe "distributors" do
     alias Basic.Distributors.Distributor
 
-    @valid_attrs %{brand: "some brand", organization_id: 42, deleted_at: ~N[2010-04-17 14:00:00]}
-    @update_attrs %{brand: "some updated brand", organization_id: 43, deleted_at: ~N[2011-05-18 15:01:01]}
-    @invalid_attrs %{brand: nil, organization_id: nil, deleted_at: nil}
+    import Basic.DistributorsFixtures
 
-    def distributor_fixture(attrs \\ %{}) do
-      {:ok, distributor} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Distributors.create_distributor()
-
-      distributor
-    end
+    @invalid_attrs %{brand: nil, deleted_at: nil, organization_id: nil}
 
     test "list_distributors/0 returns all distributors" do
       distributor = distributor_fixture()
@@ -30,10 +21,12 @@ defmodule Basic.DistributorsTest do
     end
 
     test "create_distributor/1 with valid data creates a distributor" do
-      assert {:ok, %Distributor{} = distributor} = Distributors.create_distributor(@valid_attrs)
+      valid_attrs = %{brand: "some brand", deleted_at: ~N[2022-01-12 01:49:00], organization_id: 42}
+
+      assert {:ok, %Distributor{} = distributor} = Distributors.create_distributor(valid_attrs)
       assert distributor.brand == "some brand"
+      assert distributor.deleted_at == ~N[2022-01-12 01:49:00]
       assert distributor.organization_id == 42
-      assert distributor.deleted_at == ~N[2010-04-17 14:00:00]
     end
 
     test "create_distributor/1 with invalid data returns error changeset" do
@@ -42,10 +35,12 @@ defmodule Basic.DistributorsTest do
 
     test "update_distributor/2 with valid data updates the distributor" do
       distributor = distributor_fixture()
-      assert {:ok, %Distributor{} = distributor} = Distributors.update_distributor(distributor, @update_attrs)
+      update_attrs = %{brand: "some updated brand", deleted_at: ~N[2022-01-13 01:49:00], organization_id: 43}
+
+      assert {:ok, %Distributor{} = distributor} = Distributors.update_distributor(distributor, update_attrs)
       assert distributor.brand == "some updated brand"
+      assert distributor.deleted_at == ~N[2022-01-13 01:49:00]
       assert distributor.organization_id == 43
-      assert distributor.deleted_at == ~N[2011-05-18 15:01:01]
     end
 
     test "update_distributor/2 with invalid data returns error changeset" do

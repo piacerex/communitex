@@ -5,8 +5,8 @@ defmodule Basic.Deliveries.Delivery do
   schema "deliveries" do
     field :address_id, :integer
     field :order_id, :integer
-    field :phase, :string
     field :order_number, :string
+    field :phase, :string
 
     timestamps()
   end

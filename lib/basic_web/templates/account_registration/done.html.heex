@@ -1,0 +1,19 @@
+<h1>仮登録完了
+<p>Temporary registration completed</p>
+</h1>
+
+<%= if get_flash(@conn, :info) != "" do %>
+  <div class="alert alert-warning">
+    <p>メール送信が未設定のため、下記URLをクリックして、本登録を完了させて下さい（本URLは、下記以外では表示されないのでご注意ください）</p>
+    <p><a href={get_flash(@conn, :info)}><%= get_flash(@conn, :info) %></a></p>
+    <p></p>
+  </div>
+<% end %>
+
+<div class="main">
+  <p>仮登録が完了しました</p>
+  <p>確認メールのURLをクリックして、本登録を完了させて下さい</p>
+  <p>確認メールが届かない場合は、下記から確認メールを再送して下さい</p>
+  <p><%= link "ユーザ登録確認メールの再送", to: Routes.account_confirmation_path(@conn, :new) %></p>
+
+</div>

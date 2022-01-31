@@ -1,0 +1,12 @@
+<h1>Confirm account</h1>
+
+<.form let={_f} for={:account} action={Routes.account_confirmation_path(@conn, :update, @token)}>
+  <div>
+    <%= submit "Confirm my account" %>
+  </div>
+</.form>
+
+<p>
+  <%= link "Register", to: Routes.account_registration_path(@conn, :new) %> |
+  <%= link "Log in", to: Routes.account_session_path(@conn, :new) %>
+</p>

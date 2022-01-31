@@ -2,20 +2,14 @@ defmodule BasicWeb.DistributorLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.DistributorsFixtures
 
-  alias Basic.Distributors
-
-  @create_attrs %{brand: "some brand", organization_id: 42, deleted_at: ~N[2010-04-17 14:00:00]}
-  @update_attrs %{brand: "some updated brand", organization_id: 43, deleted_at: ~N[2011-05-18 15:01:01]}
-  @invalid_attrs %{brand: nil, organization_id: nil, deleted_at: nil}
-
-  defp fixture(:distributor) do
-    {:ok, distributor} = Distributors.create_distributor(@create_attrs)
-    distributor
-  end
+  @create_attrs %{brand: "some brand", deleted_at: %{day: 12, hour: 1, minute: 49, month: 1, year: 2022}, organization_id: 42}
+  @update_attrs %{brand: "some updated brand", deleted_at: %{day: 13, hour: 1, minute: 49, month: 1, year: 2022}, organization_id: 43}
+  @invalid_attrs %{brand: nil, deleted_at: %{day: 30, hour: 1, minute: 49, month: 2, year: 2022}, organization_id: nil}
 
   defp create_distributor(_) do
-    distributor = fixture(:distributor)
+    distributor = distributor_fixture()
     %{distributor: distributor}
   end
 
@@ -39,7 +33,7 @@ defmodule BasicWeb.DistributorLiveTest do
 
       assert index_live
              |> form("#distributor-form", distributor: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -61,7 +55,7 @@ defmodule BasicWeb.DistributorLiveTest do
 
       assert index_live
              |> form("#distributor-form", distributor: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -101,7 +95,7 @@ defmodule BasicWeb.DistributorLiveTest do
 
       assert show_live
              |> form("#distributor-form", distributor: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         show_live

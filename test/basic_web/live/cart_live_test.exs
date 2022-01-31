@@ -2,27 +2,21 @@ defmodule BasicWeb.CartLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
-
-  alias Basic.Carts
+  import Basic.CartsFixtures
 
   @create_attrs %{is_order: true, item_id: 42, quantity: 42, user_id: 42}
   @update_attrs %{is_order: false, item_id: 43, quantity: 43, user_id: 43}
-  @invalid_attrs %{is_order: nil, item_id: nil, quantity: nil, user_id: nil}
-
-  defp fixture(:cart) do
-    {:ok, cart} = Carts.create_cart(@create_attrs)
-    cart
-  end
+  @invalid_attrs %{is_order: false, item_id: nil, quantity: nil, user_id: nil}
 
   defp create_cart(_) do
-    cart = fixture(:cart)
+    cart = cart_fixture()
     %{cart: cart}
   end
 
   describe "Index" do
     setup [:create_cart]
 
-    test "lists all carts", %{conn: conn, cart: cart} do
+    test "lists all carts", %{conn: conn} do
       {:ok, _index_live, html} = live(conn, Routes.cart_index_path(conn, :index))
 
       assert html =~ "Listing Carts"

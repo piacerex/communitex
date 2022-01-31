@@ -1,0 +1,15 @@
+<h1>パスワードを忘れた場合は…
+<p>If you forget your password...</p>
+</h1>
+
+<.form let={f} for={:account} action={Routes.account_reset_password_path(@conn, :create)}>
+  <p>パスワードリセット用のURLをメールにてご案内します</p>
+  <p>下記にメールアドレスをご記入いただき、パスワードリセットを開始してください</p>
+
+  <%= label f, :email, "メールアドレス" %>
+  <%= email_input f, :email, required: true %>
+
+  <div>
+    <%= submit "Send instructions to reset password" %>
+  </div>
+</.form>

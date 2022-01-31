@@ -1,0 +1,193 @@
+<h1>Listing Members</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.member_index_path(@socket, :index)}>
+    <.live_component
+      module={BasicWeb.MemberLive.FormComponent}
+      id={@member.id || :new}
+      title={@page_title}
+      action={@live_action}
+      member={@member}
+# 変更ここから
+#      return_to={Routes.member_index_path(@socket, :index)}
+      return_to={Routes.member_index_path(@socket, :index, page: @page, search: @search, total_pages: @total_pages)}
+# 変更ここまで
+    />
+  </.modal>
+<% end %>
+
+<ul class="pagination">
+  <li class="is-prev">
+<!--
+    <a <%= #if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
+-->
+<!--
+    <a <%= #if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="{@page - 1}" phx-value-search="{@search}">&lt;</a>
+-->
+    <%= if @page <= 1 do %>
+      <a style="pointer-events: none; color: silver;" href="#" phx-click="page" phx-value-page="{@page - 1}" phx-value-search="{@search}">&lt;</a>
+    <% else %>
+      <a href="#" phx-click="page" phx-value-page="{@page - 1}" phx-value-search="{@search}">&lt;</a>
+    <% end %>
+  </li>
+<%= for idx <- Enum.to_list(1..@total_pages) do %>
+<!--
+  <li <%= #if @page == idx, do: raw( "class=\"is-current\"" ), else: "" %>>
+  <a  <%= #if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
+  </li>
+-->
+  <%= if @page == idx do %>
+    <li class="is-current">
+      <a  style="pointer-events: none; color: silver;" href="#" phx-click="page" phx-value-page="{idx}" phx-value-search="{@search}">{idx}</a>
+    </li>
+  <% else %>
+    <li>
+      <a href="#" phx-click="page" phx-value-page="{idx}" phx-value-search="{@search}">{idx}</a>
+    </li>
+  <% end %>
+<% end %>
+  <li class="is-next">
+<!--
+    <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
+-->
+    <%= if @page >= @total_pages do %>
+      <a style="pointer-events: none; color: silver;" href="#" phx-click="page" phx-value-page="{@page + 1}" phx-value-search="{@search}">&gt;</a>
+    <% else %>
+      <a href="#" phx-click="page" phx-value-page="{@page + 1}" phx-value-search="{@search}">&gt;</a>
+    <% end %>
+  </li>
+</ul>
+
+<br>
+
+<form phx-change="search" class="table-form">
+<div class="search">
+  <input type="search" class="input" name="search" phx-debounce="300" placeholder="名前、メールアドレスで絞り込み" value={@search}>
+  <i class="icon fas fa-search"></i>
+</div>
+</form>
+
+<table>
+  <thead>
+    <tr>
+<!--
+      <th>User</th>
+      <th>Last name</th>
+      <th>First name</th>
+      <th>Last name kana</th>
+      <th>First name kana</th>
+      <th>Detail</th>
+      <th>Image</th>
+      <th>Birthday</th>
+      <th>Organization</th>
+      <th>Organization name</th>
+      <th>Industry</th>
+      <th>Department</th>
+      <th>Position</th>
+      <th>Deleted at</th>
+-->
+      <th>メンバID</th>
+      <th>ユーザID</th>
+      <th>姓</th>
+      <th>名</th>
+      <th>セイ</th>
+      <th>メイ</th>
+      <th>Email</th>
+      <th>詳細</th>
+      <th>写真</th>
+      <th>生年月日</th>
+      <th>所属組織名</th>
+      <th>業種</th>
+      <th>部署</th>
+      <th>役職</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="members">
+    <%= for member <- @members do %>
+      <tr id={"member-#{member.id}"}>
+        <td><%= member.id %></td>
+        <td><%= member.user_id %></td>
+        <td><%= member.last_name %></td>
+        <td><%= member.first_name %></td>
+        <td><%= member.last_name_kana %></td>
+        <td><%= member.first_name_kana %></td>
+        <td><%= member.email %></td>
+        <td><%= member.detail %></td>
+        <%= if is_nil(member.image) do %>
+          <td><img src={Routes.static_path(@socket, "/images/no_img.png")} width="80"></td>
+        <% else %>
+          <td><img src="data:images/jpeg;base64,{member.image}" width="80"></td>
+        <% end %>
+<!--
+        <td><%= #member.image %></td>
+-->
+        <td><%= member.birthday %></td>
+<!--
+        <td><%= #member.organization_id %></td>
+-->
+        <td><%= member.organization_name %></td>
+        <td><%= member.industry %></td>
+        <td><%= member.department %></td>
+        <td><%= member.position %></td>
+<!--
+        <td><%= member.deleted_at %></td>
+-->
+        <td>
+<!--
+          <span><%= #live_redirect "Show", to: Routes.member_show_path(@socket, :show, member) %></span>
+          <span><%= #live_patch "Edit", to: Routes.member_index_path(@socket, :edit, member) %></span>
+          <span><%= #link "Delete", to: "#", phx_click: "delete", phx_value_id: member.id, data: [confirm: "Are you sure?"] %></span>
+-->
+          <span><%= live_redirect "Show", to: Routes.member_show_path(@socket, :show, member.id) %></span>
+          <span><%= live_patch "Edit", to: Routes.member_index_path(@socket, :edit, member.id, page: @page, search: @search, total_pages: @total_pages) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: member.id, phx_value_page: @page, phx_value_search: @search, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<!--
+<span><%= #live_patch "New Member", to: Routes.member_index_path(@socket, :new) %></span>
+-->
+<span><%= live_patch "New Member", to: Routes.member_index_path(@socket, :new, page: @page, search: @search, total_pages: @total_pages) %></span>
+
+<ul class="pagination">
+  <li class="is-prev">
+<!--
+    <a <%= if @page <= 1, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page - 1 %>" phx-value-search="<%= @search %>">&lt;</a>
+-->
+  <%= if @page <= 1 do %>
+    <a style="pointer-events: none; color: silver;" href="#" phx-click="page" phx-value-page="{@page - 1}" phx-value-search="{@search}">&lt;</a>
+  <% else %>
+    <a href="#" phx-click="page" phx-value-page="{@page - 1}" phx-value-search="{@search}">&lt;</a>
+  <% end %>
+  </li>
+<%= for idx <- Enum.to_list(1..@total_pages) do %>
+<!--
+  <li <%= if @page == idx, do: raw( "class=\"is-current\"" ), else: "" %>>
+  <a  <%= if @page == idx, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= idx %>" phx-value-search="<%= @search %>"><%= idx %></a>
+  </li>
+-->
+  <%= if @page == idx do %>
+    <li class="is-current">
+      <a style="pointer-events: none; color: silver;" href="#" phx-click="page" phx-value-page="{idx}" phx-value-search="{@search}">{idx}</a>
+    </li>
+  <% else %>
+    <li>
+      <a href="#" phx-click="page" phx-value-page="{idx}" phx-value-search="{@search}">{idx}</a>
+    </li>
+  <% end %>
+<% end %>
+  <li class="is-next">
+<!--
+    <a <%= if @page >= @total_pages, do: raw( "style=\"pointer-events: none; color: silver;\"" ) %> href="#" phx-click="page" phx-value-page="<%= @page + 1 %>" phx-value-search="<%= @search %>">&gt;</a>
+-->
+    <%= if @page >= @total_pages do %>
+      <a style="pointer-events: none; color: silver;" href="#" phx-click="page" phx-value-page="{@page + 1}" phx-value-search="{@search}">&gt;</a>
+    <% else %>
+      <a href="#" phx-click="page" phx-value-page="{@page + 1}" phx-value-search="{@search}">&gt;</a>
+    <% end %>
+  </li>
+</ul>

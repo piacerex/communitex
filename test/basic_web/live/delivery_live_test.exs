@@ -2,20 +2,14 @@ defmodule BasicWeb.DeliveryLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.DeliveriesFixtures
 
-  alias Basic.Deliveries
-
-  @create_attrs %{address_id: 42, order_id: 42, phase: "some phase"}
-  @update_attrs %{address_id: 43, order_id: 43, phase: "some updated phase"}
-  @invalid_attrs %{address_id: nil, order_id: nil, phase: nil}
-
-  defp fixture(:delivery) do
-    {:ok, delivery} = Deliveries.create_delivery(@create_attrs)
-    delivery
-  end
+  @create_attrs %{address_id: 42, order_id: 42, order_number: "some order_number", phase: "some phase"}
+  @update_attrs %{address_id: 43, order_id: 43, order_number: "some updated order_number", phase: "some updated phase"}
+  @invalid_attrs %{address_id: nil, order_id: nil, order_number: nil, phase: nil}
 
   defp create_delivery(_) do
-    delivery = fixture(:delivery)
+    delivery = delivery_fixture()
     %{delivery: delivery}
   end
 
@@ -26,7 +20,7 @@ defmodule BasicWeb.DeliveryLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.delivery_index_path(conn, :index))
 
       assert html =~ "Listing Deliveries"
-      assert html =~ delivery.phase
+      assert html =~ delivery.order_number
     end
 
     test "saves new delivery", %{conn: conn} do
@@ -48,7 +42,7 @@ defmodule BasicWeb.DeliveryLiveTest do
         |> follow_redirect(conn, Routes.delivery_index_path(conn, :index))
 
       assert html =~ "Delivery created successfully"
-      assert html =~ "some phase"
+      assert html =~ "some order_number"
     end
 
     test "updates delivery in listing", %{conn: conn, delivery: delivery} do
@@ -70,7 +64,7 @@ defmodule BasicWeb.DeliveryLiveTest do
         |> follow_redirect(conn, Routes.delivery_index_path(conn, :index))
 
       assert html =~ "Delivery updated successfully"
-      assert html =~ "some updated phase"
+      assert html =~ "some updated order_number"
     end
 
     test "deletes delivery in listing", %{conn: conn, delivery: delivery} do
@@ -88,7 +82,7 @@ defmodule BasicWeb.DeliveryLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.delivery_show_path(conn, :show, delivery))
 
       assert html =~ "Show Delivery"
-      assert html =~ delivery.phase
+      assert html =~ delivery.order_number
     end
 
     test "updates delivery within modal", %{conn: conn, delivery: delivery} do
@@ -110,7 +104,7 @@ defmodule BasicWeb.DeliveryLiveTest do
         |> follow_redirect(conn, Routes.delivery_show_path(conn, :show, delivery))
 
       assert html =~ "Delivery updated successfully"
-      assert html =~ "some updated phase"
+      assert html =~ "some updated order_number"
     end
   end
 end

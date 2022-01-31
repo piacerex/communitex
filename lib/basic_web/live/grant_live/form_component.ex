@@ -130,7 +130,7 @@ defmodule BasicWeb.GrantLive.FormComponent do
             grant = Grants.get_grant!(List.first(Grants.get_grant_id(Map.put(grant_params, "user_id", user_id))).id)
             {:ok, _} = Grants.delete_grant(List.first(grant))
 
-            {:noreply, assign(socket, :grants, Grants.list_grants(socket.assigns.current_user_id))}
+            {:noreply, assign(socket, :grants, Grants.list_grants_by_user_id(socket.assigns.current_user_id))}
 
             save_grant(socket, socket.assigns.action, Map.put(grant_params, "user_id", user_id))
 
@@ -143,6 +143,32 @@ defmodule BasicWeb.GrantLive.FormComponent do
 
             {:noreply, assign(socket, :changeset, changeset)}
         end
+    end
+  end
+
+  defp save_grant(socket, :edit, grant_params) do
+    case Grants.update_grant(List.first(socket.assigns.grant), grant_params) do
+      {:ok, _grant} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Grant updated successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :changeset, changeset)}
+    end
+  end
+
+  defp save_grant(socket, :new, grant_params) do
+    case Grants.create_grant(grant_params) do
+      {:ok, _grant} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Grant created successfully")
+         |> push_redirect(to: socket.assigns.return_to)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, changeset: changeset)}
     end
   end
 
@@ -212,32 +238,6 @@ defmodule BasicWeb.GrantLive.FormComponent do
           end
       end
     end
-
   end
 
-  defp save_grant(socket, :edit, grant_params) do
-    case Grants.update_grant(List.first(socket.assigns.grant), grant_params) do
-      {:ok, _grant} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Grant updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
-    end
-  end
-
-  defp save_grant(socket, :new, grant_params) do
-    case Grants.create_grant(grant_params) do
-      {:ok, _grant} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Grant created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
-  end
 end

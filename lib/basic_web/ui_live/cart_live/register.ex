@@ -14,9 +14,9 @@ defmodule BasicWeb.CartUiLive.Register do
 
   @impl true
   def mount(params, session, socket) do
-    current_user_id = case session["user_token"] do
+    current_user_id = case session["account_token"] do
       nil -> ""
-      token -> Accounts.get_user_by_session_token(token).id
+      token -> Accounts.get_account_by_session_token(token).id
     end
 
     member_info = case current_user_id do
@@ -29,7 +29,7 @@ defmodule BasicWeb.CartUiLive.Register do
       _ ->
         case Map.has_key?(params, "id") do
           true ->
-            Addresses.list_addresses_for_user(current_user_id, params["id"])
+            Addresses.list_addresses_selected(current_user_id, params["id"])
           false ->
             Addresses.list_addresses_for_user(current_user_id)
         end

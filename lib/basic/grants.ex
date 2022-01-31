@@ -9,7 +9,7 @@ defmodule Basic.Grants do
   alias Basic.Grants.Grant
   alias Basic.Organizations.Organization
   alias Basic.Organizations
-  alias Basic.Accounts.User
+  alias Basic.Accounts.Account
   alias Basic.Members.Member
 
   @doc """
@@ -21,112 +21,22 @@ defmodule Basic.Grants do
       [%Grant{}, ...]
 
   """
-  def list_grants(user_id) do
-    user_roles = get_user_all_roles(user_id)
-    cond do
-      Enum.member?(user_roles, system_admin().name) -> list_grants_for_system_admin()
-      Enum.empty?(user_roles) -> []
-      true -> list_grants_except_system_admin(user_id)
-    end
-  end
-
   def list_grants do
     organizations = from organization in Organization
-    users = from user in User
+    accounts = from account in Account
     from( grant in Grant,
       order_by: grant.user_id,
       order_by: grant.organization_id,
-      join: user in ^users,
+      join: account in ^accounts,
       on: [id: grant.user_id],
       join: organization in ^organizations,
       on: [id: grant.organization_id],
       select: [
         map(grant, ^Grant.__schema__(:fields)),
-        map(user, ^User.__schema__(:fields)),
+        map(account, ^Account.__schema__(:fields)),
         map(organization, ^Organization.__schema__(:fields))
       ] )
     |> Repo.all
-  end
-
-  def list_grants_for_system_admin do
-    organizations = from organization in Organization
-    users = from user in User
-    from( grant in Grant,
-      order_by: grant.user_id,
-      order_by: grant.organization_id,
-      where: grant.role != ^system_admin().name,
-      join: user in ^users,
-      on: [id: grant.user_id],
-      join: organization in ^organizations,
-      on: [id: grant.organization_id],
-      select: [
-        map(grant, ^Grant.__schema__(:fields)),
-        map(user, ^User.__schema__(:fields)),
-        map(organization, ^Organization.__schema__(:fields))
-      ] )
-    |> Repo.all
-  end
-
-  def list_grants_except_system_admin(user_id) do
-    grants_list = list_grants_for_organization_admin(user_id)
-                  ++ list_grants_by_role(user_id, distributor_admin().name)
-                  ++ list_grants_by_role(user_id, agency_admin().name)
-                  ++ list_grants_by_role(user_id, content_editor().name)
-    Enum.sort(Enum.uniq_by(grants_list, fn list -> Enum.at(list, 0).id end), fn(x, y) -> List.first(x).user_id < List.first(y).user_id end)
-  end
-
-  def list_grants_for_organization_admin(user_id) do
-    query = from grant in Grant,
-            where: grant.user_id == ^user_id
-               and grant.role == ^organization_admin().name,
-            select: grant.organization_id
-    granted_organizations = Repo.all(query)
-    organizations = from organization in Organization
-    users = from user in User
-
-    from( grant in Grant,
-      where: grant.organization_id in ^granted_organizations
-         and grant.role in ^[organization_admin().name, distributor_admin().name, agency_admin().name],
-      order_by: grant.user_id,
-      order_by: grant.organization_id,
-      join: user in ^users,
-      on: [id: grant.user_id],
-      join: organization in ^organizations,
-      on: [id: grant.organization_id],
-      select: [
-        map(grant, ^Grant.__schema__(:fields)),
-        map(user, ^User.__schema__(:fields)),
-        map(organization, ^Organization.__schema__(:fields))
-      ] )
-    |> Repo.all
-    |> Enum.reject(fn x -> x == [] end)
-  end
-
-  def list_grants_by_role(user_id, role) do
-    query = from grant in Grant,
-            where: grant.user_id == ^user_id
-               and grant.role == ^role,
-            select: grant.organization_id
-    granted_organizations = Repo.all(query)
-
-    organizations = from organization in Organization
-    users = from user in User
-    from( grant in Grant,
-      where: grant.organization_id in ^granted_organizations
-          and grant.role == ^role,
-      order_by: grant.user_id,
-      order_by: grant.organization_id,
-      join: user in ^users,
-      on: [id: grant.user_id],
-      join: organization in ^organizations,
-      on: [id: grant.organization_id],
-      select: [
-        map(grant, ^Grant.__schema__(:fields)),
-        map(user, ^User.__schema__(:fields)),
-        map(organization, ^Organization.__schema__(:fields))
-      ] )
-    |> Repo.all
-    |> Enum.reject(fn x -> x == [] end)
   end
 
   @doc """
@@ -145,35 +55,22 @@ defmodule Basic.Grants do
   """
   def get_grant!(id) do
     organizations = from organization in Organization
-    users = from user in User
+    accounts = from account in Account
     from( grant in Grant,
       where: grant.id == ^id,
       order_by: grant.user_id,
       order_by: grant.organization_id,
-      join: user in ^users,
+      join: account in ^accounts,
       on: [id: grant.user_id],
       join: organization in ^organizations,
       on: [id: grant.organization_id],
       select: [
         map(grant, ^Grant.__schema__(:fields)),
-        map(user, ^User.__schema__(:fields)),
+        map(account, ^Account.__schema__(:fields)),
         map(organization, ^Organization.__schema__(:fields))
       ] )
     |> Repo.all
     |> List.first
-  end
-
-  def get_user_grants!(user_id) do
-    from( grant in Grant,
-      where: grant.user_id == ^user_id)
-    |> Repo.all
-  end
-
-  def find_user_grants!(user_id, roles) do
-    from( grant in Grant,
-      where: grant.user_id == ^user_id
-        and grant.role in ^roles)
-    |> Repo.all
   end
 
   @doc """
@@ -192,14 +89,6 @@ defmodule Basic.Grants do
     %Grant{}
     |> Grant.changeset(attrs)
     |> Repo.insert()
-  end
-
-  def is_registered(params) do
-    from( grant in Grant,
-      where: grant.user_id == ^params["user_id"] and
-      grant.organization_id == ^params["organization_id"] and
-      grant.role == ^params["role"])
-    |> Repo.all
   end
 
   @doc """
@@ -266,6 +155,117 @@ defmodule Basic.Grants do
     |> Grant.changeset(attrs)
   end
 
+  def list_grants_by_user_id(user_id) do
+    user_roles = get_user_all_roles(user_id)
+    cond do
+      Enum.member?(user_roles, system_admin().name) -> list_grants_for_system_admin()
+      Enum.empty?(user_roles) -> []
+      true -> list_grants_except_system_admin(user_id)
+    end
+  end
+
+  def list_grants_for_system_admin do
+    organizations = from organization in Organization
+    accounts = from account in Account
+    from( grant in Grant,
+      order_by: grant.user_id,
+      order_by: grant.organization_id,
+      where: grant.role != ^system_admin().name,
+      join: account in ^accounts,
+      on: [id: grant.user_id],
+      join: organization in ^organizations,
+      on: [id: grant.organization_id],
+      select: [
+        map(grant, ^Grant.__schema__(:fields)),
+        map(account, ^Account.__schema__(:fields)),
+        map(organization, ^Organization.__schema__(:fields))
+      ] )
+    |> Repo.all
+  end
+
+  def list_grants_except_system_admin(user_id) do
+    grants_list = list_grants_for_organization_admin(user_id)
+                  ++ list_grants_by_role(user_id, distributor_admin().name)
+                  ++ list_grants_by_role(user_id, agency_admin().name)
+                  ++ list_grants_by_role(user_id, content_editor().name)
+    Enum.sort(Enum.uniq_by(grants_list, fn list -> Enum.at(list, 0).id end), fn(x, y) -> List.first(x).user_id < List.first(y).user_id end)
+  end
+
+  def list_grants_for_organization_admin(user_id) do
+    query = from grant in Grant,
+            where: grant.user_id == ^user_id
+               and grant.role == ^organization_admin().name,
+            select: grant.organization_id
+    granted_organizations = Repo.all(query)
+    organizations = from organization in Organization
+    accounts = from account in Account
+
+    from( grant in Grant,
+      where: grant.organization_id in ^granted_organizations
+         and grant.role in ^[organization_admin().name, distributor_admin().name, agency_admin().name],
+      order_by: grant.user_id,
+      order_by: grant.organization_id,
+      join: account in ^accounts,
+      on: [id: grant.user_id],
+      join: organization in ^organizations,
+      on: [id: grant.organization_id],
+      select: [
+        map(grant, ^Grant.__schema__(:fields)),
+        map(account, ^Account.__schema__(:fields)),
+        map(organization, ^Organization.__schema__(:fields))
+      ] )
+    |> Repo.all
+    |> Enum.reject(fn x -> x == [] end)
+  end
+
+  def list_grants_by_role(user_id, role) do
+    query = from grant in Grant,
+            where: grant.user_id == ^user_id
+               and grant.role == ^role,
+            select: grant.organization_id
+    granted_organizations = Repo.all(query)
+
+    organizations = from organization in Organization
+    accounts = from account in Account
+    from( grant in Grant,
+      where: grant.organization_id in ^granted_organizations
+          and grant.role == ^role,
+      order_by: grant.user_id,
+      order_by: grant.organization_id,
+      join: account in ^accounts,
+      on: [id: grant.user_id],
+      join: organization in ^organizations,
+      on: [id: grant.organization_id],
+      select: [
+        map(grant, ^Grant.__schema__(:fields)),
+        map(account, ^Account.__schema__(:fields)),
+        map(organization, ^Organization.__schema__(:fields))
+      ] )
+    |> Repo.all
+    |> Enum.reject(fn x -> x == [] end)
+  end
+
+  def get_user_grants!(user_id) do
+    from( grant in Grant,
+      where: grant.user_id == ^user_id)
+    |> Repo.all
+  end
+
+  def find_user_grants!(user_id, roles) do
+    from( grant in Grant,
+      where: grant.user_id == ^user_id
+        and grant.role in ^roles)
+    |> Repo.all
+  end
+
+  def is_registered(params) do
+    from( grant in Grant,
+      where: grant.user_id == ^params["user_id"] and
+      grant.organization_id == ^params["organization_id"] and
+      grant.role == ^params["role"])
+    |> Repo.all
+  end
+
   def get_role_list(current_user_id, organization_id) do
     roles = get_user_roles(current_user_id, organization_id)
 
@@ -284,7 +284,7 @@ defmodule Basic.Grants do
 
     cond do
       Enum.member?(user_roles, system_admin().name) -> [system_admin().name]
-      true -> 
+      true ->
         from( grant in Grant,
               where: grant.user_id == ^user_id and grant.organization_id == ^organization_id,
               select: grant.role)
@@ -342,7 +342,7 @@ defmodule Basic.Grants do
   def content_editor(), do: %{name: "ContentEditor", display: "コンテンツ編集者"}
 
   def search_user(search) do
-    all_user_ids = Repo.all(from( user in User, select: user.id))
+    all_user_ids = Repo.all(from( account in Account, select: account.id))
     query = from grant in Grant,
             where: grant.role == ^system_admin().name,
             select: grant.user_id
@@ -350,15 +350,15 @@ defmodule Basic.Grants do
     registrable_user_ids = all_user_ids -- system_admin_user_ids
 
     members = from member in Member
-    from(user in User,
+    from(account in Account,
       left_join: member in ^members,
-      on: [user_id: user.id],
+      on: [user_id: account.id],
       where: like(member.last_name, ^"%#{search}%")
         or like(member.first_name, ^"%#{search}%")
-        or like(user.email, ^"%#{search}%")
-        and user.id in ^registrable_user_ids,
-      select: %{user_id: user.id,
-        email: user.email,
+        or like(account.email, ^"%#{search}%")
+        and account.id in ^registrable_user_ids,
+      select: %{user_id: account.id,
+        email: account.email,
         last_name: member.last_name,
         first_name: member.first_name
       }

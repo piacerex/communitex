@@ -1,0 +1,41 @@
+<h1>Show Cart</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.cart_show_path(@socket, :show, @cart)}>
+    <.live_component
+      module={BasicWeb.CartLive.FormComponent}
+      id={@cart.id}
+      title={@page_title}
+      action={@live_action}
+      cart={@cart}
+      return_to={Routes.cart_show_path(@socket, :show, @cart)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>User:</strong>
+    <%= @cart.user_id %>
+  </li>
+
+  <li>
+    <strong>Item:</strong>
+    <%= @cart.item_id %>
+  </li>
+
+  <li>
+    <strong>Quantity:</strong>
+    <%= @cart.quantity %>
+  </li>
+
+  <li>
+    <strong>Is order:</strong>
+    <%= @cart.is_order %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.cart_show_path(@socket, :edit, @cart), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.cart_index_path(@socket, :index) %></span>

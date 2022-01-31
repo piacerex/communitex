@@ -1,0 +1,1240 @@
+<%
+current_css  = if CssSwitcher.is_alive(), do: CssSwitcher.current(), else: ""
+current_cdns = if CssSwitcher.is_alive(), do: CssSwitcher.cdns(), else: ""
+current_js   = if  JsSwitcher.is_alive(), do: JsSwitcher.current(), else: ""
+%>
+<!DOCTYPE html>
+<html lang="ja" style="overflow: hidden;">
+
+<head>
+
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<%= csrf_meta_tag() %>
+
+<title>DDAcademy</title>
+<link rel="icon" href="/images/favicon.ico">
+
+<script defer phx-track-static type="text/javascript" src={"/js/#{current_js}/app.js"}></script>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js"></script>
+<script src="https://unpkg.com/axios@0.x/dist/axios.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.5.1/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/elixir.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/scala.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/rust.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/vs2015.min.css">
+
+<script src="https://unpkg.com/vue-material"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-material@1.0.0-beta-15/dist/vue-material.min.css">
+<link rel="stylesheet" href="https://unpkg.com/vue-material@1.0.0-beta-15/dist/theme/default.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.1.0/highlightjs-line-numbers.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ext-language_tools.js"></script>
+
+<link rel="stylesheet" href={"/css/#{current_css}/app.css"}/>
+
+<style>
+td.hljs-ln-numbers
+{
+	text-align: center;
+	color: #c0c0c0;
+	border-right: 1px solid #c0c0c0;
+	vertical-align: top;
+	padding-right: 5px;
+	border: 0px;
+}
+
+td.hljs-ln-code
+{
+	padding-left: 10px !important;
+	border: 0px;
+}
+
+.hljs-subst
+{
+	color: #d69d85;
+}
+
+.hljs-symbol
+{
+	color: #96ccff;
+}
+
+input[ type="text" ]
+{
+	font-size: 16px;
+	font-family: Arial;
+
+	outline: none;
+	border: 0px;
+	border-bottom: 1px solid #909090;
+}
+input[ type="text" ]::placeholder
+{
+	color: #909090;
+}
+input[ type="text" ]:focus
+{
+	border-bottom: 2px solid #448aff;
+}
+
+textarea
+{
+	font-size: 16px;
+	font-family: Arial;
+
+	outline: none;
+	border: 1px solid #909090;
+}
+textarea::placeholder
+{
+	color: #909090;
+}
+textarea:focus
+{
+	outline: 2px solid #448aff;
+}
+
+.path
+{
+	width: calc( 100vw - 300px );
+	margin: 0px 10px 10px 10px;
+}
+
+.title
+{
+	width: calc( 100vw - 300px );
+	margin: 0px 10px 10px 10px;
+}
+
+.body
+{
+	height: 100%;
+
+	resize: none;	/* TODO: そのうちhorizontalでリサイズ可能にしたい */
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="app"><v-app><v-main>
+
+	<!-------------------------------------------------------------------
+	  START main pain
+	-------------------------------------------------------------------->
+	<div style="grid-template-rows: 47px 0px calc( 100vh - ( 47px + 0px ) ); display: grid;">
+
+		<div style="grid-row: 1; display: grid; grid-column: 1 / span 2; font-size: 18px; margin: 3px;">
+			<div>
+				<md-button class="md-icon-button md-raised" v-on:click="is_open_browser = true" style="vertical-align: top;"><md-icon>folder</md-icon></md-button>
+<!--
+				<v-btn fab small color="primary"  v-on:click="is_open_browser = true" style="vertical-align: top; color: blue;"><v-icon>mdi-folder</v-icon></v-btn>
+-->
+				<b>Title:</b><input type="text" class="title" placeholder="title" v-model="title" style="font-size: 28px;">
+
+				<!-------------------------------------------------------------------
+				  START toolbar
+				-------------------------------------------------------------------->
+<!--
+				<md-button v-on:click="remove" class="md-icon-button md-raised md-accent" v-bind:disabled="disable_remove"><md-icon>delete</md-icon></md-button>
+-->
+	<!--
+				<md-button class="md-icon-button md-raised"><md-icon>save_alt</md-icon></md-button>
+	-->
+				<md-button v-on:click="save" class="md-icon-button md-raised md-primary" v-bind:disabled="disable_save"><md-icon>publish</md-icon></md-button>
+				<md-button v-on:click="show" class="md-icon-button md-raised" v-bind:disabled="disable_show"><md-icon>pageview</md-icon></md-button>
+				<!-------------------------------------------------------------------
+				  END toolbar
+				-------------------------------------------------------------------->
+			</div>
+		</div>
+
+<!--
+		<div style="grid-row: 2; display: grid; grid-column: 1 / span 2; font-size: 18px; margin: 2px;">
+			<div style="margin-left: 57px;">
+				<b>Title:</b><input type="text" class="title" placeholder="title" v-model="title">
+			</div>
+		</div>
+-->
+
+		<div style="grid-row: 3; display: grid; grid-column: 1 / 1; width: 50vw;">
+			<div id="editor" style="width: 100%;"></div>
+<!--
+			<textarea class="body" style="width: 50vw;" placeholder="body" v-bind:value="body" v-on:input="updateValue"></textarea>
+-->
+		</div>
+
+		<div style="grid-row: 3; display: grid; grid-column: 2 / 2; width: 50vw; border: 1px solid #d0d0d0; overflow-y: auto;">
+			<div class="main-mini" v-html="convertMarkdownToHtml"></div>
+		</div>
+
+	</div>
+	<!-------------------------------------------------------------------
+	  END main pain
+	-------------------------------------------------------------------->
+
+	<!-----------------------------------------------------------------------
+	  START toast
+	------------------------------------------------------------------------>
+	<template>
+		<md-snackbar :md-duration="toast_infinity ? Infinity : toast_duration" :md-active.sync="toasting" md-persistent>
+			<span>{{ toast_message }}</span>
+			<md-button class="md-primary" @click="toasting = false">x</md-button>
+		</md-snackbar>
+	</template>
+	<!-----------------------------------------------------------------------
+	  END toast
+	------------------------------------------------------------------------>
+
+	<!-----------------------------------------------------------------------
+	  START upload modeless dialog
+	------------------------------------------------------------------------>
+	<div class="modeless_dialog disable" v-bind:class="{ enable: is_open_uploaded && is_open_browser }">
+		<md-toolbar class="md-primary md-dense" style="background-color: #707070;">
+			<p style="flex: 1">File uploaded - {{ finished }} / {{ total }}</p>
+			<md-button class="md-icon-button" v-on:click="onUploadClose">
+				<md-icon>close</md-icon>
+			</md-button>
+		</md-toolbar>
+
+		<div style="height: 160px; padding: 10px; overflow-y: scroll;">
+			<div v-for="upload in uploads">
+				<div style="width: 250px; display: inline-block;">
+					{{ upload.file.name }}
+				</div>
+				<div style="width: 100px; display: inline-block;">
+					<span v-if="!upload.is_canceled">
+						<md-progress-bar md-mode="determinate" :md-value="upload.progress" style="width: 100px;" />
+					</span>
+					<span v-else>
+						Canceled
+					</span>
+				</div>
+				<div style="width: 40px; display: inline-block; text-align: right;">
+					{{ upload.progress }} %
+				</div>
+				<div style="width: 40px; display: inline-block; vertical-align: middle; text-align: right;">
+					<span v-if="upload.progress < 100 && !upload.is_canceled">
+						<md-button class="md-icon-button md-accent" v-on:click="onUploadCancel( upload.i )">
+							<md-icon>cancel</md-icon>
+						</md-button>
+					</span>
+					<span v-else>
+						<md-icon style="color: #20d040;">check</md-icon>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-----------------------------------------------------------------------
+	  END upload modeless dialog
+	------------------------------------------------------------------------>
+
+	<!-----------------------------------------------------------------------
+	  START file browser
+	------------------------------------------------------------------------>
+	<div class="property left" v-bind:class="{ open: is_open_browser }" style="overflow-y: auto;">
+
+		<div>
+			<div style="display: inline-block; width: 395px;">
+				<md-button class="md-icon-button" v-on:click="onBrowserClose">
+					<md-icon>close</md-icon>
+				</md-button>
+			</div>
+			<div style="display: inline-block;">
+				<md-button class="md-icon-button" v-on:click="onBrowserRefresh">
+					<md-icon>refresh</md-icon>
+				</md-button>
+			</div>
+		</div>
+
+		<md-icon style="color: #e0e000; margin-left: 10px;">folder</md-icon>/
+		<div style="margin-left: 35px;">
+
+			<!-------------------------------------------------------------------
+			  START folder
+			-------------------------------------------------------------------->
+			<div v-for="item in browser_items.subordinate" id="dummy">
+				<div class="selector">
+					<span style="display: inline-block; width: 375px;">
+						<div v-if="item.is_folder">
+							<a v-on:click="onClickFolder( item )" v-on:mouseover="onMouseOver( item )" v-on:mouseleave="onMouseLeave( item )" style="text-decoration: none;"><md-icon style="color: #e0e000;">folder</md-icon>{{ item.name }}</a>
+						</div>
+						<div v-else>
+							<a v-on:click="onClickFile( item )" v-on:mouseover="onMouseOver( item )" v-on:mouseleave="onMouseLeave( item )" style="text-decoration: none;"><md-icon>list_alt</md-icon>{{ item.name }}</a>
+						</div>
+					</span>
+				</div>
+				<div class="selector">
+					<!--
+					<a v-if="item.is_folder" v-on:click="true;"><md-icon style="color: #b0b0b0;">more_vert</md-icon></a>
+					<a v-else                v-on:click="true;"><md-icon style="color: #b0b0b0;">edit</md-icon></a>
+					-->
+					<span style="display: inline-block;">
+						<a v-on:click="onClickRemove( browser_items, item.name )" style="text-decoration: none;"><md-icon style="color: #b0b0b0;">delete_forever</md-icon></a>
+					</span>
+				</div>
+
+				<div v-if="item.is_open == true" style="margin-left: 25px;">
+					<!-------------------------------------------------------------------
+					  START sub folder
+					-------------------------------------------------------------------->
+					<div v-for="sub_item in item.subordinate">
+						<div style="display: inline-block; position: relative; z-index: 1;" class="selector">
+							<span style="display: inline-block; width: 350px;">
+								<div v-if="sub_item.is_folder" style="display: inline-block;">
+									<a v-on:click="onClickFolder( sub_item )" v-on:mouseover="onMouseOver( sub_item )" v-on:mouseleave="onMouseLeave( sub_item )" style="text-decoration: none;"><md-icon style="color: #d9d900;">folder</md-icon>{{ sub_item.name }}</a>
+								</div>
+								<div v-else style="display: inline-block;">
+									<a v-on:click="onClickFile( sub_item )" v-on:mouseover="onMouseOver( sub_item )" v-on:mouseleave="onMouseLeave( sub_item )" style="text-decoration: none;"><md-icon>list_alt</md-icon>{{ sub_item.name }}</a>
+								</div>
+							</span>
+						</div>
+						<div style="display: inline-block;">
+							<!--
+							<a v-if="sub_item.is_folder" v-on:click="true;"><md-icon style="color: #b0b0b0;">more_vert</md-icon></a>
+							<a v-else                    v-on:click="true;"><md-icon style="color: #b0b0b0;">edit</md-icon></a>
+							-->
+							<a v-on:click="onClickRemove( item, sub_item.name )"><md-icon style="color: #b0b0b0;">delete_forever</md-icon></a>
+						</div>
+
+						<div v-if="sub_item.is_open == true" style="margin-left: 25px;">
+							<!-------------------------------------------------------------------
+							  START sub sub folder
+							-------------------------------------------------------------------->
+							<div v-for="sub_sub_item in sub_item.subordinate">
+								<div style="display: inline-block; position: relative; z-index: 1;" class="selector">
+									<span style="display: inline-block; width: 325px;">
+										<div v-if="sub_sub_item.is_folder" style="display: inline-block;">
+											<a v-on:click="onClickFolder( sub_sub_item )" v-on:mouseover="onMouseOver( sub_sub_item )" v-on:mouseleave="onMouseLeave( sub_sub_item )" style="text-decoration: none;"><md-icon style="color: #d9d900;">folder</md-icon>{{ sub_sub_item.name }}</a>
+										</div>
+										<div v-else style="display: inline-block;">
+											<a v-on:click="onClickFile( sub_sub_item )" v-on:mouseover="onMouseOver( sub_sub_item )" v-on:mouseleave="onMouseLeave( sub_sub_item )" style="text-decoration: none;"><md-icon>list_alt</md-icon>{{ sub_sub_item.name }}</a>
+										</div>
+									</span>
+								</div>
+								<div style="display: inline-block;">
+									<!--
+									<a v-if="sub_sub_item.is_folder" v-on:click="true;"><md-icon style="color: #b0b0b0;">more_vert</md-icon></a>
+									<a v-else                        v-on:click="true;"><md-icon style="color: #b0b0b0;">edit</md-icon></a>
+									-->
+									<a v-on:click="onClickRemove( sub_item, sub_sub_item.name )"><md-icon style="color: #b0b0b0;">delete_forever</md-icon></a>
+								</div>
+
+								<div v-if="sub_sub_item.is_open == true" style="margin-left: 25px;">
+									<!-------------------------------------------------------------------
+									  START sub sub sub folder
+									-------------------------------------------------------------------->
+									<div v-for="sub_sub_sub_item in sub_sub_item.subordinate">
+										<div style="display: inline-block; position: relative; z-index: 1;" class="selector">
+											<span style="display: inline-block; width: 300px;">
+												<div v-if="sub_sub_sub_item.is_folder" style="display: inline-block;">
+													<a v-on:click="onClickFolder( sub_sub_sub_item )" v-on:mouseover="onMouseOver( sub_sub_sub_item )" v-on:mouseleave="onMouseLeave( sub_sub_sub_item )" style="text-decoration: none;"><md-icon style="color: #d9d900;">folder</md-icon>{{ sub_sub_sub_item.name }}</a>
+												</div>
+												<div v-else style="display: inline-block;">
+													<a v-on:click="onClickFile( sub_sub_sub_item )" v-on:mouseover="onMouseOver( sub_sub_sub_item )" v-on:mouseleave="onMouseLeave( sub_sub_sub_item )" style="text-decoration: none;"><md-icon>list_alt</md-icon>{{ sub_sub_sub_item.name }}</a>
+												</div>
+											</span>
+										</div>
+										<div style="display: inline-block;">
+											<!--
+											<a v-if="sub_sub_sub_item.is_folder" v-on:click="true;"><md-icon style="color: #b0b0b0;">more_vert</md-icon></a>
+											<a v-else                        v-on:click="true;"><md-icon style="color: #b0b0b0;">edit</md-icon></a>
+											-->
+											<a v-on:click="onClickRemove( sub_sub_item, sub_sub_sub_item.name )"><md-icon style="color: #b0b0b0;">delete_forever</md-icon></a>
+										</div>
+									</div>
+									<!-------------------------------------------------------------------
+									  END sub sub sub folder
+									-------------------------------------------------------------------->
+
+									<!-------------------------------------------------------------------
+									  START sub sub sub toolbox
+									-------------------------------------------------------------------->
+									<div>
+										<div style="display: inline-block; margin-bottom: 3px;">
+											<a v-on:click="onClickUpload( sub_sub_item.parent_folder + sub_sub_item.name )" v-bind:class="{ disable: sub_sub_item.is_add_folder || sub_sub_item.is_add_file }"><md-icon style="color: #b0b0b0;">attach_file</md-icon></a>
+											<a v-on:click="onClickAddFileMode( $event, sub_sub_item.parent_folder + sub_sub_item.name )" v-bind:class="{ disable: sub_sub_item.is_add_folder }"><md-icon style="color: #b0b0b0;">add_circle</md-icon></a>
+											<span class="disable" v-bind:class="{ enable: sub_sub_item.is_add_file }">
+												<input type="text" v-model="sub_sub_item.new_file" placeholder="Enter add file name" /><!-- TODO: 日本語入力対応したEnter -->
+												<a v-on:click="onClickNewFile( $event, sub_sub_item.parent_folder + sub_sub_item.name, sub_sub_item.new_file )"><md-icon class="md-primary">play_circle_filled</md-icon></a>
+												<a v-on:click="sub_sub_item.is_add_file = false"><md-icon class="md-accent">cancel</md-icon></a>
+											</span>
+										</div>
+									</div>
+									<!-------------------------------------------------------------------
+									  END sub sub sub toolbox
+									-------------------------------------------------------------------->
+								</div>
+							</div>
+							<!-------------------------------------------------------------------
+							  END sub sub folder
+							-------------------------------------------------------------------->
+
+							<!-------------------------------------------------------------------
+							  START sub sub toolbox
+							-------------------------------------------------------------------->
+							<div>
+								<div style="display: inline-block; margin-bottom: 3px;">
+									<a v-on:click="onClickUpload( sub_item.parent_folder + sub_item.name )" v-bind:class="{ disable: sub_item.is_add_folder || sub_item.is_add_file }"><md-icon style="color: #b0b0b0;">attach_file</md-icon></a>
+									<a v-on:click="onClickAddFileMode( $event, sub_item.parent_folder + sub_item.name )" v-bind:class="{ disable: sub_item.is_add_folder }"><md-icon style="color: #b0b0b0;">add_circle</md-icon></a>
+									<a v-on:click="onClickAddFolderMode( $event, sub_item.parent_folder + sub_item.name )" v-bind:class="{ disable: sub_item.is_add_file }"><md-icon style="color: #b0b0b0;">create_new_folder</md-icon></a>
+									<span class="disable" v-bind:class="{ enable: sub_item.is_add_file }">
+										<input type="text" v-model="sub_item.new_file" placeholder="Enter add file name" /><!-- TODO: 日本語入力対応したEnter -->
+										<a v-on:click="onClickNewFile( $event, sub_item.parent_folder + sub_item.name, sub_item.new_file )"><md-icon class="md-primary">play_circle_filled</md-icon></a>
+										<a v-on:click="sub_item.is_add_file = false"><md-icon class="md-accent">cancel</md-icon></a>
+									</span>
+									<span class="disable" v-bind:class="{ enable: sub_item.is_add_folder }">
+										<input type="text" v-model="sub_item.new_folder" placeholder="Enter add folder name" /><!-- TODO: 日本語入力対応したEnter -->
+										<a v-on:click="onClickNewFolder( $event, sub_item.parent_folder + sub_item.name, sub_item.new_folder )"><md-icon class="md-primary">play_circle_filled</md-icon></a>
+										<a v-on:click="sub_item.is_add_folder = false"><md-icon class="md-accent">cancel</md-icon></a>
+									</span>
+								</div>
+							</div>
+							<!-------------------------------------------------------------------
+							  END sub sub toolbox
+							-------------------------------------------------------------------->
+						</div>
+					</div>
+
+					<!-------------------------------------------------------------------
+					  START sub toolbox
+					-------------------------------------------------------------------->
+					<div>
+						<div style="display: inline-block; margin-bottom: 3px;">
+							<a v-on:click="onClickUpload( item.parent_folder + item.name )" v-bind:class="{ disable: item.is_add_folder || item.is_add_file}"><md-icon style="color: #b0b0b0;">attach_file</md-icon></a>
+							<a v-on:click="onClickAddFileMode( $event, item.parent_folder + item.name )" v-bind:class="{ disable: item.is_add_folder }"><md-icon style="color: #b0b0b0;">add_circle</md-icon></a>
+							<a v-on:click="onClickAddFolderMode( $event, item.parent_folder + item.name )" v-bind:class="{ disable: item.is_add_file }"><md-icon style="color: #b0b0b0;">create_new_folder</md-icon></a>
+							<span class="disable" v-bind:class="{ enable: item.is_add_file }">
+								<input type="text" v-model="item.new_file" placeholder="Enter add file name" /><!-- TODO: 日本語入力対応したEnter -->
+								<a v-on:click="onClickNewFile( $event, item.parent_folder + item.name, item.new_file )"><md-icon class="md-primary">play_circle_filled</md-icon></a>
+								<a v-on:click="item.is_add_file = false"><md-icon class="md-accent">cancel</md-icon></a>
+							</span>
+							<span class="disable" v-bind:class="{ enable: item.is_add_folder }">
+								<input type="text" v-model="item.new_folder" placeholder="Enter add folder name" /><!-- TODO: 日本語入力対応したEnter -->
+								<a v-on:click="onClickNewFolder( $event, item.parent_folder + item.name, item.new_folder )"><md-icon class="md-primary">play_circle_filled</md-icon></a>
+								<a v-on:click="item.is_add_folder = false"><md-icon class="md-accent">cancel</md-icon></a>
+							</span>
+						</div>
+					</div>
+					<!-------------------------------------------------------------------
+					  END sub toolbox
+					-------------------------------------------------------------------->
+				</div>
+			</div>
+
+			<!-------------------------------------------------------------------
+			  START toolbox
+			-------------------------------------------------------------------->
+			<div>
+				<div style="display: inline-block; margin-bottom: 3px;">
+					<a v-on:click="onClickUpload( browser_items.parent_folder + browser_items.name )" v-bind:class="{ disable: browser_items.is_add_folder || browser_items.is_add_file }"><md-icon style="color: #b0b0b0;">attach_file</md-icon></a>
+					<a v-on:click="onClickAddFileMode( $event, browser_items.parent_folder + browser_items.name )" v-bind:class="{ disable: browser_items.is_add_folder }"><md-icon style="color: #b0b0b0;">add_circle</md-icon></a>
+					<a v-on:click="onClickAddFolderMode( $event, browser_items.parent_folder + browser_items.name )" v-bind:class="{ disable: browser_items.is_add_file }"><md-icon style="color: #b0b0b0;">create_new_folder</md-icon></a>
+					<span class="disable" v-bind:class="{ enable: browser_items.is_add_file }">
+						<input type="text" v-model="browser_items.new_file" placeholder="Enter add file name" />
+						<a v-on:click="onClickNewFile( $event, browser_items.parent_folder + browser_items.name, browser_items.new_file )"><md-icon class="md-primary">play_circle_filled</md-icon></a>
+						<a v-on:click="browser_items.is_add_file = false"><md-icon class="md-accent">cancel</md-icon></a>
+					</span>
+					<span class="disable" v-bind:class="{ enable: browser_items.is_add_folder }">
+						<input type="text" id="folder_text" v-model="browser_items.new_folder" placeholder="Enter add folder name" v-on:focus="log( $event )" />
+						<a v-on:click="onClickNewFolder( $event, browser_items.parent_folder + browser_items.name, browser_items.new_folder )"><md-icon class="md-primary">play_circle_filled</md-icon></a>
+						<a v-on:click="browser_items.is_add_folder = false"><md-icon class="md-accent">cancel</md-icon></a>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<input type="file" id="upload_button" multiple="multiple" v-on:change="onUpload" style="display: none;" />
+
+	</div>
+
+	<label class="modal_back disable" v-bind:class="{ enable: is_open_browser }" v-on:click="onBrowserClose"></label>
+	<!-----------------------------------------------------------------------
+	  END file browser
+	------------------------------------------------------------------------>
+
+</v-main></v-app></div>
+
+<script>
+Vue.use( VueMaterial.default )
+
+var app = new Vue
+( {
+	el: '#app',
+	vuetify: new Vuetify(),
+	data: 
+	{
+		path:			'<%= @params[ "path" ] %>', 
+		title:			'<%= @params[ "title" ] %>', 
+		create_date:	'<%= @params[ "create_date" ] %>', 
+		creator:		'<%= @params[ "creator" ] %>', 
+		updater:		'<%= @params[ "updater" ] %>', 
+
+		disable_remove:	false, 
+		disable_save:	false, 
+		disable_show:	false, 
+
+		toasting:		false, 
+		toast_infinity:	false, 
+		toast_duration:	2000, 
+		toast_message:	'', 
+		toast_success:	'This column saved and published.', 
+		toast_failure:	'ERROR!', 
+
+		token_seed:		'zh@Pr*Voc86yWU1i59Bhxnrla7G^2M', 
+
+		editor:			'', 
+		before_ext:		'', 
+
+		content:	
+		{ 
+			path:		'', 
+			url:		'', 
+
+			title:		'', 
+			author:		'', 
+			date:		'', 
+			tags:		'', 
+			updated:	'', 
+			body:		'', 
+			error:		'' 
+		}, 
+
+		//---------------------------------------------------------------
+		//  for upload modeless dialog
+		//---------------------------------------------------------------
+		is_open_uploaded:	false, 
+		upload_target:		'', 
+		item_to_upoad:		{}, 
+		uploads:			[], 
+		total:				0, 
+		finished:			0, 
+
+		//---------------------------------------------------------------
+		//  for file browser
+		//---------------------------------------------------------------
+		is_open_browser:	false, 
+		browser_items:	
+		{ 
+			is_folder: true, 
+			is_open: true, 
+			name: '', 
+			parent_folder: '/', 
+			subordinate: [], 
+			is_add_file: false, 
+			is_add_folder: false, 
+			new_file: '', 
+			new_folder: '' 
+		}, 
+		browser_pos:	
+		{
+			y:	-1, 
+			x:	0, 
+		}, 
+	},
+	mounted: function() 
+	{
+		try
+		{
+			this.editor = ace.edit( "editor" )
+
+			this.editor.setTheme( "ace/theme/github" )
+			this.editor.getSession().setMode( "ace/mode/text" )
+			this.editor.setFontSize( 14 )
+
+			this.editor.getSession().setUseWrapMode( true )
+			this.editor.setShowPrintMargin( false )
+	//		this.editor.setDisplayIndentGuides( false )
+	//		this.editor.setHighlightActiveLine( false )
+	//		this.editor.setShowFoldWidgets( false )
+	//		this.editor.setShowInvisibles( false )
+
+			this.editor.setValue( '<%= raw( @params[ "body" ] |> String.replace( "\r\n", "\\r\\n" ) |> String.replace( "\n", "\\n" ) |> String.replace( "'", "\\'" ) |> String.replace( "/", "\\/" ) ) %>', -1 )
+		}
+		catch ( e )
+		{
+		}
+
+		this.listRootFiles()
+	}, 
+	computed: 
+	{
+		link_url: function() 
+		{
+			return '/admin/login.html?target=' + encodeURIComponent( location.pathname + location.search )
+		}, 
+		convertMarkdownToHtml: function() 
+		{
+			if ( this.editor == '' ) return ''
+
+//			ext = 
+			if ( this.path.lastIndexOf( '.md' ) != -1 )
+			{
+//				this.before_ext = ext
+				if ( this.editor != '' )
+				{
+					this.editor.setTheme( 'ace/theme/monokai' )
+					this.editor.getSession().setMode( 'ace/mode/markdown' )
+					this.editor.getSession().setUseWrapMode( true )
+				}
+
+				const renderer = new marked.Renderer()
+				renderer.code = function( code, language ) 
+				{
+					hljs.initHighlightingOnLoad()
+					hljs.initLineNumbersOnLoad()
+					highlighted_code = hljs.highlightAuto( code, [ language ] ).value
+					hljs.lineNumbersBlock()
+					return '<pre><code class="' + language + ' hljs">' + highlighted_code + '</code></pre>'
+				}
+
+				marked.setOptions
+				( 
+					{
+						sanitize: true, 
+					}
+				)
+				title = this.title != '' ? '# ' + this.title + '\r\n' : ''
+				marked_body = marked( title + this.editor.getValue(), { renderer: renderer } )
+				return marked_body
+			}
+			else if ( this.path.lastIndexOf( '.html' ) != -1 )
+			{
+				if ( this.editor != '' )
+				{
+					this.editor.setTheme( 'ace/theme/monokai' )
+					this.editor.getSession().setMode( 'ace/mode/html' )
+					this.editor.getSession().setUseWrapMode( true )
+				}
+				return this.editor.getValue()
+			}
+			else if ( this.path.lastIndexOf( '.css' ) != -1 )
+			{
+				if ( this.editor != '' )
+				{
+					this.editor.setTheme( 'ace/theme/monokai' )
+					this.editor.getSession().setMode( 'ace/mode/css' )
+					this.editor.getSession().setUseWrapMode( true )
+				}
+				return '<pre>' + this.editor.getValue() + '</pre>'
+			}
+			else if ( this.path.lastIndexOf( '.js' ) != -1 )
+			{
+				if ( this.editor != '' )
+				{
+					this.editor.setTheme( 'ace/theme/monokai' )
+					this.editor.getSession().setMode( 'ace/mode/js' )
+					this.editor.getSession().setUseWrapMode( true )
+				}
+				return ''
+			}
+			else if ( this.path.lastIndexOf( '.ex' ) != -1 )
+			{
+				if ( this.editor != '' )
+				{
+					this.editor.setTheme( 'ace/theme/monokai' )
+					this.editor.getSession().setMode( 'ace/mode/elixir' )
+					this.editor.getSession().setUseWrapMode( true )
+				}
+				return '<pre>' + this.editor.getValue() + '</pre>'
+			}
+			else if ( this.path.lastIndexOf( '.png' ) != -1 || 
+					  this.path.lastIndexOf( '.jpg' ) != -1 || 
+					  this.path.lastIndexOf( '.gif' ) != -1 || 
+					  this.path.lastIndexOf( '.ico' ) != -1 )
+			{
+				if ( this.editor != '' )
+				{
+					this.editor.setTheme( 'ace/theme/monokai' )
+					this.editor.getSession().setMode( 'ace/mode/html' )
+					this.editor.getSession().setUseWrapMode( true )
+				}
+				this.disable_save = true
+				return this.editor.getValue()
+			}
+			else
+			{
+				if ( this.editor != '' )
+				{
+					this.editor.setTheme( 'ace/theme/github' )
+					this.editor.getSession().setMode( 'ace/mode/text' )
+					this.editor.getSession().setUseWrapMode( false )
+				}
+				return '<pre>' + this.editor.getValue().replace( /[<>]/gim, ( i ) => '&#' + i.charCodeAt( 0 ) ) + '</pre>'
+			}
+		}, 
+	},
+	methods: 
+	{
+		updateValue: _.debounce
+		( 
+			function( eventObject ) 
+			{
+				this.editor.setValue( eventObject.target.value )
+			}, 
+			500 
+		), 
+		save: async function()
+		{
+			this.disable_save = true
+			this.disable_show = true
+
+			this.toasting = false
+			this.toast_message = this.toast_success
+			try
+			{
+				await axios.post( '/api/rest/sphere/v1/', 
+					{ 
+						'data':
+						{
+							'path':			this.path, 
+							'title':		this.title, 
+							'create_date':	this.create_date, 
+							'creator':		this.creator, 
+							'updater':		this.updater, 
+							'body':			this.editor.getValue(), 
+						} 
+					} )
+			}
+			catch( error )
+			{
+				this.toast_message = this.toast_failure
+				console.log( error )
+			}
+			this.toasting = true
+
+			this.disable_save = false
+			this.disable_show = false
+		}, 
+		show: function()
+		{
+      path = this.path.lastIndexOf( '.json.eex' ) ? this.path.replace( '.json.eex', '' ) : this.path
+			window.open( path, '_blank' )
+		}, 
+/*
+		handlePaste: function( e )
+		{
+			var items = e.clipboardData.items;
+			var formData = new FormData();
+			for (var item of items) 
+			{
+				if (item.type.match("image.*")) 
+				{
+					formData.append("image", item.getAsFile());
+				}
+			}
+			if (formData.has("image")) 
+			{
+				this.postImage(formData);
+			}
+		},
+		handleDrop: function(e)
+		{
+			// ファイルがドロップされたときだけ処理する
+			var files = e.dataTransfer.files
+			if (files.length > 0) 
+			{
+				var formData = new FormData()
+				for (var file of files) 
+				{
+					if (file.type.match('image.*')) 
+					{
+						formData.append('image', file)  // 画像のみ追加
+					}
+				}
+				if (formData.has("image")) 
+				{
+					this.postImage(formData) // 画像をアップロード
+				}
+			}
+		},
+		postImage: async function(formData)
+		{
+			var response = await axios.post( '/api/upload', formData)
+			var textarea = document.querySelector('textarea')
+			var sentence = textarea.value
+			var len = sentence.length
+			var pos = textarea.selectionStart
+			var before = sentence.substr(0, pos)
+			var after = sentence.substr(pos, len)
+			var word = '![image](' + response.data.src + ')'
+			sentence = before + word + after  //  マークダウンを挿入
+			this.editor.setValue( sentence )
+		}, 
+*/
+
+		//---------------------------------------------------------------
+		//  for file browser
+		//---------------------------------------------------------------
+		log: function( any )
+		{
+			console.log( any )
+		}, 
+		treeSubordinate: function( item, space = '' )
+		{
+			console.log( space + '[' + item.parent_folder + ']' + item.name )
+			for ( sub_item of item.subordinate )
+			{
+				this.treeSubordinate( sub_item, space + '    ' )
+			}
+		}, 
+		listRootFiles: function()
+		{
+			//console.log( 'listRootFiles' )
+			axios.get( '/api/file/list' )
+			.then
+			( 
+				response => 
+				{
+					this.browser_items.subordinate = this.sortFiles( this.removeRootFiles( response.data ) )
+					//console.log( this.browser_items.subordinate )
+				} 
+			)
+		}, 
+		removeRootFiles: function( items )
+		{
+			//console.log( 'removeRootFiles' )
+			return items.filter( item => item.name != '.git' )
+		}, 
+		getFolderItemFromPath: function( parent_folder )
+		{
+			console.log( 'getFolderItemFromPath' )
+			param_parent_folder = parent_folder.slice( -1 ) == '/' ? parent_folder : parent_folder + '/'
+			console.log( param_parent_folder )
+			split_parent_folder = param_parent_folder.split( '/' )
+			console.log( split_parent_folder )
+			result = {}
+			if ( param_parent_folder == '/' )
+			{
+				result = this.browser_items
+			}
+			else
+			{
+				for ( item of this.browser_items.subordinate )
+				{
+					if ( item.name == split_parent_folder[ 1 ] )
+					{
+						//TODO: 3階層目のフォルダを決め打ちして4を指定しているのでロバストにする
+						if ( split_parent_folder.length == 4 )
+						{
+							for ( sub_item of item.subordinate )
+							{
+								if ( sub_item.name == split_parent_folder[ 2 ] )
+								{
+									result = sub_item
+								}
+							}
+						}
+						//TODO: 4階層目のフォルダを決め打ちして5を指定しているのでロバストにする
+						else if ( split_parent_folder.length == 5 )
+						{
+							for ( sub_item of item.subordinate )
+							{
+								if ( sub_item.name == split_parent_folder[ 2 ] )
+								{
+									for ( sub_sub_item of sub_item.subordinate )
+									{
+										if ( sub_sub_item.name == split_parent_folder[ 3 ] )
+										{
+											result = sub_sub_item
+										}
+									}
+								}
+							}
+						}
+						else
+						{
+							result = item
+						}
+					}
+				}
+			}
+			return result
+		}, 
+		addSubordinate: function( item, name, parent_folder, is_folder )
+		{
+			//console.log( 'addSubordinate' )
+			//console.log( item )
+			//console.log( name )
+			param_parent_folder = parent_folder.slice( -1 ) == '/' ? parent_folder : parent_folder + '/'
+			//console.log( param_parent_folder )
+			//console.log( is_folder )
+			for ( sub_item of item.subordinate )
+			{
+				if ( sub_item.name == name ) 
+				{
+					return
+				}
+			}
+			item.subordinate.push( 
+				{ 
+					is_folder: is_folder, 
+					is_open: false, 
+					name: name, 
+					parent_folder: param_parent_folder, 
+					subordinate: [], 
+					is_add_file: false, 
+					is_add_folder: false, 
+					new_file: '', 
+					new_folder: '' 
+				} )
+			item.subordinate = this.sortFiles( item.subordinate )
+		}, 
+		removeSubordinate: function( item, name )
+		{
+			//console.log( 'removeSubordinate' )
+			//console.log( item )
+			//console.log( name )
+			for ( i = 0; i < item.subordinate.length; i++ )
+			{
+				if ( item.subordinate[ i ].name == name ) 
+				{
+					item.subordinate.splice( i, 1 )
+					return
+				}
+			}
+		}, 
+		sortFiles: function( files )
+		{
+			//console.log( 'sortFiles' )
+			return files.sort
+			( 
+				function( a, b )
+				{
+					if ( a.is_folder == true && b.is_folder != true ) return -1
+					if ( a.is_folder != true && b.is_folder == true ) return  1
+					if ( a.name > b.name ) return  1
+					if ( a.name < b.name ) return -1
+					return 0
+				}
+			)
+		}, 
+
+		onBrowserClose: function() 
+		{
+			this.is_open_browser = false
+			this.is_open_uploaded = false
+		}, 
+		onBrowserRefresh: function() 
+		{
+			this.browser_items.subordinate = []
+			this.listRootFiles()
+		}, 
+		onClickRemove: async function( parent_item, name )
+		{
+			//console.log( 'onClickRemove' )
+			console.log( parent_item )
+			console.log( name )
+			parent_folder = parent_item.parent_folder + parent_item.name == '/' ? '/' : parent_item.parent_folder + parent_item.name + '/'
+			if ( confirm( '"' + parent_folder + name + '"\nand subordinate files/folders.\n\nDo you remove it?' ) )
+			{
+				await axios.delete( '/api/file/remove?path=' + parent_folder + name )
+				.then
+				( 
+					response => 
+					{
+						message = response.data
+						if ( message != '' )
+						{
+							alert( message + '\n\n"' + parent_folder + name + '"' )
+						}
+						else
+						{
+							this.removeSubordinate( parent_item, name )
+						}
+					}
+				)
+			}
+		}, 
+		onClickFolder: function( item )
+		{
+			//console.log( 'onClickFolder' )
+			//console.log( item )
+			//console.log( item.parent_folder + item.name )
+			if ( item.is_open == false )
+			{
+				axios.get( '/api/file/list?path=' + item.parent_folder + item.name )
+				.then
+				( 
+					response => 
+					{
+						item.subordinate = this.sortFiles( response.data )
+						//console.log( item.subordinate )
+					} 
+				)
+			}
+			item.is_open = item.is_open != true
+		}, 
+		onClickFile: async function( item )
+		{
+			console.log( 'onClickFile' )
+			console.log( item )
+			history.replaceState( '', '', '/sphere/edit' + item.parent_folder + item.name )
+			history.go()
+			this.is_open_browser = false
+		}, 
+		onClickAddFileMode: function( event, parent_folder )
+		{
+			//console.log( 'onClickAddFileMode' )
+			//console.log( event )
+			//console.log( parent_folder )
+			item = this.getFolderItemFromPath( parent_folder )
+			//console.log( item )
+			item.is_add_file = item.is_add_file != true
+			item.is_add_folder = false
+
+			setTimeout
+			(
+				function()
+				{
+					item = event.target.parentNode.parentNode.children[ 3 ].children[ 0 ]
+					//console.log( item )
+					item.focus()
+				}, 0
+			)
+		}, 
+		onClickAddFolderMode: function( event, parent_folder )
+		{
+			//console.log( 'onClickAddFolderMode' )
+			//console.log( event )
+			//console.log( parent_folder )
+			item = this.getFolderItemFromPath( parent_folder )
+			//console.log( item )
+			item.is_add_folder = item.is_add_folder != true
+			item.is_add_file = false
+
+			setTimeout
+			(
+				function()
+				{
+					item = event.target.parentNode.parentNode.children[ 4 ].children[ 0 ]
+					//console.log( item )
+					item.focus()
+
+					cursor = document.getElementById( 'dummy' )
+					//console.log( cursor )
+
+					//cursor.nextSibling.nextSibling.children[ 0 ].children[ 0 ].children[ 0 ].children[ 0 ].childNodes[ 1 ].data = 'piacere to other'
+					//cursor.nextSibling.nextSibling.children[ 0 ].children[ 0 ].children[ 0 ].children[ 0 ].focus()
+
+					// リンク文字列の書き換え例
+					//cursor.nextSibling.nextSibling.nextSibling.children[ 0 ].children[ 0 ].children[ 0 ].children[ 0 ].childNodes[ 1 ].data = 'sym_num to FOO'
+					//cursor.nextSibling.nextSibling.children[ 2 ].children[ 1 ].children[ 0 ].children[ 0 ].children[ 0 ].children[ 0 ].childNodes[ 1 ].data = 'piacere/ElixirFromExcel to foooooooooo'
+				}, 0
+			)
+		}, 
+		onClickNewFile: function( event, parent_folder, new_name )
+		{
+			//console.log( 'onClickNewFile' )
+			//console.log( event )
+			if ( event.target.disabled != true )
+			{
+				event.target.disabled = true
+				param_parent_folder = parent_folder.slice( -1 ) == '/' ? parent_folder : parent_folder + '/'
+				//console.log( param_parent_folder )
+				//console.log( new_name )
+				this.treeSubordinate( this.browser_items, '    ' )
+				if ( new_name == '' )
+				{
+					alert( 'Empty, please input file name' )
+				}
+				else
+				{
+					axios.put( '/api/file/new_file', { path: param_parent_folder + new_name } )
+					.then
+					( 
+						response => 
+						{
+							message = response.data
+							if ( message != '' )
+							{
+								alert( message )
+							}
+							else
+							{
+								item = this.getFolderItemFromPath( param_parent_folder )
+								this.addSubordinate( item, new_name, param_parent_folder, false )
+								item.is_add_file = false
+								item.new_file = ''
+							}
+						} 
+					)
+				}
+				event.target.disabled = false
+			}
+		}, 
+		onClickNewFolder: function( event, parent_folder, new_name )
+		{
+			//console.log( 'onClickNewFolder' )
+			//console.log( event )
+			if ( event.target.disabled != true )
+			{
+				event.target.disabled = true
+				param_parent_folder = parent_folder.slice( -1 ) == '/' ? parent_folder : parent_folder + '/'
+				//console.log( param_parent_folder )
+				//console.log( new_name )
+				//this.treeSubordinate( this.browser_items, '    ' )
+				if ( new_name == '' )
+				{
+					alert( 'Empty, please input folder name' )
+				}
+				else
+				{
+					axios.put( '/api/file/new_folder', { path: param_parent_folder + new_name } )
+					.then
+					( 
+						response => 
+						{
+							message = response.data
+							if ( message != '' )
+							{
+								alert( message )
+							}
+							else
+							{
+								item = this.getFolderItemFromPath( param_parent_folder )
+								this.addSubordinate( item, new_name, param_parent_folder, true )
+								item.is_add_folder = false
+								item.new_folder = ''
+							}
+						} 
+					)
+				}
+				event.target.disabled = false
+			}
+		}, 
+		onClickUpload: function( path )
+		{
+			//console.log( 'onClickUpload' )
+			this.upload_target = path
+			//console.log( this.upload_target )
+			this.item_to_upoad = this.getFolderItemFromPath( path )
+			//console.log( this.item_to_upoad )
+			document.getElementById( 'upload_button' ).click()
+		}, 
+		onUpload: function( event )
+		{
+			this.is_open_uploaded = true
+
+			const files = event.target.files
+			//console.log( event.target.files )
+			//console.log( typeof event.target.files )
+			//console.log( event.target.value )
+
+			for ( key of Object.keys( files ) )
+			{ 
+				//console.log( files[ key ] )
+				this.uploads.unshift( { i: this.total, file: files[ key ], parent_folder: this.folder_path, progress: 0, is_canceled: false, cancel_source: axios.CancelToken.source() } )
+				this.total++
+				const current = this.uploads[ 0 ]
+
+				const form_data = new FormData()
+				form_data.append( 'path', this.upload_target )
+				form_data.append( 'file', current.file )
+				var config = 
+				{
+					onUploadProgress: progressEvent => 
+					{
+						current.progress = progressEvent.loaded / progressEvent.total * 100 | 0
+					}, 
+					cancelToken: current.cancel_source.token, 
+				}
+
+				axios.post( '/api/file/upload', form_data, config )
+				.catch
+				(
+					function ( thrown )
+					{
+						if ( axios.isCancel( thrown ) )
+						{
+							//console.log( 'onUpload.canceled', thrown.message )
+						}
+					} 
+				)
+				.then
+				( 
+					response => 
+					{
+						console.log( 'onUpload.uploaded' + ( new Date() ) )
+						console.log( '  filename = "' + current.file.name + '", cancel = "' + current.is_canceled + '" )' )
+
+						this.finished++
+
+						//console.log( this.item_to_upoad )
+						//console.log( current )
+						if ( current.is_canceled == false )
+						{
+							this.addSubordinate( this.item_to_upoad, current.file.name, this.item_to_upoad.parent_folder + this.item_to_upoad.name, false )
+						}
+						//console.log( this.item_to_upoad.subordinate )
+					} 
+				)
+			}
+		}, 
+
+		//TODO 下記4つ、いる？
+		onMouseOver: function( item )
+		{
+			//console.log( 'onMouseOver' )
+			//console.log( item )
+		}, 
+		onMouseLeave: function( item )
+		{
+			//console.log( 'onMouseLeave' )
+			//console.log( item )
+		}, 
+		focusUp: function( item )
+		{
+			focused = document.activeElement
+			//console.log( focused )
+		}, 
+		focusDown: function( item )
+		{
+			
+		}, 
+
+		//---------------------------------------------------------------
+		//  for upload modeless dialog
+		//---------------------------------------------------------------
+		onUploadCancel: function( i )
+		{
+			this.uploads[ this.total - i - 1 ].cancel_source.cancel()
+			this.uploads[ this.total - i - 1 ].is_canceled = true
+		}, 
+		onUploadClose: function()
+		{
+			for ( upload of this.uploads ) upload.cancel_source.cancel()
+			this.is_open_uploaded = false
+			this.uploads = []
+			this.total = 0
+			this.finished = 0
+		}, 
+	}, 
+} )
+</script>
+
+</body>
+
+</html>

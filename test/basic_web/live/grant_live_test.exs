@@ -2,20 +2,14 @@ defmodule BasicWeb.GrantLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.GrantsFixtures
 
-  alias Basic.Grants
-
-  @create_attrs %{organization_id: 42, deleted_at: ~N[2010-04-17 14:00:00], role: "some role", user_id: 42}
-  @update_attrs %{organization_id: 43, deleted_at: ~N[2011-05-18 15:01:01], role: "some updated role", user_id: 43}
-  @invalid_attrs %{organization_id: nil, deleted_at: nil, role: nil, user_id: nil}
-
-  defp fixture(:grant) do
-    {:ok, grant} = Grants.create_grant(@create_attrs)
-    grant
-  end
+  @create_attrs %{deleted_at: %{day: 12, hour: 1, minute: 45, month: 1, year: 2022}, organization_id: 42, role: "some role", user_id: 42}
+  @update_attrs %{deleted_at: %{day: 13, hour: 1, minute: 45, month: 1, year: 2022}, organization_id: 43, role: "some updated role", user_id: 43}
+  @invalid_attrs %{deleted_at: %{day: 30, hour: 1, minute: 45, month: 2, year: 2022}, organization_id: nil, role: nil, user_id: nil}
 
   defp create_grant(_) do
-    grant = fixture(:grant)
+    grant = grant_fixture()
     %{grant: grant}
   end
 
@@ -39,7 +33,7 @@ defmodule BasicWeb.GrantLiveTest do
 
       assert index_live
              |> form("#grant-form", grant: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -61,7 +55,7 @@ defmodule BasicWeb.GrantLiveTest do
 
       assert index_live
              |> form("#grant-form", grant: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -101,7 +95,7 @@ defmodule BasicWeb.GrantLiveTest do
 
       assert show_live
              |> form("#grant-form", grant: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         show_live

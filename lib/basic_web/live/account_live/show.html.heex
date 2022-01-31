@@ -1,0 +1,41 @@
+<h1>Show Account</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.account_show_path(@socket, :show, @account)}>
+    <.live_component
+      module={BasicWeb.AccountLive.FormComponent}
+      id={@account.id}
+      title={@page_title}
+      action={@live_action}
+      account={@account}
+      return_to={Routes.account_show_path(@socket, :show, @account)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @account.email %>
+  </li>
+
+  <li>
+    <strong>Hashed password:</strong>
+    <%= @account.hashed_password %>
+  </li>
+
+  <li>
+    <strong>Confirmed at:</strong>
+    <%= @account.confirmed_at %>
+  </li>
+
+  <li>
+    <strong>Deleted at:</strong>
+    <%= @account.deleted_at %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.account_show_path(@socket, :edit, @account), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.account_index_path(@socket, :index) %></span>

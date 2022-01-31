@@ -7,9 +7,9 @@ defmodule BasicWeb.AddressUiLive.Index do
 
   @impl true
   def mount(_params, session, socket) do
-    current_user_id = case session["user_token"] do
+    current_user_id = case session["account_token"] do
       nil -> ""
-      token -> Accounts.get_user_by_session_token(token).id
+      token -> Accounts.get_account_by_session_token(token).id
     end
     {:ok,
      socket

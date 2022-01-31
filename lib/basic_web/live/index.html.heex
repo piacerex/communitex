@@ -1,0 +1,43 @@
+<%
+menus = 
+[
+  "/sphere/edit",
+  "/admin/grants",
+  "/admin/contacts", 
+  "/admin/accounts", 
+  "/admin/members",
+  "/admin/organizations", 
+  "/admin/distributors", 
+  "/admin/items", 
+  "/admin/orders", 
+  "/admin/agencies", 
+  "/admin/agents", 
+  "/admin/blogs", 
+  "/admin/ls", 
+  "/admin/load", 
+  "/admin/reload", 
+  "/admin/rm", 
+]
+%>
+<h1>Admin</h1>
+
+<div class="main lefted-pane">
+
+  <nav class="quadrisect navigation">
+    <table>
+<%= for menu <- menus do %>
+    <tr>
+      <td style="text-align: left;"><a href={menu}><%= menu %></a></td>
+    </tr>
+<% end %>
+    </table>
+  </nav>
+
+  <div class="quadrisect-triple centered-pane">
+
+    <ul class="card round shadow">
+    </ul>
+
+  </div>
+
+</div>

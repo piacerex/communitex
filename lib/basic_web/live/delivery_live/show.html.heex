@@ -1,0 +1,41 @@
+<h1>Show Delivery</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.delivery_show_path(@socket, :show, @delivery)}>
+    <.live_component
+      module={BasicWeb.DeliveryLive.FormComponent}
+      id={@delivery.id}
+      title={@page_title}
+      action={@live_action}
+      delivery={@delivery}
+      return_to={Routes.delivery_show_path(@socket, :show, @delivery)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Order:</strong>
+    <%= @delivery.order_id %>
+  </li>
+
+  <li>
+    <strong>Address:</strong>
+    <%= @delivery.address_id %>
+  </li>
+
+  <li>
+    <strong>Phase:</strong>
+    <%= @delivery.phase %>
+  </li>
+
+  <li>
+    <strong>Order number:</strong>
+    <%= @delivery.order_number %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.delivery_show_path(@socket, :edit, @delivery), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.delivery_index_path(@socket, :index) %></span>

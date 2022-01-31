@@ -1,0 +1,35 @@
+<h1>ログイン
+<p>Log in</p>
+</h1>
+
+<.form let={f} for={@conn} action={Routes.account_session_path(@conn, :create)} as={:account}>
+  <%= if @error_message do %>
+    <div class="alert alert-danger">
+      <p><%= @error_message %></p>
+    </div>
+  <% end %>
+
+  <p>登録済みのメールアドレスとパスワードをご入力ください</p>
+
+  <%= label f, :email, "メールアドレス" %>
+  <%= email_input f, :email, required: true %>
+
+  <%= label f, :password, "パスワード" %>
+  <%= password_input f, :password, required: true %>
+
+  <div class="checkbox-pane">
+  <%= label f, :remember_me, "　60日間、ログイン状態を維持する" %>
+  <%= checkbox f, :remember_me %>
+  </div>
+
+  <div>
+    <%= submit "ログイン" %>
+  </div>
+
+  <br>
+  <p>
+    <%= link "パスワードを忘れた場合はこちら", to: Routes.account_reset_password_path(@conn, :new) %> |
+    <%= link "ユーザ登録", to: Routes.account_registration_path(@conn, :new) %> |
+    <%= link "ユーザ登録確認メールの再送", to: Routes.account_confirmation_path(@conn, :new) %>
+  </p>
+</.form>

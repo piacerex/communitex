@@ -3,15 +3,15 @@ defmodule Basic.Orders.Order do
   import Ecto.Changeset
 
   schema "orders" do
+    field :canceled_at, :naive_datetime
     field :deleted_at, :naive_datetime
     field :discount, :float
     field :is_cancel, :boolean, default: false
     field :item_id, :integer
     field :order_date, :naive_datetime
+    field :order_number, :string
     field :price, :float
     field :user_id, :integer
-    field :order_number, :string
-    field :canceled_at, :naive_datetime
 
     timestamps()
   end

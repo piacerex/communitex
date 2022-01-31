@@ -10,11 +10,44 @@ defmodule BasicWeb.MemberLive.Index do
   end
 
   @impl true
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id, "page" => page, "search" => search, "total_pages" => total_pages}) do
+    socket
+    |> assign(:page_title, "Edit Member")
+    |> assign(:member, Members.get_member!(id))
+    |> assign(:page, String.to_integer(page))
+    |> assign(:search, search)
+    |> assign(:total_pages, String.to_integer(total_pages))
+  end
+
+  defp apply_action(socket, :new, %{"page" => page, "search" => search, "total_pages" => total_pages}) do
+    socket
+    |> assign(:page_title, "New Member")
+    |> assign(:member, %Member{})
+    |> assign(:page, String.to_integer(page))
+    |> assign(:search, search)
+    |> assign(:total_pages, String.to_integer(total_pages))
+  end
+
+  defp apply_action(socket, :index, params) do
+    socket
+    |> assign(:page_title, "Listing Members")
+    |> assign(assign_pagination(params))
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id, "page" => page, "search" => search}, socket) do
     member = Members.get_member!(id)
     {:ok, _} = Members.delete_member(member)
 
     {:noreply, assign(socket, get_and_assign_page(page, search))}
+  end
+
+  defp list_members do
+    Members.list_members()
   end
 
   @impl true
@@ -42,7 +75,7 @@ defmodule BasicWeb.MemberLive.Index do
       page_size: page_size,
       total_entries: total_entries,
       total_pages: total_pages
-    } 
+    }
     = Members.paginate_members(page, search)
 
     [
@@ -50,37 +83,8 @@ defmodule BasicWeb.MemberLive.Index do
       page: page,
       page_size: page_size,
       total_entries: total_entries,
-      total_pages: total_pages, 
+      total_pages: total_pages,
       search: search
     ]
-  end
-
-  @impl true
-  def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
-  end
-
-  defp apply_action(socket, :edit, %{"id" => id, "page" => page, "search" => search, "total_pages" => total_pages}) do
-    socket
-    |> assign(:page_title, "Edit Member")
-    |> assign(:member, Members.get_member!(id))
-    |> assign(:page, String.to_integer(page))
-    |> assign(:search, search)
-    |> assign(:total_pages, String.to_integer(total_pages))
-  end
-
-  defp apply_action(socket, :new, %{"page" => page, "search" => search, "total_pages" => total_pages}) do
-    socket
-    |> assign(:page_title, "New Member")
-    |> assign(:member, %Member{})
-    |> assign(:page, String.to_integer(page))
-    |> assign(:search, search)
-    |> assign(:total_pages, String.to_integer(total_pages))
-  end
-
-  defp apply_action(socket, :index, params) do
-    socket
-    |> assign(:page_title, "Listing Members")
-    |> assign(assign_pagination(params))
   end
 end

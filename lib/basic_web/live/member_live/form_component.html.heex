@@ -1,0 +1,97 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="member-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :user_id, "ユーザID" %>
+    <%= number_input f, :user_id %>
+    <%= error_tag f, :user_id %>
+  
+    <%= label f, :last_name, "姓" %>
+    <%= text_input f, :last_name %>
+    <%= error_tag f, :last_name %>
+  
+    <%= label f, :first_name, "名" %>
+    <%= text_input f, :first_name %>
+    <%= error_tag f, :first_name %>
+  
+    <%= label f, :last_name_kana, "セイ" %>
+    <%= text_input f, :last_name_kana %>
+    <%= error_tag f, :last_name_kana %>
+  
+    <%= label f, :first_name_kana, "メイ" %>
+    <%= text_input f, :first_name_kana %>
+    <%= error_tag f, :first_name_kana %>
+  
+    <%= label f, :detail, "詳細" %>
+    <%= textarea f, :detail %>
+    <%= error_tag f, :detail %>
+  
+<!--
+    <%= #label f, :image %>
+    <%= #textarea f, :image %>
+    <%= #error_tag f, :image %>
+-->
+  
+    <%= label f, :image, "写真" %>
+    <div class="container" phx-drop-target="{@uploads.avatar.ref}">
+      <%= live_file_input @uploads.avatar %>
+    </div>
+
+    <%= for {_ref, err} <- @uploads.avatar.errors do %>
+      <p class="alert"><%= Phoenix.Naming.humanize(err) %></p>
+    <% end %>
+
+    <%= for entry <- @uploads.avatar.entries do %>
+      <%= entry.client_name %> - <%= entry.progress %>%
+      <%= live_img_preview entry, width: 75 %>
+    <% end %>
+
+<!--
+    <%= label f, :birthday %>
+    <%= datetime_select f, :birthday %>
+    <%= error_tag f, :birthday %>
+-->
+    <%= label f, :birthday, "生年月日" %>
+    <%= datetime_select f,
+      :birthday,
+      year: [options: 1950..Timex.now().year, selected: 1980],
+      month: [options: 1..12]
+    %>
+    <%= error_tag f, :birthday %>
+<!--  
+    <%= label f, :organization_id %>
+    <%= number_input f, :organization_id %>
+    <%= error_tag f, :organization_id %>
+-->
+    <%= label f, :organization_name, "所属組織名" %>
+    <%= text_input f, :organization_name %>
+    <%= error_tag f, :organization_name %>
+  
+    <%= label f, :industry, "業種" %>
+    <%= text_input f, :industry %>
+    <%= error_tag f, :industry %>
+  
+    <%= label f, :department, "部署" %>
+    <%= text_input f, :department %>
+    <%= error_tag f, :department %>
+  
+    <%= label f, :position, "役職" %>
+    <%= text_input f, :position %>
+    <%= error_tag f, :position %>
+<!--  
+    <%= label f, :deleted_at %>
+    <%= datetime_select f, :deleted_at %>
+    <%= error_tag f, :deleted_at %>
+-->
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

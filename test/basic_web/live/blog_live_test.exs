@@ -2,20 +2,14 @@ defmodule BasicWeb.BlogLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.BlogsFixtures
 
-  alias Basic.Blogs
-
-  @create_attrs %{body: "some body", deleted_at: ~N[2010-04-17 14:00:00], image: "some image", likes: 42, post_id: "some post_id", tags: "some tags", title: "some title", user_id: 42, views: 42}
-  @update_attrs %{body: "some updated body", deleted_at: ~N[2011-05-18 15:01:01], image: "some updated image", likes: 43, post_id: "some updated post_id", tags: "some updated tags", title: "some updated title", user_id: 43, views: 43}
-  @invalid_attrs %{body: nil, deleted_at: nil, image: nil, likes: nil, post_id: nil, tags: nil, title: nil, user_id: nil, views: nil}
-
-  defp fixture(:blog) do
-    {:ok, blog} = Blogs.create_blog(@create_attrs)
-    blog
-  end
+  @create_attrs %{body: "some body", deleted_at: %{day: 12, hour: 1, minute: 43, month: 1, year: 2022}, image: "some image", likes: 42, post_id: "some post_id", tags: "some tags", title: "some title", user_id: 42, views: 42}
+  @update_attrs %{body: "some updated body", deleted_at: %{day: 13, hour: 1, minute: 43, month: 1, year: 2022}, image: "some updated image", likes: 43, post_id: "some updated post_id", tags: "some updated tags", title: "some updated title", user_id: 43, views: 43}
+  @invalid_attrs %{body: nil, deleted_at: %{day: 30, hour: 1, minute: 43, month: 2, year: 2022}, image: nil, likes: nil, post_id: nil, tags: nil, title: nil, user_id: nil, views: nil}
 
   defp create_blog(_) do
-    blog = fixture(:blog)
+    blog = blog_fixture()
     %{blog: blog}
   end
 
@@ -39,7 +33,7 @@ defmodule BasicWeb.BlogLiveTest do
 
       assert index_live
              |> form("#blog-form", blog: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -61,7 +55,7 @@ defmodule BasicWeb.BlogLiveTest do
 
       assert index_live
              |> form("#blog-form", blog: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -101,7 +95,7 @@ defmodule BasicWeb.BlogLiveTest do
 
       assert show_live
              |> form("#blog-form", blog: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         show_live

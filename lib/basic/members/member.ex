@@ -4,8 +4,6 @@ defmodule Basic.Members.Member do
 
   schema "members" do
     field :birthday, :naive_datetime
-    field :organization_id, :integer
-    field :organization_name, :string
     field :deleted_at, :naive_datetime
     field :department, :string
     field :detail, :string
@@ -15,6 +13,8 @@ defmodule Basic.Members.Member do
     field :industry, :string
     field :last_name, :string
     field :last_name_kana, :string
+    field :organization_id, :integer
+    field :organization_name, :string
     field :position, :string
     field :user_id, :integer
 

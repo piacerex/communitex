@@ -1,0 +1,46 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="grant-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+<!--
+    <%= #label f, :user_id %>
+    <%= #number_input f, :user_id %>
+    <%= #error_tag f, :user_id %>
+-->
+    <%= label f, :user_id, "ユーザ" %>
+    <input type="search" class="input" name="grant[user]" list="user" placeholder="名前、メールアドレスで絞り込み" autocomplete="off" value={@selected_user}>
+    <datalist id="user">
+      <%= options_for_select(@candidate_users |> Enum.map(fn x -> x.email <> " " <> x.last_name <> " " <> x.first_name end), @selected_user) %>
+    </datalist>
+<!--
+    <%= label f, :organization_id %>
+    <%= number_input f, :organization_id %>
+    <%= error_tag f, :organization_id %>
+-->
+    <%= label f, :organization_id, "所属組織名" %>
+    <%= select f, :organization_id, @organizations |> Enum.map( fn x -> {x.name, x.id} end ), prompt: "-- 選択してください --" %>
+    <%= error_tag f, :organization_id %>
+<!--
+    <%= label f, :role %>
+    <%= text_input f, :role %>
+    <%= error_tag f, :role %>
+-->
+    <%= label f, :role, "ロール" %>
+    <%= select f, :role, @role_list |> Enum.map( fn x -> {x.display, x.name} end ), prompt: "-- 選択してください --" %>
+    <%= error_tag f, :role %>
+<!--
+    <%= label f, :deleted_at %>
+    <%= datetime_select f, :deleted_at %>
+    <%= error_tag f, :deleted_at %>
+-->
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

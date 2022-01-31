@@ -6,18 +6,9 @@ defmodule Basic.CartsTest do
   describe "carts" do
     alias Basic.Carts.Cart
 
-    @valid_attrs %{is_order: true, item_id: 42, quantity: 42, user_id: 42}
-    @update_attrs %{is_order: false, item_id: 43, quantity: 43, user_id: 43}
+    import Basic.CartsFixtures
+
     @invalid_attrs %{is_order: nil, item_id: nil, quantity: nil, user_id: nil}
-
-    def cart_fixture(attrs \\ %{}) do
-      {:ok, cart} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Carts.create_cart()
-
-      cart
-    end
 
     test "list_carts/0 returns all carts" do
       cart = cart_fixture()
@@ -30,7 +21,9 @@ defmodule Basic.CartsTest do
     end
 
     test "create_cart/1 with valid data creates a cart" do
-      assert {:ok, %Cart{} = cart} = Carts.create_cart(@valid_attrs)
+      valid_attrs = %{is_order: true, item_id: 42, quantity: 42, user_id: 42}
+
+      assert {:ok, %Cart{} = cart} = Carts.create_cart(valid_attrs)
       assert cart.is_order == true
       assert cart.item_id == 42
       assert cart.quantity == 42
@@ -43,7 +36,9 @@ defmodule Basic.CartsTest do
 
     test "update_cart/2 with valid data updates the cart" do
       cart = cart_fixture()
-      assert {:ok, %Cart{} = cart} = Carts.update_cart(cart, @update_attrs)
+      update_attrs = %{is_order: false, item_id: 43, quantity: 43, user_id: 43}
+
+      assert {:ok, %Cart{} = cart} = Carts.update_cart(cart, update_attrs)
       assert cart.is_order == false
       assert cart.item_id == 43
       assert cart.quantity == 43

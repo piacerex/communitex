@@ -98,7 +98,7 @@ mv basic communitex
 ```
 
 ```
-mix phx.gen.auth Accounts User users
+mix phx.gen.auth Accounts Account accounts
 
 mix shotrize.apply
 ```
@@ -112,7 +112,7 @@ defmodule Basic.Repo.Migrations.AlterUsersAuthTables do
   use Ecto.Migration
 
   def change do
-    alter table(:users) do
+    alter table(:accounts) do
       add :deleted_at, :naive_datetime
     end
   end
@@ -120,7 +120,7 @@ end
 ```
 
 ```
-mix phx.gen.live Accounts User users email:string hashed_password:string confirmed_at:datetime deleted_at:datetime
+mix phx.gen.live Accounts Account accounts email:string hashed_password:string confirmed_at:datetime deleted_at:datetime
 ```
 
 ```

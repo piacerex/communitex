@@ -7,9 +7,9 @@ defmodule BasicWeb.GrantLive.Show do
 
   @impl true
   def mount(_params, session, socket) do
-    current_user = Accounts.get_user_by_session_token(session["user_token"])
+    current_user = Accounts.get_account_by_session_token(session["account_token"])
     organizations = Grants.get_registrable_organizations(current_user.id)
-    {:ok, 
+    {:ok,
       socket
       |> assign(:organizations, organizations)
       |> assign(:all_roles, Grants.roles())

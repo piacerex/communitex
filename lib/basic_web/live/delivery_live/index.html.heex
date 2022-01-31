@@ -1,0 +1,51 @@
+<h1>Listing Deliveries</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.delivery_index_path(@socket, :index)}>
+    <.live_component
+      module={BasicWeb.DeliveryLive.FormComponent}
+      id={@delivery.id || :new}
+      title={@page_title}
+      action={@live_action}
+      delivery={@delivery}
+      return_to={Routes.delivery_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+<!--
+      <th>Order</th>
+      <th>Address</th>
+      <th>Phase</th>
+      <th>Order number</th>
+-->
+      <th>Order ID</th>
+      <th>Address ID</th>
+      <th>配送状況</th>
+      <th>注文番号</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="deliveries">
+    <%= for delivery <- @deliveries do %>
+      <tr id={"delivery-#{delivery.id}"}>
+        <td><%= delivery.order_id %></td>
+        <td><%= delivery.address_id %></td>
+        <td><%= delivery.phase %></td>
+        <td><%= delivery.order_number %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.delivery_show_path(@socket, :show, delivery) %></span>
+          <span><%= live_patch "Edit", to: Routes.delivery_index_path(@socket, :edit, delivery) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: delivery.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Delivery", to: Routes.delivery_index_path(@socket, :new) %></span>

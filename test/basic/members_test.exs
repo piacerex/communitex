@@ -6,18 +6,9 @@ defmodule Basic.MembersTest do
   describe "members" do
     alias Basic.Members.Member
 
-    @valid_attrs %{birthday: ~N[2010-04-17 14:00:00], organization_id: 42, organization_name: "some organization_name", deleted_at: ~N[2010-04-17 14:00:00], department: "some department", detail: "some detail", first_name: "some first_name", first_name_kana: "some first_name_kana", image: "some image", industry: "some industry", last_name: "some last_name", last_name_kana: "some last_name_kana", position: "some position", user_id: 42}
-    @update_attrs %{birthday: ~N[2011-05-18 15:01:01], organization_id: 43, organization_name: "some updated organization_name", deleted_at: ~N[2011-05-18 15:01:01], department: "some updated department", detail: "some updated detail", first_name: "some updated first_name", first_name_kana: "some updated first_name_kana", image: "some updated image", industry: "some updated industry", last_name: "some updated last_name", last_name_kana: "some updated last_name_kana", position: "some updated position", user_id: 43}
-    @invalid_attrs %{birthday: nil, organization_id: nil, organization_name: nil, deleted_at: nil, department: nil, detail: nil, first_name: nil, first_name_kana: nil, image: nil, industry: nil, last_name: nil, last_name_kana: nil, position: nil, user_id: nil}
+    import Basic.MembersFixtures
 
-    def member_fixture(attrs \\ %{}) do
-      {:ok, member} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Members.create_member()
-
-      member
-    end
+    @invalid_attrs %{birthday: nil, deleted_at: nil, department: nil, detail: nil, first_name: nil, first_name_kana: nil, image: nil, industry: nil, last_name: nil, last_name_kana: nil, organization_id: nil, organization_name: nil, position: nil, user_id: nil}
 
     test "list_members/0 returns all members" do
       member = member_fixture()
@@ -30,11 +21,11 @@ defmodule Basic.MembersTest do
     end
 
     test "create_member/1 with valid data creates a member" do
-      assert {:ok, %Member{} = member} = Members.create_member(@valid_attrs)
-      assert member.birthday == ~N[2010-04-17 14:00:00]
-      assert member.organization_id == 42
-      assert member.organization_name == "some organization_name"
-      assert member.deleted_at == ~N[2010-04-17 14:00:00]
+      valid_attrs = %{birthday: ~N[2022-01-12 01:31:00], deleted_at: ~N[2022-01-12 01:31:00], department: "some department", detail: "some detail", first_name: "some first_name", first_name_kana: "some first_name_kana", image: "some image", industry: "some industry", last_name: "some last_name", last_name_kana: "some last_name_kana", organization_id: 42, organization_name: "some organization_name", position: "some position", user_id: 42}
+
+      assert {:ok, %Member{} = member} = Members.create_member(valid_attrs)
+      assert member.birthday == ~N[2022-01-12 01:31:00]
+      assert member.deleted_at == ~N[2022-01-12 01:31:00]
       assert member.department == "some department"
       assert member.detail == "some detail"
       assert member.first_name == "some first_name"
@@ -43,6 +34,8 @@ defmodule Basic.MembersTest do
       assert member.industry == "some industry"
       assert member.last_name == "some last_name"
       assert member.last_name_kana == "some last_name_kana"
+      assert member.organization_id == 42
+      assert member.organization_name == "some organization_name"
       assert member.position == "some position"
       assert member.user_id == 42
     end
@@ -53,11 +46,11 @@ defmodule Basic.MembersTest do
 
     test "update_member/2 with valid data updates the member" do
       member = member_fixture()
-      assert {:ok, %Member{} = member} = Members.update_member(member, @update_attrs)
-      assert member.birthday == ~N[2011-05-18 15:01:01]
-      assert member.organization_id == 43
-      assert member.organization_name == "some updated organization_name"
-      assert member.deleted_at == ~N[2011-05-18 15:01:01]
+      update_attrs = %{birthday: ~N[2022-01-13 01:31:00], deleted_at: ~N[2022-01-13 01:31:00], department: "some updated department", detail: "some updated detail", first_name: "some updated first_name", first_name_kana: "some updated first_name_kana", image: "some updated image", industry: "some updated industry", last_name: "some updated last_name", last_name_kana: "some updated last_name_kana", organization_id: 43, organization_name: "some updated organization_name", position: "some updated position", user_id: 43}
+
+      assert {:ok, %Member{} = member} = Members.update_member(member, update_attrs)
+      assert member.birthday == ~N[2022-01-13 01:31:00]
+      assert member.deleted_at == ~N[2022-01-13 01:31:00]
       assert member.department == "some updated department"
       assert member.detail == "some updated detail"
       assert member.first_name == "some updated first_name"
@@ -66,6 +59,8 @@ defmodule Basic.MembersTest do
       assert member.industry == "some updated industry"
       assert member.last_name == "some updated last_name"
       assert member.last_name_kana == "some updated last_name_kana"
+      assert member.organization_id == 43
+      assert member.organization_name == "some updated organization_name"
       assert member.position == "some updated position"
       assert member.user_id == 43
     end

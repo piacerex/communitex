@@ -9,7 +9,7 @@ defmodule Basic.Agents do
   alias Basic.Agents.Agent
   alias Basic.Grants
   alias Basic.Agencies.Agency
-  alias Basic.Accounts.User
+  alias Basic.Accounts.Account
   alias Basic.Members.Member
 
   @doc """
@@ -22,60 +22,20 @@ defmodule Basic.Agents do
 
   """
   def list_agents do
-    users = from user in User
+    accounts = from account in Account
     agencies = from agency in Agency
     from( agent in Agent,
-          join: user in ^users,
+          join: account in ^accounts,
           on: [id: agent.user_id],
           join: agency in ^agencies,
           on: [id: agent.agency_id],
           select: [
             map(agent, ^Agent.__schema__(:fields)),
-            map(user, ^User.__schema__(:fields)),
+            map(account, ^Account.__schema__(:fields)),
             map(agency, ^Agency.__schema__(:fields))
           ] )
     |> Repo.all
-  end
-
-  def get_selected_agents(user_id, agency_id) do
-    related_agencies = get_granted_agencies(user_id)
-    selected_agency = case agency_id do
-      "" -> case related_agencies do
-              [] -> ""
-              _  -> List.first(related_agencies).id
-      end
-      _  -> agency_id
-    end
-
-    case selected_agency do
-      "" -> []
-      _  -> users = from user in User
-            agencies = from agency in Agency
-            from( agent in Agent,
-                  where: agent.agency_id == ^selected_agency,
-                  join: user in ^users,
-                  on: [id: agent.user_id],
-                  join: agency in ^agencies,
-                  on: [id: agent.agency_id],
-                  select: [
-                    map(agent, ^Agent.__schema__(:fields)),
-                    map(user, ^User.__schema__(:fields)),
-                    map(agency, ^Agency.__schema__(:fields))
-                  ] )
-            |> Repo.all
-    end
-  end
-
-  def get_granted_agencies(user_id) do
-    grants = Grants.get_user_grants!(user_id)
-    organization_ids = Enum.sort(Enum.uniq(Enum.map(grants, fn map -> Map.get(map, :organization_id) end)))
-    agencies =
-      for organization_id <- organization_ids do
-        from( agency in Agency, where: agency.organization_id == ^organization_id )
-        |> Repo.all
-      end
-    List.flatten(agencies)
-  end
+end
 
   @doc """
   Gets a single agent.
@@ -92,18 +52,18 @@ defmodule Basic.Agents do
 
   """
   def get_agent!(id) do
-    users = from user in User
+    accounts = from account in Account
     agencies = from agency in Agency
 
     from( agent in Agent,
           where: agent.id == ^id,
-          join: user in ^users,
+          join: account in ^accounts,
           on: [id: agent.user_id],
           join: agency in ^agencies,
           on: [id: agent.agency_id],
           select: [
             map(agent, ^Agent.__schema__(:fields)),
-            map(user, ^User.__schema__(:fields)),
+            map(account, ^Account.__schema__(:fields)),
             map(agency, ^Agency.__schema__(:fields))
           ] )
     |> Repo.all
@@ -180,7 +140,7 @@ defmodule Basic.Agents do
             |> Map.put(:deleted_at, agent.deleted_at)
             |> Map.put(:discount, agent.discount)
             |> Map.put(:user_id, agent.user_id)
-    
+
     Repo.delete(agent)
   end
 
@@ -210,26 +170,66 @@ defmodule Basic.Agents do
     Agent.changeset(agent, attrs)
   end
 
+  def get_selected_agents(user_id, agency_id) do
+    related_agencies = get_granted_agencies(user_id)
+    selected_agency = case agency_id do
+      "" -> case related_agencies do
+              [] -> ""
+              _  -> List.first(related_agencies).id
+      end
+      _  -> agency_id
+    end
+
+    case selected_agency do
+      "" -> []
+      _  -> accounts = from account in Account
+            agencies = from agency in Agency
+            from( agent in Agent,
+                  where: agent.agency_id == ^selected_agency,
+                  join: account in ^accounts,
+                  on: [id: agent.user_id],
+                  join: agency in ^agencies,
+                  on: [id: agent.agency_id],
+                  select: [
+                    map(agent, ^Agent.__schema__(:fields)),
+                    map(account, ^Account.__schema__(:fields)),
+                    map(agency, ^Agency.__schema__(:fields))
+                  ] )
+            |> Repo.all
+    end
+  end
+
+  def get_granted_agencies(user_id) do
+    grants = Grants.get_user_grants!(user_id)
+    organization_ids = Enum.sort(Enum.uniq(Enum.map(grants, fn map -> Map.get(map, :organization_id) end)))
+    agencies =
+      for organization_id <- organization_ids do
+        from( agency in Agency, where: agency.organization_id == ^organization_id )
+        |> Repo.all
+      end
+    List.flatten(agencies)
+  end
+
   def not_registered_user_ids() do
     agents_user = from agent in Agent, select: agent.user_id
-    from( user in User, select: user.id, except_all: ^agents_user )
+    from( account in Account, select: account.id, except_all: ^agents_user )
     |> Repo.all
   end
 
   def search_users(search) do
     candidate_user_ids = not_registered_user_ids()
 
-    query = 
+    query =
       from( member in Member,
-        right_join: user in User, 
+        right_join: account in Account,
           on: [id: member.user_id],
-        where: like(member.last_name,  ^"%#{search}%") 
-            or like(member.first_name, ^"%#{search}%") 
-            or like(user.email,        ^"%#{search}%"),
-        select: 
+        where: like(member.last_name,  ^"%#{search}%")
+            or like(member.first_name, ^"%#{search}%")
+            or like(account.email,     ^"%#{search}%"),
+        select:
         %{
-          id: user.id,
-          email: user.email,
+          id: account.id,
+          email: account.email,
           last_name: member.last_name,
           first_name: member.first_name
         }

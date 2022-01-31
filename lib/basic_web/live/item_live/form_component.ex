@@ -41,11 +41,11 @@ defmodule BasicWeb.ItemLive.FormComponent do
     case Items.update_item(socket.assigns.item, Map.put(item_params, "image", save_image)) do
       {:ok, _item} ->
         {:noreply,
-        socket
-        |> push_redirect(to: socket.assigns.return_to)}
+         socket
+         |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign(socket, :changeset, changeset)}
     end
   end
 
@@ -54,8 +54,8 @@ defmodule BasicWeb.ItemLive.FormComponent do
     case Items.create_item(Map.put(item_params, "image", image)) do
       {:ok, _item} ->
         {:noreply,
-        socket
-        |> push_redirect(to: socket.assigns.return_to)}
+         socket
+         |> push_redirect(to: socket.assigns.return_to)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}

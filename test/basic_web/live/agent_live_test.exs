@@ -2,27 +2,21 @@ defmodule BasicWeb.AgentLiveTest do
   use BasicWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  import Basic.AgentsFixtures
 
-  alias Basic.Agents
-
-  @create_attrs %{agency_id: 42, boost: 120.5, deleted_at: ~N[2010-04-17 14:00:00], discount: 120.5, user_id: 42}
-  @update_attrs %{agency_id: 43, boost: 456.7, deleted_at: ~N[2011-05-18 15:01:01], discount: 456.7, user_id: 43}
-  @invalid_attrs %{agency_id: nil, boost: nil, deleted_at: nil, discount: nil, user_id: nil}
-
-  defp fixture(:agent) do
-    {:ok, agent} = Agents.create_agent(@create_attrs)
-    agent
-  end
+  @create_attrs %{agency_id: 42, boost: 120.5, deleted_at: %{day: 12, hour: 1, minute: 51, month: 1, year: 2022}, discount: 120.5, user_id: 42}
+  @update_attrs %{agency_id: 43, boost: 456.7, deleted_at: %{day: 13, hour: 1, minute: 51, month: 1, year: 2022}, discount: 456.7, user_id: 43}
+  @invalid_attrs %{agency_id: nil, boost: nil, deleted_at: %{day: 30, hour: 1, minute: 51, month: 2, year: 2022}, discount: nil, user_id: nil}
 
   defp create_agent(_) do
-    agent = fixture(:agent)
+    agent = agent_fixture()
     %{agent: agent}
   end
 
   describe "Index" do
     setup [:create_agent]
 
-    test "lists all agents", %{conn: conn, agent: agent} do
+    test "lists all agents", %{conn: conn} do
       {:ok, _index_live, html} = live(conn, Routes.agent_index_path(conn, :index))
 
       assert html =~ "Listing Agents"
@@ -38,7 +32,7 @@ defmodule BasicWeb.AgentLiveTest do
 
       assert index_live
              |> form("#agent-form", agent: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -59,7 +53,7 @@ defmodule BasicWeb.AgentLiveTest do
 
       assert index_live
              |> form("#agent-form", agent: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         index_live
@@ -97,7 +91,7 @@ defmodule BasicWeb.AgentLiveTest do
 
       assert show_live
              |> form("#agent-form", agent: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+             |> render_change() =~ "is invalid"
 
       {:ok, _, html} =
         show_live

@@ -3,8 +3,8 @@ defmodule Basic.Grants.Grant do
   import Ecto.Changeset
 
   schema "grants" do
-    field :organization_id, :integer
     field :deleted_at, :naive_datetime
+    field :organization_id, :integer
     field :role, :string
     field :user_id, :integer
 

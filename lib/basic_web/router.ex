@@ -1,7 +1,7 @@
 defmodule BasicWeb.Router do
   use BasicWeb, :router
 
-  import BasicWeb.UserAuth
+  import BasicWeb.AccountAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -10,7 +10,7 @@ defmodule BasicWeb.Router do
     plug :put_root_layout, {BasicWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_user
+    plug :fetch_current_account
   end
 
   pipeline :api do
@@ -20,34 +20,35 @@ defmodule BasicWeb.Router do
   ## Authentication routes
 
   scope "/", BasicWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+    pipe_through [:browser, :redirect_if_account_is_authenticated]
 
-    get "/users/register", UserRegistrationController, :new
-    post "/users/register", UserRegistrationController, :create
-    get "/users/log_in", UserSessionController, :new
-    post "/users/log_in", UserSessionController, :create
-    get "/users/reset_password", UserResetPasswordController, :new
-    post "/users/reset_password", UserResetPasswordController, :create
-    get "/users/reset_password/:token", UserResetPasswordController, :edit
-    put "/users/reset_password/:token", UserResetPasswordController, :update
+    get "/accounts/register", AccountRegistrationController, :new
+    post "/accounts/register", AccountRegistrationController, :create
+    get "/accounts/log_in", AccountSessionController, :new
+    post "/accounts/log_in", AccountSessionController, :create
+    get "/accounts/reset_password", AccountResetPasswordController, :new
+    post "/accounts/reset_password", AccountResetPasswordController, :create
+    get "/accounts/reset_password/:token", AccountResetPasswordController, :edit
+    put "/accounts/reset_password/:token", AccountResetPasswordController, :update
   end
 
   scope "/", BasicWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :require_authenticated_account]
 
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+    get "/accounts/settings", AccountSettingsController, :edit
+    put "/accounts/settings", AccountSettingsController, :update
+    get "/accounts/settings/confirm_email/:token", AccountSettingsController, :confirm_email
   end
 
   scope "/", BasicWeb do
     pipe_through [:browser]
 
-#    delete "/users/log_out", UserSessionController, :delete
-    get "/users/log_out", UserSessionController, :delete
-    get "/users/confirm", UserConfirmationController, :new
-    post "/users/confirm", UserConfirmationController, :create
-    get "/users/confirm/:token", UserConfirmationController, :confirm
+#    delete "/accounts/log_out", AccountSessionController, :delete
+    get "/accounts/log_out", AccountSessionController, :delete
+    get "/accounts/confirm", AccountConfirmationController, :new
+    post "/accounts/confirm", AccountConfirmationController, :create
+    get "/accounts/confirm/:token", AccountConfirmationController, :edit
+    post "/accounts/confirm/:token", AccountConfirmationController, :update
   end
 
   scope "/api/rest/", BasicWeb do
@@ -75,6 +76,11 @@ defmodule BasicWeb.Router do
     delete "/*path_", ApiController, :index
   end
 
+  # Other scopes may use custom stacks.
+  # scope "/api", BasicWeb do
+  #   pipe_through :api
+  # end
+
   # Enables LiveDashboard only for development
   #
   # If you want to use the LiveDashboard in production, you should put
@@ -88,7 +94,20 @@ defmodule BasicWeb.Router do
     scope "/" do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: BasicWeb.Telemetry
-      forward "/sent_emails", Bamboo.SentEmailViewerPlug
+# ユーザ登録時にエラーが出るのでコメントアウト
+#      forward "/sent_emails", Bamboo.SentEmailViewerPlug
+    end
+  end
+
+  # Enables the Swoosh mailbox preview in development.
+  #
+  # Note that preview only shows emails that were sent by the same
+  # node running the Phoenix server.
+  if Mix.env() == :dev do
+    scope "/dev" do
+      pipe_through :browser
+
+      forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
 
@@ -99,19 +118,19 @@ defmodule BasicWeb.Router do
     plug :put_root_layout, false
 #    plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_user
+    plug :fetch_current_account
   end
 
   import BasicWeb.Grant
   scope "/sphere/", BasicWeb do
-    pipe_through [:sphere_browser, :require_authenticated_user, :content_editor_grant]
+    pipe_through [:sphere_browser, :require_authenticated_account, :content_editor_grant]
 #    pipe_through :sphere_browser
 
     get "/edit/*path_", SphereController, :edit
   end
 
   scope "/admin", BasicWeb do
-    pipe_through [:browser, :require_authenticated_user, :distributor_admin_grant]
+    pipe_through [:browser, :require_authenticated_account, :distributor_admin_grant]
 
     live "/items", ItemLive.Index, :index
     live "/items/new", ItemLive.Index, :new
@@ -127,7 +146,7 @@ defmodule BasicWeb.Router do
   end
 
   scope "/admin", BasicWeb do
-    pipe_through [:browser, :require_authenticated_user, :agency_admin_grant]
+    pipe_through [:browser, :require_authenticated_account, :agency_admin_grant]
 
     live "/agents", AgentLive.Index, :index
     live "/agents/new", AgentLive.Index, :new
@@ -167,7 +186,7 @@ defmodule BasicWeb.Router do
   end
 
   scope "/admin", BasicWeb do
-    pipe_through [:browser, :require_authenticated_user, :organization_admin_grant]
+    pipe_through [:browser, :require_authenticated_account, :organization_admin_grant]
 
     live "/members", MemberLive.Index, :index
     live "/members/new", MemberLive.Index, :new
@@ -175,11 +194,11 @@ defmodule BasicWeb.Router do
     live "/members/:id", MemberLive.Show, :show
     live "/members/:id/show/edit", MemberLive.Show, :edit
 
-    live "/users", UserLive.Index, :index
-    live "/users/new", UserLive.Index, :new
-    live "/users/:id/edit", UserLive.Index, :edit
-    live "/users/:id", UserLive.Show, :show
-    live "/users/:id/show/edit", UserLive.Show, :edit
+    live "/accounts", AccountLive.Index, :index
+    live "/accounts/new", AccountLive.Index, :new
+    live "/accounts/:id/edit", AccountLive.Index, :edit
+    live "/accounts/:id", AccountLive.Show, :show
+    live "/accounts/:id/show/edit", AccountLive.Show, :edit
 
     live "/organizations", OrganizationLive.Index, :index
     live "/organizations/new", OrganizationLive.Index, :new
@@ -189,7 +208,7 @@ defmodule BasicWeb.Router do
   end
 
   scope "/admin", BasicWeb do
-    pipe_through [:browser, :require_authenticated_user, :any_admin_grant]
+    pipe_through [:browser, :require_authenticated_account, :any_admin_grant]
 
     live "/grants", GrantLive.Index, :index
     live "/grants/new", GrantLive.Index, :new
@@ -202,7 +221,7 @@ defmodule BasicWeb.Router do
   end
 
   scope "/admin", BasicWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :require_authenticated_account]
 
     live "/", AdminLive.Index, :index
 
@@ -214,13 +233,13 @@ defmodule BasicWeb.Router do
   end
 
   scope "/admin", BasicWeb do
-    pipe_through [:browser, :require_authenticated_user, :system_admin_grant]
+    pipe_through [:browser, :require_authenticated_account, :system_admin_grant]
 
     live "/*path_", LiveViewController
   end
 
   scope "/", BasicWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :require_authenticated_account]
 
     live "/blogs/new", BlogUiLive.Index, :new
     live "/blogs/:post_id/edit", BlogUiLive.Index, :edit
@@ -261,8 +280,4 @@ defmodule BasicWeb.Router do
 #    post "/*path_", SphereController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", BasicWeb do
-  #   pipe_through :api
-  # end
 end

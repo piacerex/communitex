@@ -51,6 +51,7 @@ defmodule Basic.MixProject do
 
       {:ex_image_info, "~> 0.2.4"},
 
+      {:tailwind, "~> 0.1"},
       {:phoenix, "~> 1.6.6"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
